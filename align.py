@@ -7,22 +7,22 @@ from kaldi.lat.align import WordBoundaryInfoNewOpts, WordBoundaryInfo
 from kaldi.nnet3 import NnetSimpleComputationOptions
 
 # Set the paths and read/write specifiers
-model = 'final.mdl'
+model = '0013_librispeech_v1/exp/chain_cleaned/tdnn_1d_sp/final.mdl'
 tree = '0013_librispeech_v1/exp/chain_cleaned/tdnn_1d_sp/tree'
-lang_graph ='0013_librispeech_v1/data/lang_test_tgmed/L.fst' 
-words = 'words.txt'
-disam = '0013_librispeech_v1/data/lang_test_tgmed/phones/disambig.int'
-phones = '0013_librispeech_v1/data/lang_test_tgmed/phones.txt'
-word_boundary ='0013_librispeech_v1/data/lang_test_tgmed/phones/word_boundary.int' 
-text = 'transcriptions.txt' 
+lang_graph ='0013_librispeech_v1/data/lang_chain/L.fst' 
+words = '0013_librispeech_v1/data/lang_chain/words.txt'
+disam = '0013_librispeech_v1/data/lang_chain/phones/disambig.int'
+phones = '0013_librispeech_v1/exp/chain_cleaned/tdnn_1d_sp/phones.txt'
+word_boundary ='0013_librispeech_v1/data/lang_chain/phones/word_boundary.int' 
+text = 'epadb/test/text' 
 
 decodable_opts = NnetSimpleComputationOptions()
 decodable_opts.acoustic_scale = 1.0
 decodable_opts.frame_subsampling_factor = 3
 decodable_opts.frames_per_chunk = 150
 
-feats_rspec = ("ark:/home/marcelo/Desktop/pasantia/pykaldi/raw_mfcc_test.1.ark")
-ivectors_rspec = ("ark:/home/marcelo/Desktop/pasantia/pykaldi/ivector_online.1.ark")
+feats_rspec = ("ark:epadb/test/data/raw_mfcc_test.1.ark")
+ivectors_rspec = ("ark:epadb/test/data/ivector_online.1.ark")
 
 aligner = NnetAligner.from_files(model, tree, lang_graph, words,
                                  disam, decodable_opts=decodable_opts)
