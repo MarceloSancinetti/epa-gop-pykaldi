@@ -21,6 +21,15 @@ decodable_opts.acoustic_scale = 1.0
 decodable_opts.frame_subsampling_factor = 3
 decodable_opts.frames_per_chunk = 150
 
+#feats_rspec = (
+#    "ark:compute-mfcc-feats --config=conf/mfcc_hires.conf scp:data/test/wav.scp ark:- |"
+#)
+#ivectors_rspec = (
+#    "ark:compute-mfcc-feats --config=conf/mfcc_hires.conf scp:data/test/wav.scp ark:- |"
+#    "ivector-extract-online2 --config=conf/ivector_extractor.conf ark:data/test/spk2utt ark:- ark:- |"
+#)
+
+
 feats_rspec = ("ark:epadb/test/data/raw_mfcc_test.1.ark")
 ivectors_rspec = ("ark:epadb/test/data/ivector_online.1.ark")
 
@@ -43,6 +52,7 @@ with SequentialMatrixReader(feats_rspec) as f, \
 		print(fkey, phone_alignment, flush=True)
 		word_alignment = aligner.to_word_alignment(out["best_path"], wb_info)
 		print(fkey, word_alignment, flush=True)
+		print("LIKELIHOOD: ", out["likelihood"])
 
 
 

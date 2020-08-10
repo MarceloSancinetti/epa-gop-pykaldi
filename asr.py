@@ -3,16 +3,16 @@ from kaldi.decoder import LatticeFasterDecoderOptions
 from kaldi.nnet3 import NnetSimpleComputationOptions
 from kaldi.util.table import  *
 # Set the paths and read/write specifiers
-model_path = "final.mdl"
+model_path = "0013_librispeech_v1/exp/chain_cleaned/tdnn_1d_sp/final.mdl"
 graph_path = "HCLG.fst"
-symbols_path = "words.txt"
+symbols_path = "0013_librispeech_v1/data/lang_chain/words.txt"
 #feats_rspec = ("ark:compute-mfcc-feats --config=mfcc_hires.conf "
 #               "scp:wav.scp ark:- |")
 #ivectors_rspec = (feats_rspec + "ivector-extract-online2 "
 #                 "--config=ivector_extractor.conf "
 #
-feats_rspec = ("ark:/home/marcelo/Desktop/pasantia/pykaldi/raw_mfcc_test.1.ark")
-ivectors_rspec = ("ark:/home/marcelo/Desktop/pasantia/pykaldi/ivector_online.1.ark")
+feats_rspec = ("ark:epadb/test/data/raw_mfcc_test.1.ark")
+ivectors_rspec = ("ark:epadb/test/data/ivector_online.1.ark")
 lat_wspec = "ark:| gzip -c > lat.gz"
 
 # Instantiate the recognizer
@@ -34,3 +34,5 @@ with SequentialMatrixReader(feats_rspec) as feats_reader, \
         assert(fkey == ikey)
         out = asr.decode((feats, ivectors))
         print(fkey, out["text"])
+        print("Lattice: ")
+        print(out["lattice"])
