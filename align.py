@@ -18,7 +18,7 @@ text = 'epadb/test/text'
 
 decodable_opts = NnetSimpleComputationOptions()
 decodable_opts.acoustic_scale = 1.0
-decodable_opts.frame_subsampling_factor = 3
+decodable_opts.frame_subsampling_factor = 1
 decodable_opts.frames_per_chunk = 150
 
 #feats_rspec = (
@@ -47,12 +47,12 @@ with SequentialMatrixReader(feats_rspec) as f, \
 		tkey, text = line.strip().split(None, 1)
 		#assert(fkey == ikey == tkey)
 		out = aligner.align((feats, ivectors), text)
-		print(fkey, out["alignment"], flush=True)
+		#print(fkey, out["alignment"], flush=True)
 		phone_alignment = aligner.to_phone_alignment(out["alignment"], phones)
 		print(fkey, phone_alignment, flush=True)
 		word_alignment = aligner.to_word_alignment(out["best_path"], wb_info)
-		print(fkey, word_alignment, flush=True)
-		print("LIKELIHOOD: ", out["likelihood"])
+		#print(fkey, word_alignment, flush=True)
+		#print("LIKELIHOOD: ", out["likelihood"])
 
 
 
