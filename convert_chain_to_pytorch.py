@@ -1,4 +1,7 @@
 from pytorch_models import *
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
 import numpy as np
 
 def get_component_type(is_tdnnf):
@@ -25,7 +28,7 @@ def read_linear_params(file):
 		line_array = np.fromstring(line.replace(']',''), dtype=float, sep=' ')
 		linear_params.append(line_array)
 	linear_params = np.array(linear_params)
-	print(linear_params)
+	#print(linear_params)
 	return linear_params
 
 def read_vector(file, prefix, advance):
@@ -35,11 +38,11 @@ def read_vector(file, prefix, advance):
 	line = line.replace(prefix, '')
 	line = line.replace(']', '')
 	if len(line) <= 1:
-		print(np.array([]))
+		#print(np.array([]))
 		return np.array([])
 	#print(line)
 	vector = np.fromstring(line, dtype=float, sep=' ')
-	print(vector)
+	#print(vector)
 	return vector
 
 def read_bias(file):
@@ -134,8 +137,42 @@ while not finished:
 		#No tdnnfx.dropout yet
 		#No tdnnfx.noop yet
 
+print("Components")
+print(components['lda']['linear_params'].shape)
+print(components['lda']['bias'].shape)
+print(components['tdnn1.affine']['linear_params'].shape)
+print(components['tdnn1.affine']['bias'].shape)
+print(components['tdnnf2.linear']['linear_params'].shape)
+print(components['tdnnf2.linear']['bias'].shape)
+print(components['tdnnf2.affine']['linear_params'].shape)
+print(components['tdnnf2.affine']['bias'].shape)
 
 
-  
+tdnn1 = TDNN()
+print(tdnn1.state_dict)
+
+conv1d = nn.Conv1d(tdnn1.input_dim, tdnn1.output_dim, tdnn1.context_size, stride=tdnn1.stride, padding=tdnn1.padding, dilation=tdnn1.dilation)
+
+print("Model's state_dict:")
+for param_tensor in tdnn1.state_dict():
+    print(param_tensor, "\t", tdnn1.state_dict()[param_tensor].size())
+
+state_dict = {}
+
+state_dict['tdnn1'] = {}
+state_dict['tdnn1']['kernel.weight'] = torch.from_numpy(components['tdnn1.affine']['linear_params'])[:,:,None]
+state_dict['tdnn1']['kernel.bias'] = torch.from_numpy(components['tdnn1.affine']['bias'])
+state_dict['tdnn1']['bn.running_mean'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_mean'])
+state_dict['tdnn1']['bn.running_var'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_var'])
+
+tdnn1.load_state_dict(state_dict['tdnn1'])
+
+tdnnf = FTDNNLayer(512, 1024, 256, context_size=2, dilations=[2, 2, 2], paddings=[1, 1, 1])
+print("Model's state_dict:")
+for param_tensor in tdnnf.state_dict():
+    print(param_tensor, "\t", tdnnf.state_dict()[param_tensor].size())
+#print(tdnnf.state_dict)
+
+
 chain_file.close() 
 
