@@ -80,6 +80,7 @@ while not finished:
 		components['lda']['linear_params'] = read_linear_params(chain_file)
 		components['lda']['bias'] = read_bias(chain_file)
 
+
 	if '<ComponentName> tdnn1.affine' in line:
 		components['tdnn1.affine'] = {}
 		#If necessary, parse parameters such as learning rate here
@@ -136,26 +137,46 @@ while not finished:
 
 		#No tdnnfx.dropout yet
 		#No tdnnfx.noop yet
+	
+	if '<ComponentName> prefinal-chain.affine' in line:
+		components['prefinal-chain.affine'] = {}
+		components['prefinal-chain.affine']['linear_params'] = read_linear_params(chain_file)
+		components['prefinal-chain.affine']['bias'] = read_bias(chain_file)
+
+	if '<ComponentName> prefinal-chain.linear' in line:
+		components['prefinal-chain.linear'] = {}
+		components['prefinal-chain.linear']['linear_params'] = read_linear_params(chain_file)
+		components['prefinal-chain.linear']['bias'] = read_bias(chain_file)
+
+	if '<ComponentName> prefinal-xent.affine' in line:
+		components['prefinal-xent.affine'] = {}
+		components['prefinal-xent.affine']['linear_params'] = read_linear_params(chain_file)
+		components['prefinal-xent.affine']['bias'] = read_bias(chain_file)
+
+	if '<ComponentName> prefinal-xent.linear' in line: #esto esta mal
+		components['prefinal-xent.linear'] = {}
+		components['prefinal-xent.linear']['linear_params'] = read_linear_params(chain_file)
+		components['prefinal-xent.linear']['bias'] = read_bias(chain_file)
+
+	if '<ComponentName> output-xent.affine' in line:
+		components['output-xent.affine'] = {}
+		components['output-xent.affine']['linear_params'] = read_linear_params(chain_file)
+		components['output-xent.affine']['bias'] = read_bias(chain_file)
 
 print("Components")
 print(components['lda']['linear_params'].shape)
 print(components['lda']['bias'].shape)
 print(components['tdnn1.affine']['linear_params'].shape)
 print(components['tdnn1.affine']['bias'].shape)
+print(components['tdnn1.batchnorm']['stats_mean'].shape)
+print(components['tdnn1.batchnorm']['stats_var'].shape)
 print(components['tdnnf2.linear']['linear_params'].shape)
 print(components['tdnnf2.linear']['bias'].shape)
 print(components['tdnnf2.affine']['linear_params'].shape)
 print(components['tdnnf2.affine']['bias'].shape)
 
-
-tdnn1 = TDNN()
-print(tdnn1.state_dict)
-
-conv1d = nn.Conv1d(tdnn1.input_dim, tdnn1.output_dim, tdnn1.context_size, stride=tdnn1.stride, padding=tdnn1.padding, dilation=tdnn1.dilation)
-
-print("Model's state_dict:")
-for param_tensor in tdnn1.state_dict():
-    print(param_tensor, "\t", tdnn1.state_dict()[param_tensor].size())
+#tdnn1 = TDNN()
+#print(tdnn1.state_dict)
 
 state_dict = {}
 
@@ -164,15 +185,6 @@ state_dict['tdnn1']['kernel.weight'] = torch.from_numpy(components['tdnn1.affine
 state_dict['tdnn1']['kernel.bias'] = torch.from_numpy(components['tdnn1.affine']['bias'])
 state_dict['tdnn1']['bn.running_mean'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_mean'])
 state_dict['tdnn1']['bn.running_var'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_var'])
-
-tdnn1.load_state_dict(state_dict['tdnn1'])
-
-tdnnf = FTDNNLayer(512, 1024, 256, context_size=2, dilations=[2, 2, 2], paddings=[1, 1, 1])
-print("Model's state_dict:")
-for param_tensor in tdnnf.state_dict():
-    print(param_tensor, "\t", tdnnf.state_dict()[param_tensor].size())
-#print(tdnnf.state_dict)
-
 
 chain_file.close() 
 

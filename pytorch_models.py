@@ -19,19 +19,39 @@ class FTDNNLayer(nn.Module):
 
     def forward(self, x):
         padding = x[:,0,:]
-        xd = torch.cat((padding, x), axis=1)
+        xd = torch.cat([padding, x], axis=1)
         xd = xd[0,:-1,0]
-        x = torch.cat((xd, x), axis=1)
+        x = torch.cat([xd, x], axis=1)
         x = self.sorth(x)
         padding = x[:,-1,:]
-        xd = torch.cat((x, padding), axis=1)
+        xd = torch.cat([x, padding], axis=1)
         xd = xd[0,1:,0]
-        x = torch.cat((x, xd), axis=1)
+        x = torch.cat([x, xd], axis=1)
         x = self.affine(x)
         x = self.nl(x)
         x = self.bn(x)
         x = self.dropout(x)
         return x
+
+class OutputXentLayer(nn.Module):
+
+    def __init__(self, linear1_in_dim, linear2_in_dim, linear3_in_dim, out_dim, dropout_p=0.0):
+
+        super(OutputXentLayer, self).__init__()
+
+
+        self.linear1 = nn.Linear(self.linear1_in_dim, self.linear2_in_dim, bias=True) 
+        self.nl = nn.ReLU()
+        self.bn1 = nn.BatchNorm1d(linear_in_dim2)
+        self.linear2 = nn.Linear(self.linear2_in_dim, self.linear3_in_dim, bias=True) 
+        self.bn2 = nn.BatchNorm1d(out_dim)
+        self.linear3 = nn.Linear(self.linear3_in_dim, self.out_dim, bias=True)
+
+    def forward(self, x):
+        #TODO
+        #Add softmax here
+        return x
+
 
 class TDNN(nn.Module):
 
@@ -71,9 +91,9 @@ class TDNN(nn.Module):
         ivectors = x[:,:,-100:]
         padding_first = mfccs[:,0,:]
         padding_last = mfccs[:,-1,:]
-        context_first = torch.cat((padding_first, mfccs[:,:-1,:]), axis=1)
-        context_last = torch.cat((mfccs[:,1:,:], padding_last), axis=1)
-        x = torch.cat((context_first, mfccs, context_last, ivectors), axis=1)
+        context_first = torch.cat([padding_first, mfccs[:,:-1,:]], axis=1)
+        context_last = torch.cat([mfccs[:,1:,:], padding_last], axis=1)
+        x = torch.cat([context_first, mfccs, context_last, ivectors], axis=1)
         x = self.lda(x)
         x = self.kernel(x)
         x = self.nonlinearity(x)
@@ -107,6 +127,7 @@ class FTDNN(nn.Module):
         self.layer15 = FTDNNLayer(3072, 160, 1536)
         self.layer16 = FTDNNLayer(3072, 160, 1536)
         self.layer17 = FTDNNLayer(3072, 160, 1536)
+        self.layer18 = OutputXentLayer(0,0,0)
 
 
         #Todo esto ya no hace falta, hay que agregar las prefinal
