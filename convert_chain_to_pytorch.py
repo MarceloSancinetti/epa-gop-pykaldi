@@ -63,7 +63,26 @@ def read_stats_mean(file, layer_number, is_tdnnf = True):
 def read_stats_var(file):
 	return read_vector(file, '<StatsVar>  [ ', False)
 
-# Using readline() 
+def read_affine_component(file):
+	params_dict = {}
+	params_dict['linear_params'] = read_linear_params(file)
+	params_dict['bias'] = read_bias(file)
+	return params_dict
+
+def read_batchnorm_component(file, layer_number, is_tdnnf=True):
+	params_dict = {}
+	params_dict['stats_mean'] = read_stats_mean(file, layer_number, is_tdnnf=is_tdnnf)
+	line = chain_file.readline()
+	params_dict['stats_var'] = read_stats_var(file)
+	return params_dict
+
+def read_relu_component(file, layer_number, is_tdnnf=True):
+	params_dict = {}
+	params_dict['value_avg'] = read_value_avg(file, layer_number, is_tdnnf=is_tdnnf)
+	line = chain_file.readline()
+	params_dict['deriv_avg'] = read_deriv_avg(file)
+	return params_dict
+
 chain_file = open('final', 'r') 
  
 components = {}
@@ -76,115 +95,87 @@ while not finished:
 		finished = True
 
 	if '<ComponentName> lda' in line:
-		components['lda'] = {}
-		components['lda']['linear_params'] = read_linear_params(chain_file)
-		components['lda']['bias'] = read_bias(chain_file)
-
+		components['lda'] = read_affine_component(chain_file)
 
 	if '<ComponentName> tdnn1.affine' in line:
-		components['tdnn1.affine'] = {}
 		#If necessary, parse parameters such as learning rate here
-		components['tdnn1.affine']['linear_params'] = read_linear_params(chain_file)
-		components['tdnn1.affine']['bias'] = read_bias(chain_file)
+		components['tdnn1.affine'] = read_affine_component(chain_file)
 
 	if '<ComponentName> tdnn1.relu' in line:
-		components['tdnn1.relu'] = {}
-		components['tdnn1.relu']['value_avg'] = read_value_avg(chain_file,1, is_tdnnf=False)
-		line = chain_file.readline()
-		components['tdnn1.relu']['deriv_avg'] = read_deriv_avg(chain_file)
+		components['tdnn1.relu'] = read_relu_component(chain_file, 1, is_tdnnf=False)
 
 	if '<ComponentName> tdnn1.batchnorm' in line:
-		components['tdnn1.batchnorm'] = {}
-		components['tdnn1.batchnorm']['stats_mean'] = read_stats_mean(chain_file, 1, is_tdnnf=False)
-		line = chain_file.readline()
-		components['tdnn1.batchnorm']['stats_var'] = read_stats_var(chain_file)
+		components['tdnn1.batchnorm'] = read_batchnorm_component(chain_file, 1, is_tdnnf=False)
 
 	#No tdnn1.dropout yet
 
 
 	#Reads parameters for layers 2-17
-	for layer_number in range(2, 17):
+	for layer_number in range(2, 18):
 		layer_name = 'tdnnf'+str(layer_number)
 
-		component_type = '.affine'
-		if '<ComponentName> ' + layer_name + component_type in line:
-			components[layer_name + component_type] = {}
-			line = chain_file.readline()
-			components[layer_name + component_type]['linear_params'] = read_linear_params(chain_file)
-			components[layer_name + component_type]['bias'] = read_bias(chain_file)
+		if '<ComponentName> ' + layer_name + '.affine' in line:
+			line = chain_file.readline() #Skip unnecessary line
+			components[layer_name + '.affine'] = read_affine_component(chain_file)
 
-		component_type = '.relu'
-		if '<ComponentName> ' + layer_name + component_type in line:
-			components[layer_name + component_type] = {}
-			components[layer_name + component_type]['value_avg'] = read_value_avg(chain_file,layer_number)
-			line = chain_file.readline()
-			components[layer_name + component_type]['deriv_avg'] = read_deriv_avg(chain_file)
+		if '<ComponentName> ' + layer_name + '.relu' in line:
+			components[layer_name + '.relu'] = read_relu_component(chain_file, layer_number)
 
-		component_type = '.batchnorm'
-		if '<ComponentName> ' + layer_name + component_type in line:
-			components[layer_name + component_type] = {}
-			components[layer_name + component_type]['stats_mean'] = read_stats_mean(chain_file, layer_number)
-			line = chain_file.readline()
-			components[layer_name + component_type]['stats_var'] = read_stats_var(chain_file)
+		if '<ComponentName> ' + layer_name + '.batchnorm' in line:
+			components[layer_name + '.batchnorm'] = read_batchnorm_component(chain_file, layer_number)
 
-		component_type = '.linear'
-		if '<ComponentName> ' + layer_name + component_type in line:
-			components[layer_name + component_type] = {}
-			line = chain_file.readline()
-			components[layer_name + component_type]['linear_params'] = read_linear_params(chain_file)
-			components[layer_name + component_type]['bias'] = read_bias(chain_file)
-
+		if '<ComponentName> ' + layer_name + '.linear' in line:
+			line = chain_file.readline() #Skip unnecessary line
+			components[layer_name + '.linear'] = read_affine_component(chain_file)
 
 		#No tdnnfx.dropout yet
 		#No tdnnfx.noop yet
 	
+	'''
 	if '<ComponentName> prefinal-chain.affine' in line:
-		components['prefinal-chain.affine'] = {}
-		components['prefinal-chain.affine']['linear_params'] = read_linear_params(chain_file)
-		components['prefinal-chain.affine']['bias'] = read_bias(chain_file)
+		components['prefinal-chain.affine'] = read_affine_component(chain_file)
 
 	if '<ComponentName> prefinal-chain.linear' in line:
 		components['prefinal-chain.linear'] = {}
 		components['prefinal-chain.linear']['linear_params'] = read_linear_params(chain_file)
-		components['prefinal-chain.linear']['bias'] = read_bias(chain_file)
+	'''
 
 	if '<ComponentName> prefinal-xent.affine' in line:
-		components['prefinal-xent.affine'] = {}
-		components['prefinal-xent.affine']['linear_params'] = read_linear_params(chain_file)
-		components['prefinal-xent.affine']['bias'] = read_bias(chain_file)
+		components['prefinal-xent.affine'] = read_affine_component(chain_file)
 
-	if '<ComponentName> prefinal-xent.linear' in line: #esto esta mal
+	if '<ComponentName> prefinal-xent.linear' in line:
 		components['prefinal-xent.linear'] = {}
 		components['prefinal-xent.linear']['linear_params'] = read_linear_params(chain_file)
-		components['prefinal-xent.linear']['bias'] = read_bias(chain_file)
 
 	if '<ComponentName> output-xent.affine' in line:
-		components['output-xent.affine'] = {}
-		components['output-xent.affine']['linear_params'] = read_linear_params(chain_file)
-		components['output-xent.affine']['bias'] = read_bias(chain_file)
+		components['output-xent.affine'] = read_affine_component(chain_file)
 
 print("Components")
 print(components['lda']['linear_params'].shape)
 print(components['lda']['bias'].shape)
 print(components['tdnn1.affine']['linear_params'].shape)
 print(components['tdnn1.affine']['bias'].shape)
-print(components['tdnn1.batchnorm']['stats_mean'].shape)
-print(components['tdnn1.batchnorm']['stats_var'].shape)
-print(components['tdnnf2.linear']['linear_params'].shape)
-print(components['tdnnf2.linear']['bias'].shape)
-print(components['tdnnf2.affine']['linear_params'].shape)
-print(components['tdnnf2.affine']['bias'].shape)
+for n in range(2, 17):
+	print('Layer '+str(n))
+	print(components['tdnnf'+str(n)+'.linear']['linear_params'].shape)
+	print(components['tdnnf'+str(n)+'.linear']['bias'].shape)
+	print(components['tdnnf'+str(n)+'.affine']['linear_params'].shape)
+	print(components['tdnnf'+str(n)+'.affine']['bias'].shape)
+	
+print(components['prefinal-xent.affine']['linear_params'].shape)
+print(components['prefinal-xent.linear']['linear_params'].shape)
+print(components['output-xent.affine']['linear_params'].shape)
 
-#tdnn1 = TDNN()
-#print(tdnn1.state_dict)
+ftdnn = FTDNN()
+print(ftdnn.state_dict)
 
-state_dict = {}
+#state_dict = {}
 
-state_dict['tdnn1'] = {}
-state_dict['tdnn1']['kernel.weight'] = torch.from_numpy(components['tdnn1.affine']['linear_params'])[:,:,None]
-state_dict['tdnn1']['kernel.bias'] = torch.from_numpy(components['tdnn1.affine']['bias'])
-state_dict['tdnn1']['bn.running_mean'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_mean'])
-state_dict['tdnn1']['bn.running_var'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_var'])
+#tate_dict['tdnn1'] = {}
+#state_dict['tdnn1']['kernel.weight'] = torch.from_numpy(components['tdnn1.affine']['linear_params'])[:,:,None]
+#state_dict['tdnn1']['kernel.bias'] = torch.from_numpy(components['tdnn1.affine']['bias'])
+#state_dict['tdnn1']['bn.running_mean'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_mean'])
+#state_dict['tdnn1']['bn.running_var'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_var'])
 
 chain_file.close() 
 

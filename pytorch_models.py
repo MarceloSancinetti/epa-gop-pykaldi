@@ -4,18 +4,22 @@ import torch.nn.functional as F
 
 class FTDNNLayer(nn.Module):
 
-    def __init__(self, semi_orth_in_dim affine_in_dim, out_dim, dropout_p=0.0):
+    def __init__(self, semi_orth_in_dim, affine_in_dim, out_dim, dropout_p=0.0):
         '''
         3 stage factorised TDNN http://danielpovey.com/files/2018_interspeech_tdnnf.pdf
         '''
         super(FTDNNLayer, self).__init__()
+        self.semi_orth_in_dim = semi_orth_in_dim
+        self.affine_in_dim = affine_in_dim
+        self.out_dim = out_dim
+        self.dropout_p = dropout_p
 
 
         self.sorth = nn.Linear(self.semi_orth_in_dim, self.affine_in_dim, bias=False)
         self.affine = nn.Linear(self.affine_in_dim, self.out_dim, bias=True) 
         self.nl = nn.ReLU()
         self.bn = nn.BatchNorm1d(out_dim)
-        self.dropout = Dropout(p=self.dropout_p)
+        self.dropout = nn.Dropout(p=self.dropout_p)
 
     def forward(self, x):
         padding = x[:,0,:]
@@ -38,18 +42,26 @@ class OutputXentLayer(nn.Module):
     def __init__(self, linear1_in_dim, linear2_in_dim, linear3_in_dim, out_dim, dropout_p=0.0):
 
         super(OutputXentLayer, self).__init__()
-
+        self.linear1_in_dim = linear1_in_dim
+        self.linear2_in_dim = linear2_in_dim
+        self.linear3_in_dim = linear3_in_dim
+        self.out_dim = out_dim
 
         self.linear1 = nn.Linear(self.linear1_in_dim, self.linear2_in_dim, bias=True) 
         self.nl = nn.ReLU()
-        self.bn1 = nn.BatchNorm1d(linear_in_dim2)
-        self.linear2 = nn.Linear(self.linear2_in_dim, self.linear3_in_dim, bias=True) 
-        self.bn2 = nn.BatchNorm1d(out_dim)
+        self.bn1 = nn.BatchNorm1d(self.linear2_in_dim)
+        self.linear2 = nn.Linear(self.linear2_in_dim, self.linear3_in_dim, bias=False) 
+        self.bn2 = nn.BatchNorm1d(self.out_dim)
         self.linear3 = nn.Linear(self.linear3_in_dim, self.out_dim, bias=True)
 
     def forward(self, x):
-        #TODO
-        #Add softmax here
+        x = self.linear1(x)
+        x = self.nl(x)
+        x = self.bn1(x)
+        x = self.linear2(x)
+        x = self.bn2(x)
+        x = self.linear3(x)
+        x = nn.Softmax(x)
         return x
 
 
@@ -67,7 +79,7 @@ class TDNN(nn.Module):
         self.output_dim = output_dim
         self.dropout_p = dropout_p
 
-        self.lda = Linear(self.input_dim, self.input_dim)
+        self.lda = nn.Linear(self.input_dim, self.input_dim)
         self.kernel = nn.Linear(self.input_dim,
                                 self.output_dim)
 
@@ -110,31 +122,14 @@ class FTDNN(nn.Module):
 
         super(FTDNN, self).__init__()
 
-        self.layer01 = TDNN(input_dim=220, output_dim=1536)
-        self.layer02 = FTDNNLayer(3072, 160, 1536)
-        self.layer03 = FTDNNLayer(3072, 160, 1536)
-        self.layer04 = FTDNNLayer(3072, 160, 1536)
-        self.layer05 = FTDNNLayer(3072, 160, 1536)
-        self.layer06 = FTDNNLayer(3072, 160, 1536)
-        self.layer07 = FTDNNLayer(3072, 160, 1536)
-        self.layer08 = FTDNNLayer(3072, 160, 1536)
-        self.layer09 = FTDNNLayer(3072, 160, 1536)
-        self.layer10 = FTDNNLayer(3072, 160, 1536)
-        self.layer11 = FTDNNLayer(3072, 160, 1536)
-        self.layer12 = FTDNNLayer(3072, 160, 1536)
-        self.layer13 = FTDNNLayer(3072, 160, 1536)
-        self.layer14 = FTDNNLayer(3072, 160, 1536)
-        self.layer15 = FTDNNLayer(3072, 160, 1536)
-        self.layer16 = FTDNNLayer(3072, 160, 1536)
-        self.layer17 = FTDNNLayer(3072, 160, 1536)
-        self.layer18 = OutputXentLayer(0,0,0)
+        self.layers = []
+        self.layers.append(TDNN(input_dim=220, output_dim=1536))
+        for layer_number in range(2, 18):
+            self.layers.append(FTDNNLayer(3072, 160, 1536))
+        self.layers.append(nn.Linear(1536, 160, bias=False)) #This is the prefinal-l layer
+        self.layers.append(OutputXentLayer(256, 1536, 256, 6024))
 
 
-        #Todo esto ya no hace falta, hay que agregar las prefinal
-        #self.layer10 = DenseReLU(1024, 2048)
-        #self.layer11 = StatsPool()
-
-        #self.layer12 = DenseReLU(4096, 512)
 
     def forward(self, x):
 
@@ -142,21 +137,17 @@ class FTDNN(nn.Module):
         '''
         Input must be (batch_size, seq_len, in_dim)
         '''
-        x = self.layer01(x)
-        x_2 = self.layer02(x)
-        x_3 = self.layer03(x_2)
-        x_4 = self.layer04(x_3)
-        skip_5 = torch.cat([x_4, x_3], dim=-1)
-        x = self.layer05(skip_5)
-        x_6 = self.layer06(x)
-        skip_7 = torch.cat([x_6, x_4, x_2], dim=-1)
-        x = self.layer07(skip_7)
-        x_8 = self.layer08(x)
-        skip_9 = torch.cat([x_8, x_6, x_4], dim=-1)
-        x = self.layer09(skip_9)
-        x = self.layer10(x)
-        x = self.layer11(x)
-        x = self.layer12(x)
+        x = self.layers[0](x)
+        x_2 = self.layers[1](x)
+        for i in range(2, 17) :
+            input_i = torch.sum(x*0.75, x_2)
+            x = x_2
+            x_2 = ftdnn_layers[i](input_i)
+        x = layers[17](x_2)
+        x = layers[18](x)
+
+
+
         return x
 
     def step_ftdnn_layers(self):
