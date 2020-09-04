@@ -142,7 +142,7 @@ class FTDNN(nn.Module):
         self.layer18 = nn.Linear(1536, 160, bias=False) #This is the prefinal-l layer
         self.layer19 = OutputXentLayer(256, 1536, 256, 6024)
 
-    def xxx(x, x_2, layer):
+    def sum_outputs_and_feed_to_layer(x, x_2, layer):
         x_3 = torch.sum(x*0.75, x_2)
         x = x_2
         x_2 = layer(x_3)
@@ -171,7 +171,7 @@ class FTDNN(nn.Module):
         x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer16)
         x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer17)        
         x = layers18(x_2)
-        x = layers18(x)
+        x = layers19(x)
 
 
 
