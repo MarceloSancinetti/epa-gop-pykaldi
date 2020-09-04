@@ -122,29 +122,56 @@ class FTDNN(nn.Module):
 
         super(FTDNN, self).__init__()
 
-        self.layers = []
-        self.layers.append(TDNN(input_dim=220, output_dim=1536))
-        for layer_number in range(2, 18):
-            self.layers.append(FTDNNLayer(3072, 160, 1536))
-        self.layers.append(nn.Linear(1536, 160, bias=False)) #This is the prefinal-l layer
-        self.layers.append(OutputXentLayer(256, 1536, 256, 6024))
+        self.layer01 = TDNN(input_dim=220, output_dim=1536)
+        self.layer02 = FTDNNLayer(3072, 160, 1536)
+        self.layer03 = FTDNNLayer(3072, 160, 1536)
+        self.layer04 = FTDNNLayer(3072, 160, 1536)
+        self.layer05 = FTDNNLayer(3072, 160, 1536)
+        self.layer06 = FTDNNLayer(3072, 160, 1536)
+        self.layer07 = FTDNNLayer(3072, 160, 1536)
+        self.layer08 = FTDNNLayer(3072, 160, 1536)
+        self.layer09 = FTDNNLayer(3072, 160, 1536)
+        self.layer10 = FTDNNLayer(3072, 160, 1536)
+        self.layer11 = FTDNNLayer(3072, 160, 1536)
+        self.layer12 = FTDNNLayer(3072, 160, 1536)
+        self.layer13 = FTDNNLayer(3072, 160, 1536)
+        self.layer14 = FTDNNLayer(3072, 160, 1536)
+        self.layer15 = FTDNNLayer(3072, 160, 1536)
+        self.layer16 = FTDNNLayer(3072, 160, 1536)
+        self.layer17 = FTDNNLayer(3072, 160, 1536)
+        self.layer18 = nn.Linear(1536, 160, bias=False) #This is the prefinal-l layer
+        self.layer19 = OutputXentLayer(256, 1536, 256, 6024)
 
-
+    def xxx(x, x_2, layer):
+        x_3 = torch.sum(x*0.75, x_2)
+        x = x_2
+        x_2 = layer(x_3)
+        return x, x_2
 
     def forward(self, x):
 
-        #Este es el forward viejo que ya no tiene sentido, hay que ver cómo se empastan las layers
         '''
         Input must be (batch_size, seq_len, in_dim)
         '''
-        x = self.layers[0](x)
-        x_2 = self.layers[1](x)
-        for i in range(2, 17) :
-            input_i = torch.sum(x*0.75, x_2)
-            x = x_2
-            x_2 = ftdnn_layers[i](input_i)
-        x = layers[17](x_2)
-        x = layers[18](x)
+        x = self.layer01(x)
+        x_2 = self.layer02(x)
+        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer03)
+        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer04)
+        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer05)
+        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer06)
+        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer07)
+        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer08)
+        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer09)
+        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer10)
+        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer11)
+        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer12)
+        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer13)
+        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer14)
+        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer15)
+        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer16)
+        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer17)        
+        x = layers18(x_2)
+        x = layers18(x)
 
 
 
