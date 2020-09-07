@@ -4,21 +4,21 @@ import torch.nn.functional as F
 
 class FTDNNLayer(nn.Module):
 
-    def __init__(self, semi_orth_in_dim, affine_in_dim, out_dim, dropout_p=0.0):
+    def __init__(self, semi_orth_in_dim, semi_orth_out_dim, out_dim, dropout_p=0.0):
         '''
         3 stage factorised TDNN http://danielpovey.com/files/2018_interspeech_tdnnf.pdf
         '''
         super(FTDNNLayer, self).__init__()
         self.semi_orth_in_dim = semi_orth_in_dim
-        self.affine_in_dim = affine_in_dim
+        self.semi_orth_out_dim = semi_orth_out_dim
         self.out_dim = out_dim
         self.dropout_p = dropout_p
 
 
-        self.sorth = nn.Linear(self.semi_orth_in_dim, self.affine_in_dim, bias=False)
-        self.affine = nn.Linear(self.affine_in_dim, self.out_dim, bias=True) 
+        self.sorth = nn.Linear(self.semi_orth_in_dim, self.semi_orth_out_dim, bias=False)
+        self.affine = nn.Linear(2*self.semi_orth_out_dim, self.out_dim, bias=True) 
         self.nl = nn.ReLU()
-        self.bn = nn.BatchNorm1d(out_dim)
+        self.bn = nn.BatchNorm1d(out_dim, affine=False)
         self.dropout = nn.Dropout(p=self.dropout_p)
 
     def forward(self, x):
@@ -49,9 +49,9 @@ class OutputXentLayer(nn.Module):
 
         self.linear1 = nn.Linear(self.linear1_in_dim, self.linear2_in_dim, bias=True) 
         self.nl = nn.ReLU()
-        self.bn1 = nn.BatchNorm1d(self.linear2_in_dim)
+        self.bn1 = nn.BatchNorm1d(self.linear2_in_dim, affine=False)
         self.linear2 = nn.Linear(self.linear2_in_dim, self.linear3_in_dim, bias=False) 
-        self.bn2 = nn.BatchNorm1d(self.out_dim)
+        self.bn2 = nn.BatchNorm1d(self.linear3_in_dim, affine=False)
         self.linear3 = nn.Linear(self.linear3_in_dim, self.out_dim, bias=True)
 
     def forward(self, x):
@@ -139,7 +139,7 @@ class FTDNN(nn.Module):
         self.layer15 = FTDNNLayer(3072, 160, 1536)
         self.layer16 = FTDNNLayer(3072, 160, 1536)
         self.layer17 = FTDNNLayer(3072, 160, 1536)
-        self.layer18 = nn.Linear(1536, 160, bias=False) #This is the prefinal-l layer
+        self.layer18 = nn.Linear(1536, 256, bias=False) #This is the prefinal-l layer
         self.layer19 = OutputXentLayer(256, 1536, 256, 6024)
 
     def sum_outputs_and_feed_to_layer(x, x_2, layer):
