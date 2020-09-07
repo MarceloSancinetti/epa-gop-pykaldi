@@ -176,21 +176,3 @@ class FTDNN(nn.Module):
 
 
         return x
-
-    def step_ftdnn_layers(self):
-        for layer in self.children():
-            if isinstance(layer, FTDNNLayer):
-                layer.step_semi_orth()
-
-    def set_dropout_alpha(self, alpha):
-        for layer in self.children():
-            if isinstance(layer, FTDNNLayer):
-                layer.dropout.alpha = alpha
-
-    def get_orth_errors(self):
-        errors = 0.
-        with torch.no_grad():
-            for layer in self.children():
-                if isinstance(layer, FTDNNLayer):
-                    errors += layer.orth_error()
-        return errors
