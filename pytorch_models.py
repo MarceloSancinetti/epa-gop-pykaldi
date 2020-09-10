@@ -71,7 +71,7 @@ class InputLayer(nn.Module):
         self,
         input_dim=220,
         output_dim=1536,
-        batch_norm=False,
+        batch_norm=True,
         dropout_p=0.0):
 
         super(InputLayer, self).__init__()
