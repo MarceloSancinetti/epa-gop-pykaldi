@@ -22,12 +22,12 @@ class FTDNNLayer(nn.Module):
         self.dropout = nn.Dropout(p=self.dropout_p)
 
     def forward(self, x):
-        padding = x[:,0,:]
+        padding = x[:,0,:][:,None,:]
         xd = torch.cat([padding, x], axis=1)
-        xd = xd[0,:-1,0]
+        xd = xd[:,:-1,:]
         x = torch.cat([xd, x], axis=1)
         x = self.sorth(x)
-        padding = x[:,-1,:]
+        padding = x[:,-1,:][:,None,:]
         xd = torch.cat([x, padding], axis=1)
         xd = xd[0,1:,0]
         x = torch.cat([x, xd], axis=1)
@@ -65,16 +65,16 @@ class OutputXentLayer(nn.Module):
         return x
 
 
-class TDNN(nn.Module):
+class InputLayer(nn.Module):
 
     def __init__(
         self,
         input_dim=220,
         output_dim=1536,
-        batch_norm=True,
+        batch_norm=False,
         dropout_p=0.0):
 
-        super(TDNN, self).__init__()
+        super(InputLayer, self).__init__()
         self.input_dim = input_dim
         self.output_dim = output_dim
         self.dropout_p = dropout_p
@@ -95,17 +95,13 @@ class TDNN(nn.Module):
         outpu: size (batch, new_seq_len, output_features)
         '''
 
-        _, _, d = x.shape
-        assert (d == self.input_dim), 'Input dimension was wrong. Expected ({}), got ({})'.format(
-            self.input_dim, d)
-
-        mfccs = x[:,:,40]
+        mfccs = x[:,:,:40]
         ivectors = x[:,:,-100:]
-        padding_first = mfccs[:,0,:]
-        padding_last = mfccs[:,-1,:]
+        padding_first = mfccs[:,0,:][:,None,:]
+        padding_last = mfccs[:,-1,:][:,None,:]
         context_first = torch.cat([padding_first, mfccs[:,:-1,:]], axis=1)
         context_last = torch.cat([mfccs[:,1:,:], padding_last], axis=1)
-        x = torch.cat([context_first, mfccs, context_last, ivectors], axis=1)
+        x = torch.cat([context_first, mfccs, context_last, ivectors], axis=2)
         x = self.lda(x)
         x = self.kernel(x)
         x = self.nonlinearity(x)
@@ -122,7 +118,7 @@ class FTDNN(nn.Module):
 
         super(FTDNN, self).__init__()
 
-        self.layer01 = TDNN(input_dim=220, output_dim=1536)
+        self.layer01 = InputLayer(input_dim=220, output_dim=1536)
         self.layer02 = FTDNNLayer(3072, 160, 1536)
         self.layer03 = FTDNNLayer(3072, 160, 1536)
         self.layer04 = FTDNNLayer(3072, 160, 1536)
