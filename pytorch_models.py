@@ -22,18 +22,19 @@ class FTDNNLayer(nn.Module):
         self.dropout = nn.Dropout(p=self.dropout_p)
 
     def forward(self, x):
-        padding = x[:,0,:][:,None,:]
-        xd = torch.cat([padding, x], axis=1)
-        xd = xd[:,:-1,:]
-        x = torch.cat([xd, x], axis=1)
+        padding = x[:,:,0][:,:,None]
+        xd = torch.cat([padding, x], axis=2)
+        xd = xd[:,:,:-1]
+        x = torch.cat([xd, x], axis=2)
         x = self.sorth(x)
-        padding = x[:,-1,:][:,None,:]
-        xd = torch.cat([x, padding], axis=1)
-        xd = xd[0,1:,0]
-        x = torch.cat([x, xd], axis=1)
+        padding = x[:,:,-1][:,:,None]
+        xd = torch.cat([x, padding], axis=2)
+        xd = xd[:,:,1:]
+        x = torch.cat([x, xd], axis=2)
         x = self.affine(x)
         x = self.nl(x)
-        x = self.bn(x)
+        x = x.transpose(1,2)
+        x = self.bn(x).transpose(1,2)
         x = self.dropout(x)
         return x
 
@@ -57,9 +58,11 @@ class OutputXentLayer(nn.Module):
     def forward(self, x):
         x = self.linear1(x)
         x = self.nl(x)
-        x = self.bn1(x)
+        x = x.transpose(1,2)
+        x = self.bn1(x).transpose(1,2)
         x = self.linear2(x)
-        x = self.bn2(x)
+        x = x.transpose(1,2)
+        x = self.bn2(x).transpose(1,2)
         x = self.linear3(x)
         x = nn.Softmax(x)
         return x
@@ -108,9 +111,17 @@ class InputLayer(nn.Module):
         x = self.drop(x)
 
         if self.batch_norm:
-            x = self.bn(x)
-        return x.transpose(1, 2)
+            x = x.transpose(1, 2)
+            x = self.bn(x).transpose(1,2)
+        return x
 
+
+
+def sum_outputs_and_feed_to_layer(x, x_2, layer):
+        x_3 = x*0.75 + x_2
+        x = x_2
+        x_2 = layer(x_3)
+        return x, x_2
 
 class FTDNN(nn.Module):
 
@@ -138,12 +149,6 @@ class FTDNN(nn.Module):
         self.layer18 = nn.Linear(1536, 256, bias=False) #This is the prefinal-l layer
         self.layer19 = OutputXentLayer(256, 1536, 256, 6024)
 
-    def sum_outputs_and_feed_to_layer(x, x_2, layer):
-        x_3 = torch.sum(x*0.75, x_2)
-        x = x_2
-        x_2 = layer(x_3)
-        return x, x_2
-
     def forward(self, x):
 
         '''
@@ -151,23 +156,23 @@ class FTDNN(nn.Module):
         '''
         x = self.layer01(x)
         x_2 = self.layer02(x)
-        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer03)
-        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer04)
-        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer05)
-        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer06)
-        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer07)
-        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer08)
-        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer09)
-        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer10)
-        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer11)
-        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer12)
-        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer13)
-        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer14)
-        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer15)
-        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer16)
-        x, x_2 = sum_outputs_and_feed_to_layer(x,x_2, layer17)        
-        x = layers18(x_2)
-        x = layers19(x)
+        x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer03)
+        x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer04)
+        x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer05)
+        x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer06)
+        x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer07)
+        x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer08)
+        x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer09)
+        x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer10)
+        x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer11)
+        x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer12)
+        x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer13)
+        x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer14)
+        x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer15)
+        x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer16)
+        x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer17)
+        x = self.layer18(x_2)
+        x = self.layer19(x)
 
 
 
