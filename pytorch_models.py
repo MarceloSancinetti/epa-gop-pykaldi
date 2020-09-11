@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 class FTDNNLayer(nn.Module):
 
-    def __init__(self, semi_orth_in_dim, semi_orth_out_dim, out_dim, dropout_p=0.0):
+    def __init__(self, semi_orth_in_dim, semi_orth_out_dim, out_dim, time_offset, dropout_p=0.0):
         '''
         3 stage factorised TDNN http://danielpovey.com/files/2018_interspeech_tdnnf.pdf
         '''
@@ -12,6 +12,7 @@ class FTDNNLayer(nn.Module):
         self.semi_orth_in_dim = semi_orth_in_dim
         self.semi_orth_out_dim = semi_orth_out_dim
         self.out_dim = out_dim
+        self.time_offset = time_offset
         self.dropout_p = dropout_p
 
 
@@ -22,14 +23,16 @@ class FTDNNLayer(nn.Module):
         self.dropout = nn.Dropout(p=self.dropout_p)
 
     def forward(self, x):
+        time_offset = self.time_offset
         padding = x[:,:,0][:,:,None]
-        xd = torch.cat([padding, x], axis=2)
-        xd = xd[:,:,:-1]
+        xd = torch.cat([padding]*time_offset+[x], axis=2)
+        if time_offset != 0:
+            xd = xd[:,:,:-time_offset]
         x = torch.cat([xd, x], axis=2)
         x = self.sorth(x)
         padding = x[:,:,-1][:,:,None]
-        xd = torch.cat([x, padding], axis=2)
-        xd = xd[:,:,1:]
+        xd = torch.cat([x]+[padding]*time_offset, axis=2)
+        xd = xd[:,:,time_offset:]
         x = torch.cat([x, xd], axis=2)
         x = self.affine(x)
         x = self.nl(x)
@@ -64,7 +67,7 @@ class OutputXentLayer(nn.Module):
         x = x.transpose(1,2)
         x = self.bn2(x).transpose(1,2)
         x = self.linear3(x)
-        x = nn.Softmax(x)
+        x = nn.LogSoftmax(x)
         return x
 
 
@@ -130,22 +133,22 @@ class FTDNN(nn.Module):
         super(FTDNN, self).__init__()
 
         self.layer01 = InputLayer(input_dim=220, output_dim=1536)
-        self.layer02 = FTDNNLayer(3072, 160, 1536)
-        self.layer03 = FTDNNLayer(3072, 160, 1536)
-        self.layer04 = FTDNNLayer(3072, 160, 1536)
-        self.layer05 = FTDNNLayer(3072, 160, 1536)
-        self.layer06 = FTDNNLayer(3072, 160, 1536)
-        self.layer07 = FTDNNLayer(3072, 160, 1536)
-        self.layer08 = FTDNNLayer(3072, 160, 1536)
-        self.layer09 = FTDNNLayer(3072, 160, 1536)
-        self.layer10 = FTDNNLayer(3072, 160, 1536)
-        self.layer11 = FTDNNLayer(3072, 160, 1536)
-        self.layer12 = FTDNNLayer(3072, 160, 1536)
-        self.layer13 = FTDNNLayer(3072, 160, 1536)
-        self.layer14 = FTDNNLayer(3072, 160, 1536)
-        self.layer15 = FTDNNLayer(3072, 160, 1536)
-        self.layer16 = FTDNNLayer(3072, 160, 1536)
-        self.layer17 = FTDNNLayer(3072, 160, 1536)
+        self.layer02 = FTDNNLayer(3072, 160, 1536, 1)
+        self.layer03 = FTDNNLayer(3072, 160, 1536, 1)
+        self.layer04 = FTDNNLayer(3072, 160, 1536, 1)
+        self.layer05 = FTDNNLayer(3072, 160, 1536, 0)
+        self.layer06 = FTDNNLayer(3072, 160, 1536, 3)
+        self.layer07 = FTDNNLayer(3072, 160, 1536, 3)
+        self.layer08 = FTDNNLayer(3072, 160, 1536, 3)
+        self.layer09 = FTDNNLayer(3072, 160, 1536, 3)
+        self.layer10 = FTDNNLayer(3072, 160, 1536, 3)
+        self.layer11 = FTDNNLayer(3072, 160, 1536, 3)
+        self.layer12 = FTDNNLayer(3072, 160, 1536, 3)
+        self.layer13 = FTDNNLayer(3072, 160, 1536, 3)
+        self.layer14 = FTDNNLayer(3072, 160, 1536, 3)
+        self.layer15 = FTDNNLayer(3072, 160, 1536, 3)
+        self.layer16 = FTDNNLayer(3072, 160, 1536, 3)
+        self.layer17 = FTDNNLayer(3072, 160, 1536, 3)
         self.layer18 = nn.Linear(1536, 256, bias=False) #This is the prefinal-l layer
         self.layer19 = OutputXentLayer(256, 1536, 256, 6024)
 
@@ -173,7 +176,6 @@ class FTDNN(nn.Module):
         x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer17)
         x = self.layer18(x_2)
         x = self.layer19(x)
-
 
 
         return x
