@@ -67,8 +67,8 @@ class OutputXentLayer(nn.Module):
         x = x.transpose(1,2)
         x = self.bn2(x).transpose(1,2)
         x = self.linear3(x)
-        x = nn.LogSoftmax(x)
-        return x
+        softmax = nn.LogSoftmax()
+        return softmax(x)
 
 
 class InputLayer(nn.Module):
