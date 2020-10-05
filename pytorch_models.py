@@ -32,6 +32,7 @@ class FTDNNLayer(nn.Module):
             xd = xd[:,:,:-time_offset]
             x = torch.cat([xd, x], axis=2)
         x = self.sorth(x)
+        return x
         if time_offset != 0:
             padding = x[:,:,-1][:,:,None]
             xd = torch.cat([x]+[padding]*time_offset, axis=2)
@@ -73,6 +74,30 @@ class OutputXentLayer(nn.Module):
         softmax = nn.LogSoftmax(dim = 2)
         return softmax(x)
 
+class OutputLayer(nn.Module):
+
+    def __init__(self, linear1_in_dim, linear2_in_dim, out_dim, dropout_p=0.0):
+
+        super(OutputLayer, self).__init__()
+        self.linear1_in_dim = linear1_in_dim
+        self.linear2_in_dim = linear2_in_dim
+        self.out_dim = out_dim
+
+        self.linear1 = nn.Linear(self.linear1_in_dim, self.linear2_in_dim, bias=True) 
+        self.nl = nn.ReLU()
+        self.bn1 = nn.BatchNorm1d(self.linear2_in_dim, affine=False)
+        self.linear2 = nn.Linear(self.linear2_in_dim, self.out_dim, bias=False) 
+        self.bn2 = nn.BatchNorm1d(self.out_dim, affine=False)
+
+    def forward(self, x):
+        x = self.linear1(x)
+        x = self.nl(x)
+        x = x.transpose(1,2)
+        x = self.bn1(x).transpose(1,2)
+        x = self.linear2(x)
+        x = x.transpose(1,2)
+        x = self.bn2(x).transpose(1,2)
+        return x
 
 class InputLayer(nn.Module):
 
@@ -81,7 +106,7 @@ class InputLayer(nn.Module):
         input_dim=220,
         output_dim=1536,
         batch_norm=True,
-        dropout_p=0.0):
+        dropout_p=0.005851493):
 
         super(InputLayer, self).__init__()
         self.input_dim = input_dim
@@ -95,7 +120,7 @@ class InputLayer(nn.Module):
         self.nonlinearity = nn.ReLU()
         self.batch_norm = batch_norm
         if batch_norm:
-            self.bn = nn.BatchNorm1d(output_dim, affine=False)
+            self.bn = nn.BatchNorm1d(output_dim, affine=False, eps=0.001)
         self.drop = nn.Dropout(p=self.dropout_p)
 
     def forward(self, x):
@@ -114,11 +139,11 @@ class InputLayer(nn.Module):
         x = self.lda(x)
         x = self.kernel(x)
         x = self.nonlinearity(x)
-        x = self.drop(x)
 
         if self.batch_norm:
             x = x.transpose(1, 2)
             x = self.bn(x).transpose(1,2)
+        x = self.drop(x)
         return x
 
 
@@ -153,7 +178,8 @@ class FTDNN(nn.Module):
         self.layer16 = FTDNNLayer(3072, 160, 320, 1536, 3)
         self.layer17 = FTDNNLayer(3072, 160, 320, 1536, 3)
         self.layer18 = nn.Linear(1536, 256, bias=False) #This is the prefinal-l layer
-        self.layer19 = OutputXentLayer(256, 1536, 256, 6024)
+        #self.layer19 = OutputXentLayer(256, 1536, 256, 6024) #This corresponds to the output-xent layer instead of output
+        self.layer19 = OutputLayer(256, 1536, 256)
 
     def forward(self, x):
 
@@ -161,7 +187,9 @@ class FTDNN(nn.Module):
         Input must be (batch_size, seq_len, in_dim)
         '''
         x = self.layer01(x)
+        return x
         x_2 = self.layer02(x)
+        return x_2
         x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer03)
         x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer04)
         x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer05)
@@ -179,6 +207,5 @@ class FTDNN(nn.Module):
         x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer17)
         x = self.layer18(x_2)
         x = self.layer19(x)
-
 
         return x
