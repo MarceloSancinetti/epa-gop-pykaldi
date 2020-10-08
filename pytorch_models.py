@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 class FTDNNLayer(nn.Module):
 
-    def __init__(self, semi_orth_in_dim, semi_orth_out_dim, affine_in_dim, out_dim, time_offset, dropout_p=0.0):
+    def __init__(self, semi_orth_in_dim, semi_orth_out_dim, affine_in_dim, out_dim, time_offset, dropout_p=0.005851493):
         '''
         3 stage factorised TDNN http://danielpovey.com/files/2018_interspeech_tdnnf.pdf
         '''
@@ -21,22 +21,21 @@ class FTDNNLayer(nn.Module):
         self.sorth = nn.Linear(self.semi_orth_in_dim, self.semi_orth_out_dim, bias=False)
         self.affine = nn.Linear(self.affine_in_dim, self.out_dim, bias=True) 
         self.nl = nn.ReLU()
-        self.bn = nn.BatchNorm1d(out_dim, affine=False)
+        self.bn = nn.BatchNorm1d(out_dim, affine=False, eps=0.001)
         self.dropout = nn.Dropout(p=self.dropout_p)
 
     def forward(self, x):
         time_offset = self.time_offset
         if time_offset != 0:
-            padding = x[:,:,0][:,:,None]
-            xd = torch.cat([padding]*time_offset+[x], axis=2)
-            xd = xd[:,:,:-time_offset]
+            padding = x[:,0,:][:,None,:]
+            xd = torch.cat([padding]*time_offset+[x], axis=1)
+            xd = xd[:,:-time_offset,:]
             x = torch.cat([xd, x], axis=2)
         x = self.sorth(x)
-        return x
         if time_offset != 0:
-            padding = x[:,:,-1][:,:,None]
-            xd = torch.cat([x]+[padding]*time_offset, axis=2)
-            xd = xd[:,:,time_offset:]
+            padding = x[:,-1,:][:,None,:]
+            xd = torch.cat([x]+[padding]*time_offset, axis=1)
+            xd = xd[:,time_offset:,:]
             x = torch.cat([x, xd], axis=2)
         x = self.affine(x)
         x = self.nl(x)
@@ -150,7 +149,7 @@ class InputLayer(nn.Module):
 
 def sum_outputs_and_feed_to_layer(x, x_2, layer):
         x_3 = x*0.75 + x_2
-        x = x_2
+        x = x_3
         x_2 = layer(x_3)
         return x, x_2
 
@@ -187,13 +186,12 @@ class FTDNN(nn.Module):
         Input must be (batch_size, seq_len, in_dim)
         '''
         x = self.layer01(x)
-        return x
         x_2 = self.layer02(x)
-        return x_2
         x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer03)
         x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer04)
         x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer05)
         x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer06)
+        return x_2
         x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer07)
         x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer08)
         x, x_2 =sum_outputs_and_feed_to_layer(x,x_2, self.layer09)

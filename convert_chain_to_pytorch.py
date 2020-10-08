@@ -193,6 +193,7 @@ while not finished:
 #print(components['output-xent.affine']['linear_params'].shape)
 
 ftdnn = FTDNN()
+#torch.set_default_tensor_type(torch.FloatTensor)
 
 state_dict = {}
 
@@ -204,8 +205,6 @@ state_dict['layer01.bn.running_mean'] = torch.from_numpy(components['tdnn1.batch
 state_dict['layer01.bn.running_var'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_var'])
 
 
-print(components['tdnnf2.linear']['linear_params'])
-print(components['tdnnf2.linear']['bias'])
 
 for layer_number in range(2, 18):
 	state_dict['layer'+ str("{:02d}".format(layer_number)) +'.sorth.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.linear']['linear_params'])
@@ -216,6 +215,7 @@ for layer_number in range(2, 18):
 	state_dict['layer'+ str("{:02d}".format(layer_number)) +'.bn.running_var'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.batchnorm']['stats_var'])
 
 state_dict['layer18.weight'] = torch.from_numpy(components['prefinal-l']['linear_params'])
+
 
 # state_dict['layer19.linear1.weight'] = torch.from_numpy(components['prefinal-xent.affine']['linear_params'])
 # state_dict['layer19.linear1.bias'] = torch.from_numpy(components['prefinal-xent.affine']['bias'])
