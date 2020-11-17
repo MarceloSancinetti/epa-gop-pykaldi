@@ -94,7 +94,7 @@ while not finished:
   
 	line = chain_file.readline() 
 
-	if line == '</Nnet3>':
+	if line == '</Nnet3> ':
 		finished = True
 
 	if '<ComponentName> lda' in line:
@@ -152,6 +152,9 @@ while not finished:
 	if '<ComponentName> prefinal-chain.batchnorm2' in line:
 	 	components['prefinal-chain.batchnorm2'] = read_batchnorm_component(chain_file, 19, component_name='prefinal-chain.batchnorm2', dim='256')
 	
+	if '<ComponentName> output.affine' in line:
+		components['output.affine'] = read_affine_component(chain_file)
+
 
 	#Xent head
 	if '<ComponentName> prefinal-xent.affine' in line:
@@ -193,7 +196,6 @@ while not finished:
 #print(components['output-xent.affine']['linear_params'].shape)
 
 ftdnn = FTDNN()
-#torch.set_default_tensor_type(torch.FloatTensor)
 
 state_dict = {}
 
@@ -238,16 +240,19 @@ state_dict['layer19.linear2.weight'] = torch.from_numpy(components['prefinal-cha
 state_dict['layer19.bn2.running_mean'] = torch.from_numpy(components['prefinal-chain.batchnorm2']['stats_mean'])
 state_dict['layer19.bn2.running_var'] = torch.from_numpy(components['prefinal-chain.batchnorm2']['stats_var'])
 #state_dict['layer19.bn2.num_batches_tracked']
+state_dict['layer19.linear3.weight'] = torch.from_numpy(components['output.affine']['linear_params'])
+state_dict['layer19.linear3.bias'] = torch.from_numpy(components['output.affine']['bias'])
 
+print(state_dict['layer19.linear3.weight'])
 
 #for param_tensor in ftdnn.state_dict():
 #    print(param_tensor, "\t", ftdnn.state_dict()[param_tensor].size())
 
 for name, param in ftdnn.named_parameters():
-    print (name, param.shape)
+	print (name, param.shape)
 
 chain_file.close() 
 
 ftdnn.load_state_dict(state_dict)
 
-torch.save(ftdnn.state_dict(), './state_dict.pt')
+torch.save(ftdnn.state_dict(), './model.pt')
