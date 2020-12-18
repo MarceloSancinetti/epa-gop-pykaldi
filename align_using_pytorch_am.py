@@ -9,7 +9,7 @@ from kaldi.lat.align import WordBoundaryInfoNewOpts, WordBoundaryInfo
 from pytorch_models import *
 import torch
 import numpy as np
-
+import pickle
 
 # Set the paths and read/write specifiers
 acoustic_model_path = "model.pt"
@@ -59,7 +59,7 @@ with SequentialMatrixReader(mfccs_rspec) as mfccs_reader, \
         #loglikes_writer.Write(mkey, loglikes)
         out = aligner.align(loglikes, text)
         phone_alignment = aligner.to_phone_alignment(out["alignment"], phones)
-        print(mkey, phone_alignment, flush=True)
+        print(mkey, phone_alignment)
         word_alignment = aligner.to_word_alignment(out["best_path"], wb_info)
 
 with open('loglikes.pickle', 'wb') as handle:
