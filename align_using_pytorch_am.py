@@ -60,7 +60,7 @@ with SequentialMatrixReader(mfccs_rspec) as mfccs_reader, \
         out = aligner.align(loglikes, text)
         phone_alignment = aligner.to_phone_alignment(out["alignment"], phones)
         print(mkey, phone_alignment)
-        print(out['alignment'])
+        print(mkey + ' transitions', out['alignment'])
         word_alignment = aligner.to_word_alignment(out["best_path"], wb_info)
 
 with open('loglikes.pickle', 'wb') as handle:
