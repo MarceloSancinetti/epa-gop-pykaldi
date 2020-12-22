@@ -24,7 +24,6 @@ def removeSymbols(str, symbols):
     return str
 
 def get_alignments(path_alignements, alignments_dict):
-
     for l in open(path_alignements+"align_output", encoding="utf8", errors='ignore').readlines():
         l=l.split()
         #Get transitions alignments
@@ -33,7 +32,7 @@ def get_alignments(path_alignements, alignments_dict):
             alignment_array = []
             current_phone_transition = int(removeSymbols(l[3],['[',']',',']))
             transitions = []
-            alignments_dict[waveform_name] = {}
+            #alignments_dict[waveform_name] = {}
             for i in range(2, len(l)):
                 transition_id = int(removeSymbols(l[i],['[',']',',']))
                 if abs(current_phone_transition-transition_id) > 10:
@@ -41,23 +40,17 @@ def get_alignments(path_alignements, alignments_dict):
                     transitions = []
                     current_phone_transition = transition_id
                 transitions.append(transition_id)
-            alignments_dict[waveform_name][transitions] = alignment_array
+            alignments_dict[waveform_name]['transitions'] = alignment_array
 
         #Get phones alignments
-        if len(l) > 3 and l[1] == 'transitions':
+        if len(l) > 3 and l[1] == 'phones':
             waveform_name = l[0]
-            alignment_array = []
-            current_phone_transition = int(removeSymbols(l[3],['[',']',',']))
-            transitions = []
+            phones = []
             alignments_dict[waveform_name] = {}
-            for i in range(2, len(l)):
-                transition_id = int(removeSymbols(l[i],['[',']',',']))
-                if abs(current_phone_transition-transition_id) > 10:
-                    alignment_array.append(transitions)
-                    transitions = []
-                    current_phone_transition = transition_id
-                transitions.append(transition_id)
-            alignments_dict[waveform_name][transitions] = alignment_array
+            for i in range(2, len(l),3):
+                current_phone = removeSymbols(l[i],['[',']',',',')','(','\''])
+                phones.append(current_phone)
+            alignments_dict[waveform_name]['phones'] = phones
     return alignments_dict
 
 
