@@ -41,8 +41,6 @@ def gop_robust_with_matrix(df_scores, df_phones_pure, number_senones, batch_size
     
     logids = df_scores.index
 
-    print(len(df_scores))
-
     for j in range(0, len(df_scores)):
         phones = df_scores.phones[j]
         transitions = df_scores.transitions[j]
@@ -58,8 +56,8 @@ def gop_robust_with_matrix(df_scores, df_phones_pure, number_senones, batch_size
             tf = ti + len(transitions_by_phone) - 1                
 
             lpp = (sum(np.log(scores_phone_pure[j][ti:tf+1])))/(tf-ti+1)
-            
-            phone_pure = df_phones_pure.loc[(df_phones_pure['phone'] == str(phones[ti]) )].phone_pure.unique()[0]
+                        
+            phone_pure = df_phones_pure.loc[(df_phones_pure['phone_name'] == str(phones[i]) )].phone_pure.unique()[0]
             gop_r_max = lpp[int(phone_pure)-1] - max(lpp)
             gop_r = lpp[int(phone_pure)-1]
 
