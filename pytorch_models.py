@@ -94,7 +94,7 @@ class OutputLayer(nn.Module):
         self.linear2 = nn.Linear(self.linear2_in_dim, self.linear3_in_dim, bias=False) 
         self.bn2 = nn.BatchNorm1d(self.linear3_in_dim, affine=False)
         self.linear3 = nn.Linear(self.linear1_in_dim, self.out_dim, bias=True)
-        self.softmax = nn.LogSoftmax()
+        #self.softmax = nn.LogSoftmax()
 
     def forward(self, x):
         x = self.linear1(x)
@@ -105,7 +105,7 @@ class OutputLayer(nn.Module):
         x = x.transpose(1,2)
         x = self.bn2(x).transpose(1,2)
         x = self.linear3(x)
-        return self.softmax(x)
+        return x
 
 class InputLayer(nn.Module):
 
