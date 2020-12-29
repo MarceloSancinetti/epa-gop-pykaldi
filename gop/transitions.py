@@ -1,5 +1,3 @@
- #!usr/bin/env python3 
-
 from IPython import embed
 from pathlib import Path 
 import numpy as np 
@@ -55,6 +53,7 @@ def get_transitions(path_show_transitions, path_output_transitions):
             for line in f:
                     line_array = line.split(' ')
                     if line_array[0] == 'Transition-state':
+                            data = []
                             transition_state = line_array[1].split(":")[0]
                             phone = line_array[4]
                             hmm_state = line_array[7]
@@ -62,15 +61,20 @@ def get_transitions(path_show_transitions, path_output_transitions):
                             pdf = pdf.split('\n')
                             pdf = pdf[0]
 
-                            data = []
                             data.append(transition_state)
                             data.append(phone)
                             data.append(hmm_state)
                             data.append(pdf)
-                            transitions_dict[transition_state] = data
+                    if line_array[1] == 'Transition-id':
+                            transition_id = line_array[3]
+                            transitions_dict[transition_id] = data + [transition_id]
+                            
+                    #if line_array[-1] == '[self-loop]\n':
+                    #    data.append(transition_ids)
+                    #    transitions_dict[transition_id] = data
 
 
-    df_transitions = pd.DataFrame.from_dict(transitions_dict, orient='index', columns=['transition_state', 'phone_name', 'hmm_state', 'pdf'])
+    df_transitions = pd.DataFrame.from_dict(transitions_dict, orient='index', columns=['transition_state', 'phone_name', 'hmm_state', 'pdf', 'transition_id'])
 
     return df_transitions
 
@@ -83,14 +87,20 @@ def main(data_path="."):
             l = line.split()
             phones_dict[l[1]] = l[0]
 
-    output = []
     f = open("phones-pure.txt", "r")
+    phones_pure_dict = {}
     for line in tqdm.tqdm(f):
+            l = line.split()
+            phones_pure_dict[l[1]] = l[0]
+
+    output = []
+    phone_to_pure_file = open("phone-to-pure-phone.int", "r")
+    for line in tqdm.tqdm(phone_to_pure_file):
             l = line.split()
             output.append({'phone':l[0],
                             'phone_name':phones_dict[l[0]],
                             'phone_pure': l[1],
-                            'phone_pure_name': l[2]})
+                            'phone_pure_name': phones_pure_dict[l[1]]})
 
 
     df_phone_pure = pd.DataFrame(output)
@@ -103,7 +113,7 @@ def main(data_path="."):
     df = df_transitions.set_index('phone_name').join(df_phone_pure.set_index('phone_name'))
     df = df.reset_index().set_index("phone")
 
-    df.to_pickle('phones_pure_libri.pickle')
+    df.to_pickle('phones_pure_epa.pickle')
 
 
 if __name__ == "__main__":
