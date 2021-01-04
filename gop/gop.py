@@ -53,7 +53,8 @@ def gop_robust_with_matrix(df_scores, df_phones_pure, number_senones, batch_size
         
         for i in range(0, len(transitions)):
             transitions_by_phone = transitions[i]
-            tf = ti + len(transitions_by_phone) - 1                
+            tf = ti + len(transitions_by_phone) - 1     
+            
 
             lpp = (sum(np.log(scores_phone_pure[j][ti:tf+1])))/(tf-ti+1)
                         
