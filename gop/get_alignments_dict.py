@@ -29,11 +29,14 @@ def removeSymbols(str, symbols):
 def get_alignments(path_alignements, alignments_dict, df_phones_pure):
     for l in open(path_alignements+"align_output", encoding="utf8", errors='ignore').readlines():
         l=l.split()
+        if l[0] != 'spkr32_58':
+            continue
+
         #Get transitions alignments
         if len(l) > 3 and l[1] == 'transitions':
             waveform_name = l[0]
             alignment_array = []
-            current_phone_transition = int(removeSymbols(l[3],['[',']',',']))
+            current_phone_transition = int(removeSymbols(l[2],['[',']',',']))
             current_phone = get_phone_from_transition_id(current_phone_transition, df_phones_pure)
             transitions = []
             #alignments_dict[waveform_name] = {}
@@ -47,7 +50,7 @@ def get_alignments(path_alignements, alignments_dict, df_phones_pure):
                     current_phone = get_phone_from_transition_id(current_phone_transition, df_phones_pure)
                 transitions.append(transition_id)
             alignments_dict[waveform_name]['transitions'] = alignment_array
-
+            print(alignment_array)
         #Get phones alignments
         if len(l) > 3 and l[1] == 'phones':
             waveform_name = l[0]
