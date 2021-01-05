@@ -1,0 +1,7 @@
+spkr29_54_0 SH SH +
+spkr29_54_1 IY IY +
+spkr29_54_2 Z S -
+spkr29_54_3 AX A -
+spkr29_54_4 L L +
+spkr29_54_5 AY AY +
+spkr29_54_6 ER ER +
