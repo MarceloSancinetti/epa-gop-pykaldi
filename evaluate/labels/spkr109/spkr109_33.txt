@@ -1,0 +1,22 @@
+spkr109_33_0 D DE -
+spkr109_33_1 OW O -
+spkr109_33_2 N N +
+spkr109_33_3 T  -
+spkr109_33_4 S E+S -
+spkr109_33_5 P P +
+spkr109_33_6 IY IY +
+spkr109_33_7 K  -
+spkr109_33_8 T T +
+spkr109_33_9 UH UW -
+spkr109_33_10 L L +
+spkr109_33_11 AW OW -
+spkr109_33_12 D  -
+spkr109_33_13 AX A -
+spkr109_33_14 T DH -
+spkr109_33_15 DH DH +
+spkr109_33_16 AX E -
+spkr109_33_17 TH Th -
+spkr109_33_18 IY IY +
+spkr109_33_19 AX AH -
+spkr109_33_20 Th TH -
+spkr109_33_21 ER ER +

@@ -1,0 +1,15 @@
+spkr31_46_0 AY AY +
+spkr31_46_1 D D +
+spkr31_46_2 OW O -
+spkr31_46_3 N N +
+spkr31_46_4 T  -
+spkr31_46_5 L L +
+spkr31_46_6 AY AY +
+spkr31_46_7 K K +
+spkr31_46_8 R R +
+spkr31_46_9 EY EY +
+spkr31_46_10 N N +
+spkr31_46_11 IY  -
+spkr31_46_12 D D +
+spkr31_46_13 EY EY +
+spkr31_46_14 Z S -

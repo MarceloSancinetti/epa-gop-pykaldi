@@ -1,0 +1,16 @@
+spkr114_7_0 HH HH +
+spkr114_7_1 ER ER +
+spkr114_7_2 L L +
+spkr114_7_3 IH IH +
+spkr114_7_4 DX DX +
+spkr114_7_5 AX  -
+spkr114_7_6 L L +
+spkr114_7_7 S S +
+spkr114_7_8 IH IH +
+spkr114_7_9 S S +
+spkr114_7_10 T T +
+spkr114_7_11 ER ER +
+spkr114_7_12 Z S -
+spkr114_7_13 Th Th +
+spkr114_7_14 IY IY +
+spkr114_7_15 TH TH +

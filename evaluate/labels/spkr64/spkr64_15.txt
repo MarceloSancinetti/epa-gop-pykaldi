@@ -1,0 +1,17 @@
+spkr64_15_0 K K +
+spkr64_15_1 AA O -
+spkr64_15_2 F F +
+spkr64_15_3 IY IY +
+spkr64_15_4 W W +
+spkr64_15_5 IH IH +
+spkr64_15_6 DH  -
+spkr64_15_7 SH SH +
+spkr64_15_8 UH UH +
+spkr64_15_9 G GH -
+spkr64_15_10 ER A+DX -
+spkr64_15_11 P P +
+spkr64_15_12 L L +
+spkr64_15_13 IY IY +
+spkr64_15_14 Z S -
+spkr64_15_15 S S +
+spkr64_15_16 ER ER +

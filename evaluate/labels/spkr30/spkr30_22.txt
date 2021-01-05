@@ -1,0 +1,18 @@
+spkr30_22_0 AY AY +
+spkr30_22_1 HH  -
+spkr30_22_2 AE AE +
+spkr30_22_3 V V +
+spkr30_22_4 F F +
+spkr30_22_5 IH IH +
+spkr30_22_6 N N +
+spkr30_22_7 IH IH +
+spkr30_22_8 SH SH +
+spkr30_22_9 T  -
+spkr30_22_10 M M +
+spkr30_22_11 AY AY +
+spkr30_22_12 HH HH +
+spkr30_22_13 OW O -
+spkr30_22_14 M M +
+spkr30_22_15 W W +
+spkr30_22_16 ER ER +
+spkr30_22_17 K K +

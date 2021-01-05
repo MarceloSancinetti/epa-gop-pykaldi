@@ -1,0 +1,15 @@
+spkr109_46_0 AY AY +
+spkr109_46_1 D D +
+spkr109_46_2 OW O -
+spkr109_46_3 N N +
+spkr109_46_4 T  -
+spkr109_46_5 L L +
+spkr109_46_6 AY AY +
+spkr109_46_7 K K +
+spkr109_46_8 R R +
+spkr109_46_9 EY EY +
+spkr109_46_10 N N +
+spkr109_46_11 IY IY +
+spkr109_46_12 D D +
+spkr109_46_13 EY EY +
+spkr109_46_14 Z S -

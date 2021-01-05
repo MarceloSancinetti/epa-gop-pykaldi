@@ -1,0 +1,17 @@
+spkr64_10_0 AY AY +
+spkr64_10_1 TH TH +
+spkr64_10_2 IH IH +
+spkr64_10_3 NG N -
+spkr64_10_4 K  -
+spkr64_10_5 DH DH +
+spkr64_10_6 AX AX +
+spkr64_10_7 SH SH +
+spkr64_10_8 IH IY -
+spkr64_10_9 P P +
+spkr64_10_10 W W +
+spkr64_10_11 IH IH +
+spkr64_10_12 L L +
+spkr64_10_13 S TH -
+spkr64_10_14 IH IY -
+spkr64_10_15 NG N -
+spkr64_10_16 K K +

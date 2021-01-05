@@ -1,0 +1,18 @@
+spkr31_57_0 D D +
+spkr31_57_1 OW OW +
+spkr31_57_2 N N +
+spkr31_57_3 T  -
+spkr31_57_4 F F +
+spkr31_57_5 AO AO +
+spkr31_57_6 R R +
+spkr31_57_7 G G +
+spkr31_57_8 EH EH +
+spkr31_57_9 T T +
+spkr31_57_10 Y Y +
+spkr31_57_11 AA O -
+spkr31_57_12 R  -
+spkr31_57_13 SH SH +
+spkr31_57_14 AH OW -
+spkr31_57_15 V BH -
+spkr31_57_16 AX EH -
+spkr31_57_17 L L +

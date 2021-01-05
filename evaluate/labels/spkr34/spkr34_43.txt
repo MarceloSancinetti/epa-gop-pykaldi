@@ -1,0 +1,13 @@
+spkr34_43_0 W W +
+spkr34_43_1 IY IY +
+spkr34_43_2 S S +
+spkr34_43_3 AO AO +
+spkr34_43_4 AX AX +
+spkr34_43_5 N N +
+spkr34_43_6 OW OW +
+spkr34_43_7 L L +
+spkr34_43_8 D D +
+spkr34_43_9 F F +
+spkr34_43_10 IH IH +
+spkr34_43_11 L L +
+spkr34_43_12 M  -

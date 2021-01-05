@@ -1,0 +1,7 @@
+spkr25_54_0 SH SH +
+spkr25_54_1 IY IY +
+spkr25_54_2 Z Z +
+spkr25_54_3 AX AX +
+spkr25_54_4 L L +
+spkr25_54_5 AY AY +
+spkr25_54_6 ER ER +

@@ -1,0 +1,17 @@
+spkr89_13_0 AY AY +
+spkr89_13_1 HH HH +
+spkr89_13_2 AE A -
+spkr89_13_3 D D +
+spkr89_13_4 AX AX +
+spkr89_13_5 HH HH +
+spkr89_13_6 EH EH +
+spkr89_13_7 D DH -
+spkr89_13_8 EY E -
+spkr89_13_9 K CH -
+spkr89_13_10 L L +
+spkr89_13_11 AE A -
+spkr89_13_12 S S +
+spkr89_13_13 T  -
+spkr89_13_14 Y Y +
+spkr89_13_15 IH IH +
+spkr89_13_16 R ER -

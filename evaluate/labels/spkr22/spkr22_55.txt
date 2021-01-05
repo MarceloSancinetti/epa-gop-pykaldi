@@ -1,0 +1,17 @@
+spkr22_55_0 DH DH +
+spkr22_55_1 AX AX +
+spkr22_55_2 B P -
+spkr22_55_3 OY OY +
+spkr22_55_4 IY IY +
+spkr22_55_5 T T +
+spkr22_55_6 S S +
+spkr22_55_7 AX AX +
+spkr22_55_8 T T +
+spkr22_55_9 DH DH +
+spkr22_55_10 IY IY +
+spkr22_55_11 EH EH +
+spkr22_55_12 R  -
+spkr22_55_13 Ph P -
+spkr22_55_14 AO AO +
+spkr22_55_15 R  -
+spkr22_55_16 Th Th +

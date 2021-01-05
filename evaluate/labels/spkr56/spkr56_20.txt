@@ -1,0 +1,25 @@
+spkr56_20_0 DH DH +
+spkr56_20_1 EY EY +
+spkr56_20_2 Y  -
+spkr56_20_3 UW UW +
+spkr56_20_4 ZH SH -
+spkr56_20_5 UW UW +
+spkr56_20_6 AH A -
+spkr56_20_7 L L +
+spkr56_20_8 IY IY +
+spkr56_20_9 K K +
+spkr56_20_10 AH AH +
+spkr56_20_11 M M +
+spkr56_20_12 HH X -
+spkr56_20_13 OW OW +
+spkr56_20_14 M M +
+spkr56_20_15 IH IY -
+spkr56_20_16 N N +
+spkr56_20_17 JH JH +
+spkr56_20_18 AE A -
+spkr56_20_19 N N +
+spkr56_20_20 Y  -
+spkr56_20_21 UW UW +
+spkr56_20_22 EH A -
+spkr56_20_23 R DX -
+spkr56_20_24 IY IY +

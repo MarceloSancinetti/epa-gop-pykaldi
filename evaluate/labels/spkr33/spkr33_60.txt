@@ -1,0 +1,17 @@
+spkr33_60_0 DH DH +
+spkr33_60_1 AX AX +
+spkr33_60_2 CH CH +
+spkr33_60_3 AY AY +
+spkr33_60_4 L L +
+spkr33_60_5 D  -
+spkr33_60_6 HH HH +
+spkr33_60_7 AX A -
+spkr33_60_8 Z S -
+spkr33_60_9 L L +
+spkr33_60_10 IH IH +
+spkr33_60_11 DH DH +
+spkr33_60_12 DH DH +
+spkr33_60_13 AX E -
+spkr33_60_14 F F +
+spkr33_60_15 AY AY +
+spkr33_60_16 ER ER +

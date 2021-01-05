@@ -1,0 +1,17 @@
+spkr109_12_0 DH DE -
+spkr109_12_1 AX E -
+spkr109_12_2 K K +
+spkr109_12_3 AE A -
+spkr109_12_4 T T +
+spkr109_12_5 IH IY -
+spkr109_12_6 Z S -
+spkr109_12_7 S S +
+spkr109_12_8 IH IY -
+spkr109_12_9 T T +
+spkr109_12_10 IH IY -
+spkr109_12_11 NG N -
+spkr109_12_12 AW AW +
+spkr109_12_13 T T +
+spkr109_12_14 S S +
+spkr109_12_15 AY AY +
+spkr109_12_16 D  -

@@ -1,0 +1,22 @@
+spkr109_34_0 DH DE -
+spkr109_34_1 AX IY -
+spkr109_34_2 B B +
+spkr109_34_3 EH IY -
+spkr109_34_4 S S +
+spkr109_34_5 T T +
+spkr109_34_6 L L +
+spkr109_34_7 EH IY -
+spkr109_34_8 M M +
+spkr109_34_9 AX AH -
+spkr109_34_10 N N +
+spkr109_34_11 AY AY +
+spkr109_34_12 S S +
+spkr109_34_13 T  -
+spkr109_34_14 Th Th +
+spkr109_34_15 IY IY +
+spkr109_34_16 R R +
+spkr109_34_17 EH IY -
+spkr109_34_18 S S +
+spkr109_34_19 AX AY -
+spkr109_34_20 P P +
+spkr109_34_21 IY  -

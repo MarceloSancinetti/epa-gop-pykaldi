@@ -1,0 +1,26 @@
+spkr46_18_0 HH  -
+spkr46_18_1 Y Y +
+spkr46_18_2 UW UW +
+spkr46_18_3 M M +
+spkr46_18_4 AH AH +
+spkr46_18_5 N N +
+spkr46_18_6 Z S -
+spkr46_18_7 Y T+IY -
+spkr46_18_8 UW UW +
+spkr46_18_9 Z S -
+spkr46_18_10 AX AX +
+spkr46_18_11 HH SH -
+spkr46_18_12 Y  -
+spkr46_18_13 UW UW +
+spkr46_18_14 JH S -
+spkr46_18_15 AX AH -
+spkr46_18_16 M M +
+spkr46_18_17 AW AW +
+spkr46_18_18 N  -
+spkr46_18_19 T D -
+spkr46_18_20 AX O -
+spkr46_18_21 V V +
+spkr46_18_22 W W +
+spkr46_18_23 AA O -
+spkr46_18_24 T T +
+spkr46_18_25 ER ER +

@@ -1,0 +1,19 @@
+spkr109_26_0 W W +
+spkr109_26_1 IY IY +
+spkr109_26_2 AA A -
+spkr109_26_3 R R +
+spkr109_26_4 G G +
+spkr109_26_5 Y  -
+spkr109_26_6 UW E -
+spkr109_26_7 D D +
+spkr109_26_8 AX A -
+spkr109_26_9 B B +
+spkr109_26_10 AW AW +
+spkr109_26_11 T  -
+spkr109_26_12 DH DH +
+spkr109_26_13 AX AX +
+spkr109_26_14 M M +
+spkr109_26_15 EH EH +
+spkr109_26_16 N N +
+spkr109_26_17 Y  -
+spkr109_26_18 UW UW +

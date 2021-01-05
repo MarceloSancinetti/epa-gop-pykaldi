@@ -1,0 +1,17 @@
+spkr57_70_0 F F +
+spkr57_70_1 R R +
+spkr57_70_2 IY IY +
+spkr57_70_3 Th Th +
+spkr57_70_4 UH UW -
+spkr57_70_5 R R +
+spkr57_70_6 Z S -
+spkr57_70_7 AA AA +
+spkr57_70_8 R R +
+spkr57_70_9 AW AW +
+spkr57_70_10 N N +
+spkr57_70_11 D  -
+spkr57_70_12 Y Y +
+spkr57_70_13 UH UH +
+spkr57_70_14 R R +
+spkr57_70_15 AX O -
+spkr57_70_16 P B -

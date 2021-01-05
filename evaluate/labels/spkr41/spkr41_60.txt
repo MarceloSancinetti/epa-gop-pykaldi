@@ -1,0 +1,17 @@
+spkr41_60_0 DH DH +
+spkr41_60_1 AX AX +
+spkr41_60_2 CH CH +
+spkr41_60_3 AY AY +
+spkr41_60_4 L L +
+spkr41_60_5 D  -
+spkr41_60_6 HH HH +
+spkr41_60_7 AE AE +
+spkr41_60_8 Z Z +
+spkr41_60_9 L L +
+spkr41_60_10 IH IH +
+spkr41_60_11 T T +
+spkr41_60_12 DH DH +
+spkr41_60_13 AX AX +
+spkr41_60_14 F F +
+spkr41_60_15 AY AY +
+spkr41_60_16 ER ER +

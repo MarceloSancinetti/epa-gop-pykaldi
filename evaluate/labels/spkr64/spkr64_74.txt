@@ -1,0 +1,14 @@
+spkr64_74_0 DH DH +
+spkr64_74_1 AE A -
+spkr64_74_2 T  -
+spkr64_74_3 S S +
+spkr64_74_4 P P +
+spkr64_74_5 Y Y +
+spkr64_74_6 UH UH +
+spkr64_74_7 R R +
+spkr64_74_8 L L +
+spkr64_74_9 AH UW -
+spkr64_74_10 G K -
+spkr64_74_11 ZH S -
+spkr64_74_12 ER UW+DX -
+spkr64_74_13 IY IY +

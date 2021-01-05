@@ -1,0 +1,17 @@
+spkr46_60_0 DH DH +
+spkr46_60_1 AX AX +
+spkr46_60_2 CH CH +
+spkr46_60_3 AY AY +
+spkr46_60_4 L L +
+spkr46_60_5 D  -
+spkr46_60_6 HH HH +
+spkr46_60_7 AX A -
+spkr46_60_8 Z S -
+spkr46_60_9 L L +
+spkr46_60_10 IH IY -
+spkr46_60_11 DH DH +
+spkr46_60_12 DH DH +
+spkr46_60_13 AX AX +
+spkr46_60_14 F F +
+spkr46_60_15 AY AY +
+spkr46_60_16 ER E+DX -

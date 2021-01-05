@@ -1,0 +1,15 @@
+spkr89_38_0 AY AY +
+spkr89_38_1 Kh Kh +
+spkr89_38_2 IY IY +
+spkr89_38_3 P P +
+spkr89_38_4 AX  -
+spkr89_38_5 P P +
+spkr89_38_6 R R +
+spkr89_38_7 AY AY +
+spkr89_38_8 V BH -
+spkr89_38_9 AX AX +
+spkr89_38_10 T T +
+spkr89_38_11 D D +
+spkr89_38_12 AY AY +
+spkr89_38_13 ER ER +
+spkr89_38_14 IY IY +

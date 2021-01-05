@@ -1,0 +1,15 @@
+spkr52_5_0 T T +
+spkr52_5_1 R R +
+spkr52_5_2 AY AY +
+spkr52_5_3 T T +
+spkr52_5_4 AX AX +
+spkr52_5_5 S S +
+spkr52_5_6 IH IH +
+spkr52_5_7 NG NG +
+spkr52_5_8 AX AX +
+spkr52_5_9 N N +
+spkr52_5_10 D  -
+spkr52_5_11 JH JH +
+spkr52_5_12 AH AH +
+spkr52_5_13 M M +
+spkr52_5_14 P P +

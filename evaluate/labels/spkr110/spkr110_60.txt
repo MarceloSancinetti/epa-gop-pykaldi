@@ -1,0 +1,17 @@
+spkr110_60_0 DH DH +
+spkr110_60_1 AX E -
+spkr110_60_2 CH CH +
+spkr110_60_3 AY AY +
+spkr110_60_4 L L +
+spkr110_60_5 D  -
+spkr110_60_6 HH HH +
+spkr110_60_7 AX A -
+spkr110_60_8 Z S -
+spkr110_60_9 L L +
+spkr110_60_10 IH IH +
+spkr110_60_11 DH DH +
+spkr110_60_12 DH DH +
+spkr110_60_13 AX E -
+spkr110_60_14 F F +
+spkr110_60_15 AY AY +
+spkr110_60_16 ER AX -

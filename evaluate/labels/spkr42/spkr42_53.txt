@@ -1,0 +1,15 @@
+spkr42_53_0 M M +
+spkr42_53_1 AH A -
+spkr42_53_2 M M +
+spkr42_53_3 S S +
+spkr42_53_4 EH EH +
+spkr42_53_5 N  -
+spkr42_53_6 T D -
+spkr42_53_7 M M +
+spkr42_53_8 IY IY +
+spkr42_53_9 AX AX +
+spkr42_53_10 M M +
+spkr42_53_11 EH EH +
+spkr42_53_12 S S +
+spkr42_53_13 AX A -
+spkr42_53_14 JH SH -

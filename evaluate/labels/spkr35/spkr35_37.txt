@@ -1,0 +1,14 @@
+spkr35_37_0 AY AY +
+spkr35_37_1 L L +
+spkr35_37_2 ER ER +
+spkr35_37_3 N N +
+spkr35_37_4 T  -
+spkr35_37_5 Th Th +
+spkr35_37_6 UH UH +
+spkr35_37_7 Th Th +
+spkr35_37_8 AY AY +
+spkr35_37_9 M M +
+spkr35_37_10 AY AY +
+spkr35_37_11 SH SH +
+spkr35_37_12 UW UW +
+spkr35_37_13 Z S -

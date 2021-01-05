@@ -1,0 +1,17 @@
+spkr46_13_0 AY AY +
+spkr46_13_1 HH HH +
+spkr46_13_2 AE A -
+spkr46_13_3 D D +
+spkr46_13_4 AX AX +
+spkr46_13_5 HH X -
+spkr46_13_6 EH EH +
+spkr46_13_7 D D +
+spkr46_13_8 EY A -
+spkr46_13_9 K CH -
+spkr46_13_10 L L +
+spkr46_13_11 AE A -
+spkr46_13_12 S  -
+spkr46_13_13 T T +
+spkr46_13_14 Y IY -
+spkr46_13_15 IH E -
+spkr46_13_16 R RR -

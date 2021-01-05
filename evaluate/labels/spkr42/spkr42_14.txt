@@ -1,0 +1,17 @@
+spkr42_14_0 M M +
+spkr42_14_1 AY AY +
+spkr42_14_2 B B +
+spkr42_14_3 R R +
+spkr42_14_4 AH AO -
+spkr42_14_5 DH DH +
+spkr42_14_6 ER ER +
+spkr42_14_7 CH CH +
+spkr42_14_8 IY IY +
+spkr42_14_9 T T +
+spkr42_14_10 S S +
+spkr42_14_11 AX AH -
+spkr42_14_12 T  -
+spkr42_14_13 S S +
+spkr42_14_14 K K +
+spkr42_14_15 UW UW +
+spkr42_14_16 L L +

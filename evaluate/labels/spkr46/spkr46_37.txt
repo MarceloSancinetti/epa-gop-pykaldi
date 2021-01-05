@@ -1,0 +1,14 @@
+spkr46_37_0 AY AY +
+spkr46_37_1 L L +
+spkr46_37_2 ER E+DX -
+spkr46_37_3 N N +
+spkr46_37_4 T  -
+spkr46_37_5 T T +
+spkr46_37_6 UH UH +
+spkr46_37_7 T T +
+spkr46_37_8 AY AY +
+spkr46_37_9 M M +
+spkr46_37_10 AY AY +
+spkr46_37_11 SH SH +
+spkr46_37_12 UW UW +
+spkr46_37_13 Z S -

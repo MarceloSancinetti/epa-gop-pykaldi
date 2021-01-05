@@ -1,0 +1,17 @@
+spkr18_13_0 AY AY +
+spkr18_13_1 HH HH +
+spkr18_13_2 AE A -
+spkr18_13_3 D D +
+spkr18_13_4 AX E -
+spkr18_13_5 HH HH +
+spkr18_13_6 EH EH +
+spkr18_13_7 D DH -
+spkr18_13_8 EY E -
+spkr18_13_9 K G* -
+spkr18_13_10 L L +
+spkr18_13_11 AE A -
+spkr18_13_12 S S +
+spkr18_13_13 T  -
+spkr18_13_14 Y Y +
+spkr18_13_15 IH IY -
+spkr18_13_16 R ER -

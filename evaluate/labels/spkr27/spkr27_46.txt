@@ -1,0 +1,15 @@
+spkr27_46_0 AY AY +
+spkr27_46_1 D D +
+spkr27_46_2 OW OW +
+spkr27_46_3 N N +
+spkr27_46_4 T  -
+spkr27_46_5 L L +
+spkr27_46_6 AY AY +
+spkr27_46_7 K K +
+spkr27_46_8 R R +
+spkr27_46_9 EY EY +
+spkr27_46_10 N N +
+spkr27_46_11 IY IY +
+spkr27_46_12 D D +
+spkr27_46_13 EY EY +
+spkr27_46_14 Z S -

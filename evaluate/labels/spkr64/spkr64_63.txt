@@ -1,0 +1,10 @@
+spkr64_63_0 T T +
+spkr64_63_1 UH UW -
+spkr64_63_2 P P +
+spkr64_63_3 L L +
+spkr64_63_4 EY EY +
+spkr64_63_5 ER ER+S -
+spkr64_63_6 G GH -
+spkr64_63_7 EY EH -
+spkr64_63_8 M M +
+spkr64_63_9 Z  -

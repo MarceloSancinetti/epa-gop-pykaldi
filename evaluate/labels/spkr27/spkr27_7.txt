@@ -1,0 +1,16 @@
+spkr27_7_0 HH HH +
+spkr27_7_1 ER ER +
+spkr27_7_2 L L +
+spkr27_7_3 IH IH +
+spkr27_7_4 DX DX +
+spkr27_7_5 AX  -
+spkr27_7_6 L L +
+spkr27_7_7 S S +
+spkr27_7_8 IH IY -
+spkr27_7_9 S S +
+spkr27_7_10 T T +
+spkr27_7_11 ER ER +
+spkr27_7_12 Z S -
+spkr27_7_13 Th Th +
+spkr27_7_14 IY IY +
+spkr27_7_15 TH TH +

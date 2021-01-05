@@ -1,0 +1,10 @@
+spkr46_56_0 Y Y +
+spkr46_56_1 UW UW +
+spkr46_56_2 K K +
+spkr46_56_3 AA O -
+spkr46_56_4 L L +
+spkr46_56_5 D  -
+spkr46_56_6 AX EH -
+spkr46_56_7 K K +
+spkr46_56_8 AE A -
+spkr46_56_9 BH BH +

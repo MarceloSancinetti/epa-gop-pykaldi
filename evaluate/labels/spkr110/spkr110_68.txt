@@ -1,0 +1,13 @@
+spkr110_68_0 W W +
+spkr110_68_1 IY  -
+spkr110_68_2 M M +
+spkr110_68_3 EH EH +
+spkr110_68_4 Th Th +
+spkr110_68_5 AX A -
+spkr110_68_6 T T +
+spkr110_68_7 DH DH +
+spkr110_68_8 AX E -
+spkr110_68_9 K SH -
+spkr110_68_10 W W +
+spkr110_68_11 AY A -
+spkr110_68_12 ER R -

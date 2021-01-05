@@ -1,0 +1,22 @@
+spkr114_33_0 D DH -
+spkr114_33_1 OW OW +
+spkr114_33_2 N N +
+spkr114_33_3 T  -
+spkr114_33_4 S S +
+spkr114_33_5 P P +
+spkr114_33_6 IY IY +
+spkr114_33_7 K K +
+spkr114_33_8 Th Th +
+spkr114_33_9 UH UW -
+spkr114_33_10 L L +
+spkr114_33_11 AW AW +
+spkr114_33_12 D D +
+spkr114_33_13 AX AX +
+spkr114_33_14 T T +
+spkr114_33_15 DH DH +
+spkr114_33_16 AX AX +
+spkr114_33_17 TH TH +
+spkr114_33_18 IY IY +
+spkr114_33_19 AX  -
+spkr114_33_20 Th DX -
+spkr114_33_21 ER ER +

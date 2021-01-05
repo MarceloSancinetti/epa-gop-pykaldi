@@ -1,0 +1,11 @@
+spkr110_42_0 AW AW +
+spkr110_42_1 L  -
+spkr110_42_2 Z S -
+spkr110_42_3 HH X -
+spkr110_42_4 AE A -
+spkr110_42_5 V B -
+spkr110_42_6 B B +
+spkr110_42_7 IH IH +
+spkr110_42_8 G G +
+spkr110_42_9 AY AY +
+spkr110_42_10 Z S -

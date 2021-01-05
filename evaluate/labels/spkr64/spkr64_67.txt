@@ -1,0 +1,15 @@
+spkr64_67_0 AY AY +
+spkr64_67_1 N N +
+spkr64_67_2 Y Y +
+spkr64_67_3 UW UW +
+spkr64_67_4 AX A -
+spkr64_67_5 V V +
+spkr64_67_6 EH EH +
+spkr64_67_7 R R +
+spkr64_67_8 IY IY +
+spkr64_67_9 Th Th +
+spkr64_67_10 AA O -
+spkr64_67_11 L L +
+spkr64_67_12 M M +
+spkr64_67_13 AE A -
+spkr64_67_14 N  -

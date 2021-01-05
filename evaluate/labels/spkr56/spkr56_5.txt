@@ -1,0 +1,15 @@
+spkr56_5_0 T Th -
+spkr56_5_1 R R +
+spkr56_5_2 AY AY +
+spkr56_5_3 Th Th +
+spkr56_5_4 UW UW +
+spkr56_5_5 S S +
+spkr56_5_6 IH IY -
+spkr56_5_7 NG NG +
+spkr56_5_8 AX A -
+spkr56_5_9 N N +
+spkr56_5_10 D  -
+spkr56_5_11 JH JH +
+spkr56_5_12 AH AH +
+spkr56_5_13 M M +
+spkr56_5_14 P  -

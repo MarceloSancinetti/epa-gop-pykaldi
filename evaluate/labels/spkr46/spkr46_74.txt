@@ -1,0 +1,14 @@
+spkr46_74_0 DH DH +
+spkr46_74_1 AE AE +
+spkr46_74_2 T  -
+spkr46_74_3 S Sh -
+spkr46_74_4 P P +
+spkr46_74_5 Y  -
+spkr46_74_6 UH UW -
+spkr46_74_7 R R +
+spkr46_74_8 L L +
+spkr46_74_9 AH UH -
+spkr46_74_10 G K -
+spkr46_74_11 ZH S -
+spkr46_74_12 ER UH+R -
+spkr46_74_13 IY IY* -

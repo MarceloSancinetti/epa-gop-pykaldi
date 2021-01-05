@@ -1,0 +1,31 @@
+spkr56_19_0 M M +
+spkr56_19_1 AY AY +
+spkr56_19_2 B BH -
+spkr56_19_3 EH EH +
+spkr56_19_4 S S +
+spkr56_19_5 T  -
+spkr56_19_6 F F +
+spkr56_19_7 R R +
+spkr56_19_8 EH EH +
+spkr56_19_9 N N +
+spkr56_19_10 D  -
+spkr56_19_11 S S +
+spkr56_19_12 P P +
+spkr56_19_13 IY IY +
+spkr56_19_14 K K +
+spkr56_19_15 S  -
+spkr56_19_16 IH IY -
+spkr56_19_17 NG N -
+spkr56_19_18 G G +
+spkr56_19_19 L L +
+spkr56_19_20 IH IY -
+spkr56_19_21 SH SH +
+spkr56_19_22 AX AX +
+spkr56_19_23 N N +
+spkr56_19_24 D  -
+spkr56_19_25 S S +
+spkr56_19_26 P P +
+spkr56_19_27 AE A -
+spkr56_19_28 N N +
+spkr56_19_29 IH IY -
+spkr56_19_30 SH SH +

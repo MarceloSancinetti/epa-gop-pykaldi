@@ -1,0 +1,15 @@
+spkr34_53_0 M M +
+spkr34_53_1 AH AH +
+spkr34_53_2 M M +
+spkr34_53_3 S S +
+spkr34_53_4 EH EH +
+spkr34_53_5 N N +
+spkr34_53_6 T  -
+spkr34_53_7 M M +
+spkr34_53_8 IY IY +
+spkr34_53_9 AX AX +
+spkr34_53_10 M M +
+spkr34_53_11 EH EH +
+spkr34_53_12 S S +
+spkr34_53_13 IH IH +
+spkr34_53_14 JH JH +

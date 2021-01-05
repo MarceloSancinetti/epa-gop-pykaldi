@@ -1,0 +1,17 @@
+spkr56_60_0 DH DE -
+spkr56_60_1 AX E -
+spkr56_60_2 CH CH +
+spkr56_60_3 AY AY +
+spkr56_60_4 L  -
+spkr56_60_5 D  -
+spkr56_60_6 HH X -
+spkr56_60_7 AX A -
+spkr56_60_8 Z S -
+spkr56_60_9 L L +
+spkr56_60_10 IH IY -
+spkr56_60_11 T T +
+spkr56_60_12 DH DE -
+spkr56_60_13 AX E -
+spkr56_60_14 F F +
+spkr56_60_15 AY AY +
+spkr56_60_16 ER E+DX -

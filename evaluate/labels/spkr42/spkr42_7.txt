@@ -1,0 +1,16 @@
+spkr42_7_0 HH HH +
+spkr42_7_1 ER ER +
+spkr42_7_2 L L +
+spkr42_7_3 IH IY -
+spkr42_7_4 T T +
+spkr42_7_5 AX EH -
+spkr42_7_6 L L +
+spkr42_7_7 S S +
+spkr42_7_8 IH IH +
+spkr42_7_9 S Sh -
+spkr42_7_10 Th Th +
+spkr42_7_11 ER ER +
+spkr42_7_12 Z  -
+spkr42_7_13 Th Th +
+spkr42_7_14 IY IY +
+spkr42_7_15 TH TH +

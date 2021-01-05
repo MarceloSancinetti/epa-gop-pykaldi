@@ -1,0 +1,17 @@
+spkr34_10_0 AY AY +
+spkr34_10_1 TH TH +
+spkr34_10_2 IH IH +
+spkr34_10_3 NG NG +
+spkr34_10_4 K  -
+spkr34_10_5 DH D -
+spkr34_10_6 AX E -
+spkr34_10_7 SH SH +
+spkr34_10_8 IH IH +
+spkr34_10_9 P BH -
+spkr34_10_10 W W +
+spkr34_10_11 IH  -
+spkr34_10_12 L L +
+spkr34_10_13 S S +
+spkr34_10_14 IH IH +
+spkr34_10_15 NG N -
+spkr34_10_16 K K +

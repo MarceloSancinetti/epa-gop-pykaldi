@@ -1,0 +1,13 @@
+spkr64_43_0 W W +
+spkr64_43_1 IY IY +
+spkr64_43_2 S S +
+spkr64_43_3 AA O -
+spkr64_43_4 AX AX +
+spkr64_43_5 N  -
+spkr64_43_6 OW O -
+spkr64_43_7 L L +
+spkr64_43_8 D D +
+spkr64_43_9 F F +
+spkr64_43_10 IH IY -
+spkr64_43_11 L L* -
+spkr64_43_12 M M +

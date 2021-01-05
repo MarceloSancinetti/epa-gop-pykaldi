@@ -1,0 +1,15 @@
+spkr15_5_0 T T +
+spkr15_5_1 R R +
+spkr15_5_2 AY AY +
+spkr15_5_3 Th Th +
+spkr15_5_4 UW UW +
+spkr15_5_5 S S +
+spkr15_5_6 IH IH +
+spkr15_5_7 NG NG +
+spkr15_5_8 AX AX +
+spkr15_5_9 N N +
+spkr15_5_10 D  -
+spkr15_5_11 JH JH +
+spkr15_5_12 AH A -
+spkr15_5_13 M M +
+spkr15_5_14 P P +

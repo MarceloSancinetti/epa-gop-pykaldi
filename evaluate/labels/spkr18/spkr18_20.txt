@@ -1,0 +1,25 @@
+spkr18_20_0 DH DH +
+spkr18_20_1 EY EY +
+spkr18_20_2 Y Y +
+spkr18_20_3 UW UW +
+spkr18_20_4 ZH ZH +
+spkr18_20_5 UW UW +
+spkr18_20_6 AH AH +
+spkr18_20_7 L L +
+spkr18_20_8 IY IY +
+spkr18_20_9 Kh Kh +
+spkr18_20_10 AH AE -
+spkr18_20_11 M M +
+spkr18_20_12 HH HH +
+spkr18_20_13 OW O -
+spkr18_20_14 M M +
+spkr18_20_15 IH O -
+spkr18_20_16 N N +
+spkr18_20_17 JH JH +
+spkr18_20_18 AE A -
+spkr18_20_19 N N +
+spkr18_20_20 Y  -
+spkr18_20_21 UW  -
+spkr18_20_22 EH E -
+spkr18_20_23 R R +
+spkr18_20_24 IY IY +

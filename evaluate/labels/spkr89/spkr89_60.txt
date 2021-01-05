@@ -1,0 +1,17 @@
+spkr89_60_0 DH DH +
+spkr89_60_1 AX  -
+spkr89_60_2 CH CH +
+spkr89_60_3 AY AY +
+spkr89_60_4 L L +
+spkr89_60_5 D D +
+spkr89_60_6 HH HH +
+spkr89_60_7 AX A -
+spkr89_60_8 Z S -
+spkr89_60_9 L L +
+spkr89_60_10 IH IH +
+spkr89_60_11 DH DH +
+spkr89_60_12 DH DH +
+spkr89_60_13 AX AH -
+spkr89_60_14 F F +
+spkr89_60_15 AY AY +
+spkr89_60_16 ER E+DX -

@@ -1,0 +1,7 @@
+spkr14_54_0 SH SH +
+spkr14_54_1 IY IY +
+spkr14_54_2 Z S -
+spkr14_54_3 AX E -
+spkr14_54_4 L L +
+spkr14_54_5 AY AY +
+spkr14_54_6 ER E+DX -

@@ -1,0 +1,14 @@
+spkr31_37_0 AY AY +
+spkr31_37_1 L L +
+spkr31_37_2 ER ER +
+spkr31_37_3 N N +
+spkr31_37_4 T  -
+spkr31_37_5 Th Th +
+spkr31_37_6 UW UW +
+spkr31_37_7 Th Th +
+spkr31_37_8 AY AY +
+spkr31_37_9 M M +
+spkr31_37_10 AY AY +
+spkr31_37_11 SH SH +
+spkr31_37_12 UW UW +
+spkr31_37_13 Z S -

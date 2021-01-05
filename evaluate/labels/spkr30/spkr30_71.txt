@@ -1,0 +1,19 @@
+spkr30_71_0 M M +
+spkr30_71_1 AH AH +
+spkr30_71_2 CH CH +
+spkr30_71_3 M M +
+spkr30_71_4 AO AO +
+spkr30_71_5 R  -
+spkr30_71_6 AO AO +
+spkr30_71_7 L L +
+spkr30_71_8 IH IH +
+spkr30_71_9 V V +
+spkr30_71_10 OY OY +
+spkr30_71_11 L L +
+spkr30_71_12 F F +
+spkr30_71_13 AA  -
+spkr30_71_14 R  -
+spkr30_71_15 DH DH +
+spkr30_71_16 AX AX +
+spkr30_71_17 B B +
+spkr30_71_18 OY OY +
