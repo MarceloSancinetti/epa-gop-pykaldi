@@ -1,0 +1,130 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0.0
+xmax = 3.250793650793651
+tiers? <exists>
+size = 3
+item []:
+    item [1]:
+        class = "IntervalTier"
+        name = "words"
+        xmin = 0.0
+        xmax = 3.250793650793651
+        intervals: size = 7
+            intervals [1]:
+                xmin = 0.0
+                xmax = 0.8870393414254754
+                text = ""
+            intervals [2]:
+                xmin = 0.8870393414254754
+                xmax = 1.1000547559045393
+                text = "i "
+            intervals [3]:
+                xmin = 1.1000547559045393
+                xmax = 1.4
+                text = "don't"
+            intervals [4]:
+                xmin = 1.4
+                xmax = 1.72
+                text = "like"
+            intervals [5]:
+                xmin = 1.72
+                xmax = 2.07
+                text = "rainy"
+            intervals [6]:
+                xmin = 2.07
+                xmax = 2.44
+                text = "days"
+            intervals [7]:
+                xmin = 2.44
+                xmax = 3.250793650793651
+                text = ""
+    item [1]:
+        class = "IntervalTier"
+        name = "annotation"
+        xmin = 0.0
+        xmax = 3.250793650793651
+        intervals: size = 18
+            intervals [1]:
+                xmin = 0.0
+                xmax = 0.8870393414254754
+                text = "sil"
+            intervals [2]:
+                xmin = 0.8870393414254754
+                xmax = 1.1000547559045393
+                text = "AY"
+            intervals [3]:
+                xmin = 1.1000547559045393
+                xmax = 1.209441049826221
+                text = "D"
+            intervals [4]:
+                xmin = 1.209441049826221
+                xmax = 1.3101915837014537
+                text = "O"
+            intervals [5]:
+                xmin = 1.3101915837014537
+                xmax = 1.3963114573415927
+                text = "N"
+            intervals [6]:
+                xmin = 1.3963114573415927
+                xmax = 1.4
+                text = "0"
+            intervals [7]:
+                xmin = 1.4
+                xmax = 1.52
+                text = "L"
+            intervals [8]:
+                xmin = 1.52
+                xmax = 1.65
+                text = "AY"
+            intervals [9]:
+                xmin = 1.65
+                xmax = 1.72
+                text = "K"
+            intervals [10]:
+                xmin = 1.72
+                xmax = 1.84
+                text = "R"
+            intervals [11]:
+                xmin = 1.84
+                xmax = 1.9662716204071964
+                text = "EY"
+            intervals [12]:
+                xmin = 1.9662716204071964
+                xmax = 2.069900740964579
+                text = "N"
+            intervals [13]:
+                xmin = 2.069900740964579
+                xmax = 2.07
+                text = "0"
+            intervals [14]:
+                xmin = 2.07
+                xmax = 2.14
+                text = "D"
+            intervals [15]:
+                xmin = 2.14
+                xmax = 2.32
+                text = "EY"
+            intervals [16]:
+                xmin = 2.32
+                xmax = 2.44
+                text = "S"
+            intervals [17]:
+                xmin = 2.44
+                xmax = 3.23
+                text = "sp"
+            intervals [18]:
+                xmin = 3.23
+                xmax = 3.250793650793651
+                text = ""
+    item [1]:
+        class = "IntervalTier"
+        name = "score"
+        xmin = 0.0
+        xmax = 3.250793650793651
+        intervals: size = 1
+            intervals [1]:
+                xmin = 0.0
+                xmax = 3.250793650793651
+                text = "3/5"

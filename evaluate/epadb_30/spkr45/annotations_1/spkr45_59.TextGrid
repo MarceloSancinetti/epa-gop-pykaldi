@@ -1,0 +1,132 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0.0
+xmax = 2.6006349206349206
+tiers? <exists>
+size = 4
+item []:
+    item [1]:
+        class = "IntervalTier"
+        name = "words"
+        xmin = 0.0
+        xmax = 2.6006349206349206
+        intervals: size = 7
+            intervals [1]:
+                xmin = 0.0
+                xmax = 0.53
+                text = ""
+            intervals [2]:
+                xmin = 0.53
+                xmax = 1.07
+                text = "against"
+            intervals [3]:
+                xmin = 1.07
+                xmax = 1.1748110809757415
+                text = ""
+            intervals [4]:
+                xmin = 1.1748110809757415
+                xmax = 1.4
+                text = "all"
+            intervals [5]:
+                xmin = 1.4
+                xmax = 1.4695783572278516
+                text = ""
+            intervals [6]:
+                xmin = 1.4695783572278516
+                xmax = 2.01
+                text = "odds"
+            intervals [7]:
+                xmin = 2.01
+                xmax = 2.6006349206349206
+                text = ""
+    item [1]:
+        class = "IntervalTier"
+        name = "annotation"
+        xmin = 0.0
+        xmax = 2.6006349206349206
+        intervals: size = 15
+            intervals [1]:
+                xmin = 0.0
+                xmax = 0.53
+                text = "sil"
+            intervals [2]:
+                xmin = 0.53
+                xmax = 0.67
+                text = "A"
+            intervals [3]:
+                xmin = 0.67
+                xmax = 0.77
+                text = "G"
+            intervals [4]:
+                xmin = 0.77
+                xmax = 0.87
+                text = "EH"
+            intervals [5]:
+                xmin = 0.87
+                xmax = 0.96
+                text = "N"
+            intervals [6]:
+                xmin = 0.96
+                xmax = 1.0698300659249709
+                text = "S"
+            intervals [7]:
+                xmin = 1.0698300659249709
+                xmax = 1.07
+                text = "0"
+            intervals [8]:
+                xmin = 1.07
+                xmax = 1.1748110809757415
+                text = "sp"
+            intervals [9]:
+                xmin = 1.1748110809757415
+                xmax = 1.32
+                text = "O"
+            intervals [10]:
+                xmin = 1.32
+                xmax = 1.4
+                text = "L"
+            intervals [11]:
+                xmin = 1.4
+                xmax = 1.4695783572278516
+                text = "sp"
+            intervals [12]:
+                xmin = 1.4695783572278516
+                xmax = 1.63
+                text = "O"
+            intervals [13]:
+                xmin = 1.63
+                xmax = 1.83
+                text = "D"
+            intervals [14]:
+                xmin = 1.83
+                xmax = 2.01
+                text = "S"
+            intervals [15]:
+                xmin = 2.01
+                xmax = 2.6006349206349206
+                text = ""
+    item [1]:
+        class = "IntervalTier"
+        name = "score"
+        xmin = 0.0
+        xmax = 2.6006349206349206
+        intervals: size = 1
+            intervals [1]:
+                xmin = 0.0
+                xmax = 2.6006349206349206
+                text = "3/5"
+    item [1]:
+        class = "IntervalTier"
+        name = "comments"
+        xmin = 0.0
+        xmax = 2.6006349206349206
+        intervals: size = 2
+            intervals [1]:
+                xmin = 0.0
+                xmax = 1.467275487882132
+                text = ""
+            intervals [2]:
+                xmin = 1.467275487882132
+                xmax = 2.6006349206349206
+                text = "background noise"

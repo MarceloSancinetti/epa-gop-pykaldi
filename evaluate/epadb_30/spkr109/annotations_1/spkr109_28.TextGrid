@@ -1,0 +1,146 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0.0
+xmax = 3.0650340136054424
+tiers? <exists>
+size = 3
+item []:
+    item [1]:
+        class = "IntervalTier"
+        name = "words"
+        xmin = 0.0
+        xmax = 3.0650340136054424
+        intervals: size = 8
+            intervals [1]:
+                xmin = 0.0
+                xmax = 1.01
+                text = ""
+            intervals [2]:
+                xmin = 1.01
+                xmax = 1.2
+                text = "she"
+            intervals [3]:
+                xmin = 1.2
+                xmax = 1.69
+                text = "thinks"
+            intervals [4]:
+                xmin = 1.69
+                xmax = 1.83
+                text = ""
+            intervals [5]:
+                xmin = 1.83
+                xmax = 2.3
+                text = "cars"
+            intervals [6]:
+                xmin = 2.3
+                xmax = 2.42
+                text = "are"
+            intervals [7]:
+                xmin = 2.42
+                xmax = 2.87
+                text = "great"
+            intervals [8]:
+                xmin = 2.87
+                xmax = 3.0650340136054424
+                text = ""
+    item [1]:
+        class = "IntervalTier"
+        name = "annotation"
+        xmin = 0.0
+        xmax = 3.0650340136054424
+        intervals: size = 21
+            intervals [1]:
+                xmin = 0.0
+                xmax = 1.01
+                text = "sil"
+            intervals [2]:
+                xmin = 1.01
+                xmax = 1.09
+                text = "SH"
+            intervals [3]:
+                xmin = 1.09
+                xmax = 1.2
+                text = "IY"
+            intervals [4]:
+                xmin = 1.2
+                xmax = 1.3
+                text = "S"
+            intervals [5]:
+                xmin = 1.3
+                xmax = 1.34
+                text = "IH"
+            intervals [6]:
+                xmin = 1.34
+                xmax = 1.46
+                text = "NG"
+            intervals [7]:
+                xmin = 1.46
+                xmax = 1.53
+                text = "K"
+            intervals [8]:
+                xmin = 1.53
+                xmax = 1.69
+                text = "S"
+            intervals [9]:
+                xmin = 1.69
+                xmax = 1.83
+                text = "sp"
+            intervals [10]:
+                xmin = 1.83
+                xmax = 1.9
+                text = "K"
+            intervals [11]:
+                xmin = 1.9
+                xmax = 2.04
+                text = "AA"
+            intervals [12]:
+                xmin = 2.04
+                xmax = 2.1
+                text = "R"
+            intervals [13]:
+                xmin = 2.1
+                xmax = 2.3
+                text = "S"
+            intervals [14]:
+                xmin = 2.3
+                xmax = 2.36
+                text = "AA"
+            intervals [15]:
+                xmin = 2.36
+                xmax = 2.42
+                text = "DX"
+            intervals [16]:
+                xmin = 2.42
+                xmax = 2.45
+                text = "G"
+            intervals [17]:
+                xmin = 2.45
+                xmax = 2.57
+                text = "R"
+            intervals [18]:
+                xmin = 2.57
+                xmax = 2.67
+                text = "IY"
+            intervals [19]:
+                xmin = 2.67
+                xmax = 2.87
+                text = "T"
+            intervals [20]:
+                xmin = 2.87
+                xmax = 3.05
+                text = "sp"
+            intervals [21]:
+                xmin = 3.05
+                xmax = 3.0650340136054424
+                text = ""
+    item [1]:
+        class = "IntervalTier"
+        name = "score"
+        xmin = 0.0
+        xmax = 3.0650340136054424
+        intervals: size = 1
+            intervals [1]:
+                xmin = 0.0
+                xmax = 3.0650340136054424
+                text = "1/5"

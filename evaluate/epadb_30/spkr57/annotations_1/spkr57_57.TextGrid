@@ -1,0 +1,138 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0.0
+xmax = 2.3219954648526078
+tiers? <exists>
+size = 3
+item []:
+    item [1]:
+        class = "IntervalTier"
+        name = "words"
+        xmin = 0.0
+        xmax = 2.3219954648526078
+        intervals: size = 6
+            intervals [1]:
+                xmin = 0.0
+                xmax = 0.64
+                text = ""
+            intervals [2]:
+                xmin = 0.64
+                xmax = 0.95
+                text = "dont"
+            intervals [3]:
+                xmin = 0.95
+                xmax = 1.38
+                text = "forget"
+            intervals [4]:
+                xmin = 1.38
+                xmax = 1.5362420677779367
+                text = "your"
+            intervals [5]:
+                xmin = 1.5362420677779367
+                xmax = 2.03
+                text = "shovel"
+            intervals [6]:
+                xmin = 2.03
+                xmax = 2.3219954648526078
+                text = ""
+    item [1]:
+        class = "IntervalTier"
+        name = "annotation"
+        xmin = 0.0
+        xmax = 2.3219954648526078
+        intervals: size = 21
+            intervals [1]:
+                xmin = 0.0
+                xmax = 0.64
+                text = ""
+            intervals [2]:
+                xmin = 0.64
+                xmax = 0.74
+                text = "D"
+            intervals [3]:
+                xmin = 0.74
+                xmax = 0.8474373974064462
+                text = "O"
+            intervals [4]:
+                xmin = 0.8474373974064462
+                xmax = 0.9499142760951774
+                text = "N "
+            intervals [5]:
+                xmin = 0.9499142760951774
+                xmax = 0.95
+                text = "0"
+            intervals [6]:
+                xmin = 0.95
+                xmax = 1.03
+                text = "F"
+            intervals [7]:
+                xmin = 1.03
+                xmax = 1.077210298642309
+                text = "AO"
+            intervals [8]:
+                xmin = 1.077210298642309
+                xmax = 1.11
+                text = "R"
+            intervals [9]:
+                xmin = 1.11
+                xmax = 1.1517451323765375
+                text = "G"
+            intervals [10]:
+                xmin = 1.1517451323765375
+                xmax = 1.25
+                text = "EH"
+            intervals [11]:
+                xmin = 1.25
+                xmax = 1.38
+                text = "T"
+            intervals [12]:
+                xmin = 1.38
+                xmax = 1.42
+                text = "Y"
+            intervals [13]:
+                xmin = 1.42
+                xmax = 1.46
+                text = "O"
+            intervals [14]:
+                xmin = 1.46
+                xmax = 1.5362420677779367
+                text = "R"
+            intervals [15]:
+                xmin = 1.5362420677779367
+                xmax = 1.71
+                text = "SH"
+            intervals [16]:
+                xmin = 1.71
+                xmax = 1.8
+                text = "O"
+            intervals [17]:
+                xmin = 1.8
+                xmax = 1.8487743361255982
+                text = "V"
+            intervals [18]:
+                xmin = 1.8487743361255982
+                xmax = 1.916626736490551
+                text = "AX"
+            intervals [19]:
+                xmin = 1.916626736490551
+                xmax = 2.03
+                text = "L"
+            intervals [20]:
+                xmin = 2.03
+                xmax = 2.3
+                text = "sp"
+            intervals [21]:
+                xmin = 2.3
+                xmax = 2.3219954648526078
+                text = ""
+    item [1]:
+        class = "IntervalTier"
+        name = "score"
+        xmin = 0.0
+        xmax = 2.3219954648526078
+        intervals: size = 1
+            intervals [1]:
+                xmin = 0.0
+                xmax = 2.3219954648526078
+                text = "4/5"

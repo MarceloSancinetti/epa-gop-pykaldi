@@ -1,0 +1,114 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0.0
+xmax = 2.9013333333333335
+tiers? <exists>
+size = 3
+item []:
+    item [1]:
+        class = "IntervalTier"
+        name = "words"
+        xmin = 0.0
+        xmax = 2.9013333333333335
+        intervals: size = 7
+            intervals [1]:
+                xmin = 0.0
+                xmax = 0.8816024637058821
+                text = ""
+            intervals [2]:
+                xmin = 0.8816024637058821
+                xmax = 1.15
+                text = "you"
+            intervals [3]:
+                xmin = 1.15
+                xmax = 1.75
+                text = "called"
+            intervals [4]:
+                xmin = 1.75
+                xmax = 1.78
+                text = ""
+            intervals [5]:
+                xmin = 1.78
+                xmax = 1.88
+                text = "a"
+            intervals [6]:
+                xmin = 1.88
+                xmax = 2.46
+                text = "cab"
+            intervals [7]:
+                xmin = 2.46
+                xmax = 2.9013333333333335
+                text = ""
+    item [1]:
+        class = "IntervalTier"
+        name = "annotation"
+        xmin = 0.0
+        xmax = 2.9013333333333335
+        intervals: size = 14
+            intervals [1]:
+                xmin = 0.0
+                xmax = 0.8816024637058821
+                text = ""
+            intervals [2]:
+                xmin = 0.8816024637058821
+                xmax = 0.9792297310309829
+                text = "Y"
+            intervals [3]:
+                xmin = 0.9792297310309829
+                xmax = 1.15
+                text = "UW"
+            intervals [4]:
+                xmin = 1.15
+                xmax = 1.23
+                text = "K"
+            intervals [5]:
+                xmin = 1.23
+                xmax = 1.48
+                text = "AO"
+            intervals [6]:
+                xmin = 1.48
+                xmax = 1.52
+                text = "L"
+            intervals [7]:
+                xmin = 1.52
+                xmax = 1.75
+                text = "T"
+            intervals [8]:
+                xmin = 1.75
+                xmax = 1.78
+                text = "sp"
+            intervals [9]:
+                xmin = 1.78
+                xmax = 1.88
+                text = "AX"
+            intervals [10]:
+                xmin = 1.88
+                xmax = 1.97
+                text = "Kh"
+            intervals [11]:
+                xmin = 1.97
+                xmax = 2.15
+                text = "A"
+            intervals [12]:
+                xmin = 2.15
+                xmax = 2.46
+                text = "P"
+            intervals [13]:
+                xmin = 2.46
+                xmax = 2.88
+                text = "sp"
+            intervals [14]:
+                xmin = 2.88
+                xmax = 2.9013333333333335
+                text = ""
+    item [1]:
+        class = "IntervalTier"
+        name = "score"
+        xmin = 0.0
+        xmax = 2.9013333333333335
+        intervals: size = 1
+            intervals [1]:
+                xmin = 0.0
+                xmax = 2.9013333333333335
+                text = "3/5"
