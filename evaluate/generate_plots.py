@@ -19,18 +19,18 @@ def mkdirs(newdir):
 def plot(scores, output_dir):
 
     # list of phones in order
-    phones = sorted(scores['phone']unique())
+    phones = sorted(scores.phone.unique())
 
     for phone in phones:
 
-        pos = scores[(scores['phone'] == phone) & (scores['label'] == 1)]
-        neg = scores[(scores['phone'] == phone) & (scores['label'] == 0)]
+        pos = scores[(scores.phone == phone) & (scores.label == 1)]
+        neg = scores[(scores.phone == phone) & (scores.label == 0)]
 
         pos_scores = list(pos.gop_scores)
         neg_scores = list(neg.gop_scores)
 
-        pos_labels = list(pos['label'])
-        neg_labels = list(neg['label'])
+        pos_labels = list(pos.label)
+        neg_labels = list(neg.label)
 
         all_scores = pos_scores + neg_scores
         all_labels = pos_labels + neg_labels
