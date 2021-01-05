@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 import os, errno, re
 import os.path as path
 from os import remove
@@ -157,7 +154,7 @@ def get_gop_alignments(path_filename, phone_pure_dic):
                     i = i + 4
 
             output.append({'logid': str(logid),
-                            'phones': phones,
+                           'phones': phones,
                            'phones_name':phones_name,
                            'gops':gops})
 
@@ -244,8 +241,7 @@ if __name__ == '__main__':
     phone_pure_dict = phones2dic(args.phones_pure_path)
     gop_alignments = get_gop_alignments(args.gop_path, args.phones_pure_path)
 
-    utterance_list = [re.sub('.TextGrid','', re.sub('.*\/','',s)) for s in glob.glob("%s/*/*"%args.labels_dir)]
-
+    utterance_list = [re.sub('.txt','', re.sub('.*\/','',s)) for s in glob.glob("%s/*/*"%args.labels_dir)]
 
     # Now, iterate over utterances
     for utterance in utterance_list:
@@ -285,13 +281,13 @@ if __name__ == '__main__':
         best_trans = -1
         best_trans_corr = 0
 
+        print(trans_dict_clean_complete[sent])
         for trans_idx, trans in enumerate(trans_dict_clean_complete[sent]):
             if(len(trans) == len(annot_kaldi)):
                 num_correct = np.sum([t==a for t, a in np.c_[trans,annot_kaldi]])
                 if num_correct > best_trans_corr:
                     best_trans_corr = num_correct
                     best_trans = trans_idx
-
 
 
         if best_trans != -1:
