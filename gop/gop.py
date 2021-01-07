@@ -68,7 +68,7 @@ def gop_robust_with_matrix(df_scores, df_phones_pure, number_senones, batch_size
             
             ti = tf + 1
         
-        output_gop_r_max.append({'gop': gops_r_max,
+        output_gop_r_max.append({'gop': gops_r,
                                 'phones_pure': phones_pure,
                                 'logid': logid})
 
