@@ -68,10 +68,6 @@ def get_transitions(path_show_transitions, path_output_transitions):
                     if line_array[1] == 'Transition-id':
                             transition_id = line_array[3]
                             transitions_dict[transition_id] = data + [transition_id]
-                            
-                    #if line_array[-1] == '[self-loop]\n':
-                    #    data.append(transition_ids)
-                    #    transitions_dict[transition_id] = data
 
 
     df_transitions = pd.DataFrame.from_dict(transitions_dict, orient='index', columns=['transition_state', 'phone_name', 'hmm_state', 'pdf', 'transition_id'])

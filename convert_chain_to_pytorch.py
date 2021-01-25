@@ -86,7 +86,8 @@ def read_relu_component(file, layer_number, is_tdnnf=True):
 	params_dict['deriv_avg'] = read_deriv_avg(file)
 	return params_dict
 
-chain_file = open('final', 'r') 
+
+chain_file = open('exp/chain_cleaned/tdnn_1d_sp/final.txt', 'r') 
  
 components = {}
 finished = False  
@@ -156,45 +157,6 @@ while not finished:
 		components['output.affine'] = read_affine_component(chain_file)
 
 
-	#Xent head
-	if '<ComponentName> prefinal-xent.affine' in line:
-		components['prefinal-xent.affine'] = read_affine_component(chain_file)
-
-	if '<ComponentName> prefinal-xent.linear' in line:
-		components['prefinal-xent.linear'] = {}
-		components['prefinal-xent.linear']['linear_params'] = read_linear_params(chain_file)
-
-	if '<ComponentName> output-xent.affine' in line:
-		components['output-xent.affine'] = read_affine_component(chain_file)
-
-	if '<ComponentName> prefinal-xent.batchnorm1' in line:
-		components['prefinal-xent.batchnorm1'] = read_batchnorm_component(chain_file, 19, component_name='prefinal-xent.batchnorm1')
-
-	if '<ComponentName> prefinal-xent.batchnorm2' in line:
-		components['prefinal-xent.batchnorm2'] = read_batchnorm_component(chain_file, 19, component_name='prefinal-xent.batchnorm2', dim='256')
-
-		
-
-#print("Components")
-#print(components['lda']['linear_params'].shape)
-#print(components['lda']['bias'].shape)
-#print(components['tdnn1.affine']['linear_params'].shape)
-#print(components['tdnn1.affine']['bias'].shape)
-#for n in range(2, 17):
-#	print('Layer '+str(n))
-#	print(components['tdnnf'+str(n)+'.linear']['linear_params'].shape)
-#	print(components['tdnnf'+str(n)+'.linear']['bias'].shape)
-#	print(components['tdnnf'+str(n)+'.affine']['linear_params'].shape)
-#	print(components['tdnnf'+str(n)+'.affine']['bias'].shape)
-	
-#print(components['prefinal-xent.affine']['linear_params'].shape)
-#print(components['prefinal-xent.linear']['linear_params'].shape)
-#print(components['output-xent.affine']['linear_params'].shape)
-
-#print(components['prefinal-chain.affine']['linear_params'].shape)
-#print(components['prefinal-chain.linear']['linear_params'].shape)
-#print(components['output-xent.affine']['linear_params'].shape)
-
 ftdnn = FTDNN()
 
 state_dict = {}
@@ -219,34 +181,18 @@ for layer_number in range(2, 18):
 state_dict['layer18.weight'] = torch.from_numpy(components['prefinal-l']['linear_params'])
 
 
-# state_dict['layer19.linear1.weight'] = torch.from_numpy(components['prefinal-xent.affine']['linear_params'])
-# state_dict['layer19.linear1.bias'] = torch.from_numpy(components['prefinal-xent.affine']['bias'])
-# state_dict['layer19.bn1.running_mean'] = torch.from_numpy(components['prefinal-xent.batchnorm1']['stats_mean'])
-# state_dict['layer19.bn1.running_var'] = torch.from_numpy(components['prefinal-xent.batchnorm1']['stats_var'])
-# #state_dict['layer19.bn1.num_batches_tracked']
-# state_dict['layer19.linear2.weight'] = torch.from_numpy(components['prefinal-xent.linear']['linear_params'])
-# state_dict['layer19.bn2.running_mean'] = torch.from_numpy(components['prefinal-xent.batchnorm2']['stats_mean'])
-# state_dict['layer19.bn2.running_var'] = torch.from_numpy(components['prefinal-xent.batchnorm2']['stats_var'])
-# #state_dict['layer19.bn2.num_batches_tracked']
-# state_dict['layer19.linear3.weight'] = torch.from_numpy(components['output-xent.affine']['linear_params'])
-# state_dict['layer19.linear3.bias'] = torch.from_numpy(components['output-xent.affine']['bias'])
-
 state_dict['layer19.linear1.weight'] = torch.from_numpy(components['prefinal-chain.affine']['linear_params'])
 state_dict['layer19.linear1.bias'] = torch.from_numpy(components['prefinal-chain.affine']['bias'])
 state_dict['layer19.bn1.running_mean'] = torch.from_numpy(components['prefinal-chain.batchnorm1']['stats_mean'])
 state_dict['layer19.bn1.running_var'] = torch.from_numpy(components['prefinal-chain.batchnorm1']['stats_var'])
-#state_dict['layer19.bn1.num_batches_tracked']
 state_dict['layer19.linear2.weight'] = torch.from_numpy(components['prefinal-chain.linear']['linear_params'])
 state_dict['layer19.bn2.running_mean'] = torch.from_numpy(components['prefinal-chain.batchnorm2']['stats_mean'])
 state_dict['layer19.bn2.running_var'] = torch.from_numpy(components['prefinal-chain.batchnorm2']['stats_var'])
-#state_dict['layer19.bn2.num_batches_tracked']
 state_dict['layer19.linear3.weight'] = torch.from_numpy(components['output.affine']['linear_params'])
 state_dict['layer19.linear3.bias'] = torch.from_numpy(components['output.affine']['bias'])
 
 print(state_dict['layer19.linear3.weight'])
 
-#for param_tensor in ftdnn.state_dict():
-#    print(param_tensor, "\t", ftdnn.state_dict()[param_tensor].size())
 
 for name, param in ftdnn.named_parameters():
 	print (name, param.shape)

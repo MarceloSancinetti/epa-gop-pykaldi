@@ -13,13 +13,13 @@ import pickle
 
 # Set the paths and read/write specifiers
 acoustic_model_path = "model.pt"
-transition_model_path = "0013_librispeech_v1/exp/chain_cleaned/tdnn_1d_sp/final.mdl"
-tree = '0013_librispeech_v1/exp/chain_cleaned/tdnn_1d_sp/tree'
-disam = '0013_librispeech_v1/data/lang_chain/phones/disambig.int'
-lang_graph ='0013_librispeech_v1/data/lang_chain/L.fst' 
+transition_model_path = "exp/chain_cleaned/tdnn_1d_sp/final.mdl"
+tree = 'exp/chain_cleaned/tdnn_1d_sp/tree'
+disam = 'data/lang_chain/phones/disambig.int'
+lang_graph ='data/lang_chain/L.fst' 
 graph_path = "HCLG.fst"
-symbols_path = '0013_librispeech_v1/data/lang_chain/words.txt'
-phones = '0013_librispeech_v1/exp/chain_cleaned/tdnn_1d_sp/phones.txt'
+symbols_path = 'data/lang_chain/words.txt'
+phones = 'exp/chain_cleaned/tdnn_1d_sp/phones.txt'
 text_path = 'epadb/test/text' 
 
 
