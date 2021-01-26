@@ -15,10 +15,9 @@ import pickle
 acoustic_model_path = "model.pt"
 transition_model_path = "exp/chain_cleaned/tdnn_1d_sp/final.mdl"
 tree = 'exp/chain_cleaned/tdnn_1d_sp/tree'
-disam = 'data/lang_chain/phones/disambig.int'
-lang_graph ='data/lang_chain/L.fst' 
-graph_path = "HCLG.fst"
-symbols_path = 'data/lang_chain/words.txt'
+disam = 'data/lang_test_tgsmall/phones/disambig.int'
+lang_graph ='data/lang_test_tgsmall/L.fst' 
+symbols_path = 'data/lang_test_tgsmall/words.txt'
 phones = 'exp/chain_cleaned/tdnn_1d_sp/phones.txt'
 text_path = 'epadb/test/text' 
 
@@ -33,7 +32,7 @@ aligner = MappedAligner.from_files(transition_model_path, tree, lang_graph, symb
                                  disam, acoustic_scale = 1.0)
 phones = SymbolTable.read_text(phones)
 wb_info = WordBoundaryInfo.from_file(WordBoundaryInfoNewOpts(),
-                                     "0013_librispeech_v1/data/lang_test_tgmed/phones/word_boundary.int")
+                                     "data/lang_test_tgsmall/phones/word_boundary.int")
 
 
 # Instantiate the PyTorch acoustic model (subclass of torch.nn.Module)
@@ -61,7 +60,7 @@ with SequentialMatrixReader(mfccs_rspec) as mfccs_reader, \
         phone_alignment = aligner.to_phone_alignment(out["alignment"], phones)
         print(mkey + ' phones', phone_alignment)
         print(mkey + ' transitions', out['alignment'])
-        word_alignment = aligner.to_word_alignment(out["best_path"], wb_info)
+        #word_alignment = aligner.to_word_alignment(out["best_path"], wb_info)
 
 #with open('loglikes.pickle', 'wb') as handle:
 #    pickle.dump(loglikes_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
