@@ -23,7 +23,9 @@ text_path = 'epadb/test/text'
 
 
 
-mfccs_rspec = ("ark:epadb/test/data/raw_mfcc_test.1.ark")
+mfccs_rspec = ("ark:compute-mfcc-feats --config=conf/mfcc_hires.conf "
+               "scp:wav.scp ark:- |")
+
 ivectors_rspec = ("ark:epadb/test/data/ivector_online.1.ark")
 
 loglikes_wspec = "ark:loglikes.ark"
@@ -53,7 +55,6 @@ with SequentialMatrixReader(mfccs_rspec) as mfccs_reader, \
         x = np.expand_dims(x, axis=0)
         feats = torch.from_numpy(x)  # Convert to PyTorch tensor
         loglikes = model(feats)                  # Compute log-likelihoods
-#        loglikes_dict[mkey] = loglikes
         loglikes = Matrix(loglikes.detach().numpy()[0])      # Convert to PyKaldi matrix
         loglikes_writer[mkey] = loglikes
         out = aligner.align(loglikes, text)
