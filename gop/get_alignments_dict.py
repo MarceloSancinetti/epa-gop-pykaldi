@@ -19,7 +19,7 @@ import pickle
 from random import shuffle
 
 def get_phone_from_transition_id(id, df_phones_pure):
-    return df_phones_pure.loc[df_phones_pure['transition_ids'] == str(id),'phone_pure'].values[0]
+    return df_phones_pure.loc[df_phones_pure['transition_id'] == str(id),'phone_pure'].values[0]
 
 def removeSymbols(str, symbols):
     for symbol in symbols:

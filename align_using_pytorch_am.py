@@ -10,6 +10,7 @@ from pytorch_models import *
 import torch
 import numpy as np
 import pickle
+import os
 
 # Set the paths and read/write specifiers
 acoustic_model_path = "model.pt"
@@ -19,14 +20,12 @@ disam = 'data/lang_test_tgsmall/phones/disambig.int'
 lang_graph ='data/lang_test_tgsmall/L.fst' 
 symbols_path = 'data/lang_test_tgsmall/words.txt'
 phones = 'exp/chain_cleaned/tdnn_1d_sp/phones.txt'
-text_path = 'epadb/test/text' 
+text_path = 'epadb/test/text'
 
 
+mfccs_rspec = ("ark:epadb/test/data/mfccs.ark")
 
-mfccs_rspec = ("ark:compute-mfcc-feats --config=conf/mfcc_hires.conf "
-               "scp:wav.scp ark:- |")
-
-ivectors_rspec = ("ark:epadb/test/data/ivector_online.1.ark")
+ivectors_rspec = ("ark:epadb/test/data/ivectors.ark")
 
 loglikes_wspec = "ark:loglikes.ark"
 
@@ -48,6 +47,8 @@ with SequentialMatrixReader(mfccs_rspec) as mfccs_reader, \
  	 SequentialMatrixReader(ivectors_rspec) as ivectors_reader, open(text_path) as t, \
      DoubleMatrixWriter(loglikes_wspec) as loglikes_writer:
     for (mkey, mfccs), (ikey, ivectors), line in zip(mfccs_reader, ivectors_reader, t):
+        if mkey != ikey:
+            print("Algo anda mal")
         tkey, text = line.strip().split(None, 1)
         ivectors = np.repeat(ivectors, 10, axis=0)
         ivectors = ivectors[:mfccs.shape[0],:]

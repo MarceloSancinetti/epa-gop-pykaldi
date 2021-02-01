@@ -27,7 +27,7 @@ def show_transitions(dir_show_transitions, show_transitions_output_filename):
     if not os.path.isdir(dir_show_transitions):
         os.mkdir(dir_show_transitions)
 
-    os.system("show-transitions " + "phones.txt " + "../exp/chain_cleaned/tdnn_1d_sp/final.mdl > " + path_show_transitions)  
+    os.system("show-transitions " + "phones/phones.txt " + "../exp/chain_cleaned/tdnn_1d_sp/final.mdl > " + path_show_transitions)  
 
 
 
