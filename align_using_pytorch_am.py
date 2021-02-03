@@ -22,12 +22,11 @@ symbols_path = 'data/lang_test_tgsmall/words.txt'
 phones = 'exp/chain_cleaned/tdnn_1d_sp/phones.txt'
 text_path = 'epadb/test/text'
 
-
 mfccs_rspec = ("ark:epadb/test/data/mfccs.ark")
 
 ivectors_rspec = ("ark:epadb/test/data/ivectors.ark")
 
-loglikes_wspec = "ark:loglikes.ark"
+loglikes_wspec = "ark:gop/loglikes.ark"
 
 aligner = MappedAligner.from_files(transition_model_path, tree, lang_graph, symbols_path,
                                  disam, acoustic_scale = 1.0)
@@ -41,7 +40,8 @@ model = FTDNN()
 model.load_state_dict(torch.load(acoustic_model_path))
 model.eval()
 
-loglikes_dict = {}
+
+align_out_file = open("gop/align_output","w+")
 # Extract the features, decode and write output lattices
 with SequentialMatrixReader(mfccs_rspec) as mfccs_reader, \
  	 SequentialMatrixReader(ivectors_rspec) as ivectors_reader, open(text_path) as t, \
@@ -60,9 +60,8 @@ with SequentialMatrixReader(mfccs_rspec) as mfccs_reader, \
         loglikes_writer[mkey] = loglikes
         out = aligner.align(loglikes, text)
         phone_alignment = aligner.to_phone_alignment(out["alignment"], phones)
-        print(mkey + ' phones', phone_alignment)
-        print(mkey + ' transitions', out['alignment'])
+        print(mkey + ' phones' + str(phone_alignment))
+        print(mkey + ' transitions' +str(out['alignment']))
+        align_out_file.write(mkey + ' phones' + str(phone_alignment)  + '\n')
+        align_out_file.write(mkey + ' transitions' + str(out['alignment']) + '\n') 
         #word_alignment = aligner.to_word_alignment(out["best_path"], wb_info)
-
-#with open('loglikes.pickle', 'wb') as handle:
-#    pickle.dump(loglikes_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)

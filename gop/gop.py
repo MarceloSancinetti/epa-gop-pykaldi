@@ -27,6 +27,8 @@ def matrix_gop_robust(df_phones_pure, number_senones, batch_size):
     
     return pdfs_to_phone_pure_mask_3D
 
+
+
 def gop_robust_with_matrix(df_scores, df_phones_pure, number_senones, batch_size, output_gop_r, output_gop_r_max):
     
     mask_score = matrix_gop_robust(df_phones_pure, number_senones, batch_size)
