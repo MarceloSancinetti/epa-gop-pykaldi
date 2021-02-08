@@ -1,8 +1,10 @@
 import glob
 import os
 
-mfcc_path =  'epadb/test/data/mfccs.ark'
-ivectors_path =  'epadb/test/data/ivectors.ark'
+data_path = 'epadb/test/data'
+mfcc_path =  data_path + '/mfccs.ark'
+ivectors_path =  data_path + '/ivectors.ark'
+
 
 wav_scp_file = open("wav.scp","w+")
 spk2utt_file = open("spk2utt","w+")
@@ -14,6 +16,9 @@ for file in glob.glob('EpaDB/*/waveforms/*'):
     spkr = basename.split('_')[0]
     spk2utt_file.write(spkr + ' ' + basename + '\n')
 
+
+if not os.path.isdir(data_path):
+        os.mkdir(data_path)
 
 
 if not os.path.exists(mfcc_path):

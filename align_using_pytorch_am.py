@@ -21,10 +21,11 @@ lang_graph ='data/lang_test_tgsmall/L.fst'
 symbols_path = 'data/lang_test_tgsmall/words.txt'
 phones = 'exp/chain_cleaned/tdnn_1d_sp/phones.txt'
 text_path = 'epadb/test/text'
+data_path = 'epadb/test/data'
 
-mfccs_rspec = ("ark:epadb/test/data/mfccs.ark")
+mfccs_rspec = ("ark:" + data_path + "/mfccs.ark")
 
-ivectors_rspec = ("ark:epadb/test/data/ivectors.ark")
+ivectors_rspec = ("ark:" + data_path + "/ivectors.ark")
 
 loglikes_wspec = "ark:gop/loglikes.ark"
 
@@ -33,6 +34,8 @@ aligner = MappedAligner.from_files(transition_model_path, tree, lang_graph, symb
 phones = SymbolTable.read_text(phones)
 wb_info = WordBoundaryInfo.from_file(WordBoundaryInfoNewOpts(),
                                      "data/lang_test_tgsmall/phones/word_boundary.int")
+
+
 
 
 # Instantiate the PyTorch acoustic model (subclass of torch.nn.Module)
@@ -60,8 +63,8 @@ with SequentialMatrixReader(mfccs_rspec) as mfccs_reader, \
         loglikes_writer[mkey] = loglikes
         out = aligner.align(loglikes, text)
         phone_alignment = aligner.to_phone_alignment(out["alignment"], phones)
-        print(mkey + ' phones' + str(phone_alignment))
-        print(mkey + ' transitions' +str(out['alignment']))
+        #print(mkey + ' phones' + str(phone_alignment))
+        #print(mkey + ' transitions' +str(out['alignment']))
         align_out_file.write(mkey + ' phones' + str(phone_alignment)  + '\n')
         align_out_file.write(mkey + ' transitions' + str(out['alignment']) + '\n') 
         #word_alignment = aligner.to_word_alignment(out["best_path"], wb_info)
