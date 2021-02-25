@@ -21,7 +21,7 @@ def show_transitions(dir_show_transitions, show_transitions_output_filename):
 
 
 
-#Builds dictionary using transitions file
+#Builds dictionary containing information about transitions, pdfs and phones using transitions file
 def get_transitions(path_show_transitions, path_output_transitions):
 
     transitions_dict = {}
@@ -36,20 +36,27 @@ def get_transitions(path_show_transitions, path_output_transitions):
                     transition_state = line_array[1].split(":")[0]
                     phone = line_array[4]
                     hmm_state = line_array[7]
-                    pdf = line_array[10]
-                    pdf = pdf.split('\n')
-                    pdf = pdf[0]
+                    forward_pdf = line_array[10]
+                    forward_pdf = forward_pdf.split('\n')
+                    forward_pdf = forward_pdf[0]
+                    self_pdf = line_array[13]
+                    self_pdf = self_pdf.split('\n')
+                    self_pdf = self_pdf[0]
+
+
 
                     data.append(transition_state)
                     data.append(phone)
                     data.append(hmm_state)
-                    data.append(pdf)
+                    data.append(forward_pdf)
+                    data.append(self_pdf)
+
             if line_array[1] == 'Transition-id':
                     transition_id = line_array[3]
                     transitions_dict[transition_id] = data + [transition_id]
 
 
-    df_transitions = pd.DataFrame.from_dict(transitions_dict, orient='index', columns=['transition_state', 'phone_name', 'hmm_state', 'pdf', 'transition_id'])
+    df_transitions = pd.DataFrame.from_dict(transitions_dict, orient='index', columns=['transition_state', 'phone_name', 'hmm_state', 'forward_pdf', 'self_pdf', 'transition_id'])
 
     return df_transitions
 
