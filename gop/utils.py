@@ -156,7 +156,7 @@ def get_alignments(path_alignements, df_phones_pure):
 
 
 
-def generate_alignments_df(data_path="."):
+def generate_df_alignments(data_path="."):
     df_phones_pure = pd.read_pickle('phones_pure_epa.pickle')
 
     #path_show_alignments = "alignments/"

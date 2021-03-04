@@ -288,6 +288,7 @@ if __name__ == '__main__':
                 if num_correct > best_trans_corr:
                     best_trans_corr = num_correct
                     best_trans = trans_idx
+        print(annot_kaldi)
 
 
         if best_trans != -1:
