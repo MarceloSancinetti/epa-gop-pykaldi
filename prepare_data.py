@@ -17,7 +17,7 @@ for file in glob.glob('EpaDB/*/waveforms/*'):
     spk2utt_file.write(spkr + ' ' + basename + '\n')
 
 
-if not os.path.isdir(data_path):
+if not os.path.isdir(data_path) or not os.path.exists('feats.scp'):
         os.mkdir(data_path)
 
 

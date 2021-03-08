@@ -116,11 +116,10 @@ def removeSymbols(str, symbols):
         str = str.replace(symbol,'')
     return str
 
-def get_alignments(path_alignements, df_phones_pure):
-    
+def get_alignments(path_alignments, df_phones_pure):
     alignments_dict = {}
 
-    for l in open(path_alignements+"align_output", encoding="utf8", errors='ignore').readlines():
+    for l in open(path_alignments+"align_output", 'r', encoding="utf8").readlines():
         l=l.split()
         #Get transitions alignments
         if len(l) > 3 and l[1] == 'transitions':
@@ -165,5 +164,5 @@ def generate_df_alignments(data_path="."):
     alignments_dict = get_alignments(path_show_alignments, df_phones_pure)
 
     with open('alignments.pickle', 'wb') as handle:
-        pickle.dump(alignments_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(alignments_dict, handle)
 

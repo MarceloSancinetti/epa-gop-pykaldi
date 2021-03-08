@@ -65,6 +65,6 @@ with SequentialMatrixReader(mfccs_rspec) as mfccs_reader, \
         phone_alignment = aligner.to_phone_alignment(out["alignment"], phones)
         #print(mkey + ' phones' + str(phone_alignment))
         #print(mkey + ' transitions' +str(out['alignment']))
-        align_out_file.write(mkey + ' phones' + str(phone_alignment)  + '\n')
-        align_out_file.write(mkey + ' transitions' + str(out['alignment']) + '\n') 
+        align_out_file.write(mkey + ' phones ' + str(phone_alignment)  + '\n')
+        align_out_file.write(mkey + ' transitions ' + str(out['alignment']) + '\n') 
         #word_alignment = aligner.to_word_alignment(out["best_path"], wb_info)

@@ -7,13 +7,14 @@ from scipy.special import softmax
 from kaldiio import ReadHelper
 import tqdm
 
+
 def prepare_dataframes():
 
     if not os.path.exists('phones_pure_epa.pickle'):
         generate_df_phones_pure()
 
     if not os.path.exists('alignments.pickle'):
-        generate_alignments_df()
+        generate_df_alignments()
 
 
     df_phones_pure = pd.read_pickle('phones_pure_epa.pickle')
@@ -33,7 +34,7 @@ def compute_gop(df_phones_pure, df_alignments):
         for key, loglikes in tqdm.tqdm(reader):
             
             loglikes = softmax(np.array(loglikes), axis=1) #Apply softmax before computing
-            df_scores = pd.DataFrame(alignments.loc[:,key]).transpose()
+            df_scores = pd.DataFrame(df_alignments.loc[:,key]).transpose()
             df_scores['p'] = [loglikes]
             gop[key] = gop_robust_with_matrix(df_scores, df_phones_pure, 6024, 1, [], [])
 

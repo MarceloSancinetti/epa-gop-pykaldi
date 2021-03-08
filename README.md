@@ -60,11 +60,15 @@ To install this repository, do the following steps:
 git clone https://github.com/MarceloSancinetti/epa-gop-pykaldi.git
 ```
 
-2. Download Librispeech ASR acoustic model from Kaldi and move it or link it inside the top directory of the repository:
+2. Download Librispeech ASR chain acoustic model, language model and i-vector extractor from Kaldi and move them or link them inside the top directory of the repository:
 
 ```
 wget https://kaldi-asr.org/models/13/0013_librispeech_v1_chain.tar.gz
 tar -zxvf 0013_librispeech_v1_chain.tar.gz
+wget https://kaldi-asr.org/models/13/0013_librispeech_v1_lm.tar.gz
+tar -zxvf 0013_librispeech_v1_lm.tar.gz
+wget https://kaldi-asr.org/models/13/0013_librispeech_v1_extractor.tar.gz
+tar -zxvf 0013_librispeech_v1_extractor.tar.gz
 ```
 
 3. Convert the acoustic model to text format:
@@ -88,3 +92,38 @@ Follow instructions from https://github.com/pykaldi/pykaldi#installation
 ```
 python convert_chain_to_pytorch.py
 ```
+
+7. Make sure the EpaDB folder (or a link to it with the name 'EpaDB') is in the top directory of the repository.
+
+## How to run
+
+
+1. Run the data preparation script (extracts features):
+
+```
+python prepare_data.py
+```
+
+2. Run the alignment script:
+
+```
+python align_using_pytorch_am.py
+```
+
+3. Run the GOP script from the gop/ directory:
+
+```
+cd gop
+python calculate_gop.py
+```
+
+GOP results in text form will be found in gop/gop_epa.txt
+
+4. If you want to evaluate the results, use the following commands to generate ROCs comparing the model to the Kaldi GOP recipe:
+
+```
+cd evaluate
+python generate_data_for_eval.py --transcription-file=epadb_30/reference_transcriptions.txt --labels-dir=labels/ --output-dir=output --gop-file=../gop/gop_epa.txt --phones-pure-file=../gop/phones/phones-pure.txt --reference-file=epadb_30/
+python generate_plots.py --data-for-eval-dir=output ----output-dir=output
+```
+Plots will be found in evaluate/output
