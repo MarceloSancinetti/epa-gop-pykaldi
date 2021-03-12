@@ -51,8 +51,10 @@ with SequentialMatrixReader(mfccs_rspec) as mfccs_reader, \
      DoubleMatrixWriter(loglikes_wspec) as loglikes_writer:
     for (mkey, mfccs), (ikey, ivectors), line in zip(mfccs_reader, ivectors_reader, t):
         if mkey != ikey:
-            print("Algo anda mal")
+            print("MFCCs key does not match iVectors key")
         tkey, text = line.strip().split(None, 1)
+        if tkey != ikey:
+            print("Text key does not match features key")
         ivectors = np.repeat(ivectors, 10, axis=0)
         ivectors = ivectors[:mfccs.shape[0],:]
         x = np.concatenate((mfccs,ivectors), axis=1)

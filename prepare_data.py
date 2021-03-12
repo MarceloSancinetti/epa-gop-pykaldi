@@ -9,7 +9,7 @@ ivectors_path =  data_path + '/ivectors.ark'
 wav_scp_file = open("wav.scp","w+")
 spk2utt_file = open("spk2utt","w+")
 
-for file in glob.glob('EpaDB/*/waveforms/*'):
+for file in sorted(glob.glob('EpaDB/*/waveforms/*')):
     fullpath = os.path.abspath(file)
     basename = os.path.splitext(os.path.basename(file))[0]
     wav_scp_file.write(basename + ' ' + fullpath + '\n')
