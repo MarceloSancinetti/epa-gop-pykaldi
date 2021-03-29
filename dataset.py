@@ -11,6 +11,7 @@ from torchaudio.datasets.utils import (
     extract_archive,
 )
 from typing import List
+from utils import *
 
 _RELEASE_CONFIGS = {
     "release1": {
@@ -116,7 +117,7 @@ class EpaDB(Dataset):
         #self._dict_path = os.path.join(root, folder_in_archive, _RELEASE_CONFIGS[release]["dict"])
         #self._phoneme_dict = None
 
-    def _load_epa_item(self, file_id: str, path: str) -> Tuple[Tensor, str, str, str, List[Tuple[str, str, str, int]]]:
+    def _load_epa_item(self, file_id: str, path: str) -> Tuple[Tensor, str, str, str, List[Tuple[str, str, str, int, int]]]:
         """Loads an EpaDB dataset sample given a file name and corresponding sentence name.
 
         Args:
@@ -125,6 +126,7 @@ class EpaDB(Dataset):
 
         Returns:
             tuple: ``(features, transcript, speaker_id, utterance_id, annotation)``
+                    annotation is List[(correct_phone, pronounced_phone, label, start_time, end_time]]
         """
         speaker_id = file_id.split("_")[0]
         utterance_id = file_id.split("_")[1]
@@ -146,34 +148,12 @@ class EpaDB(Dataset):
                 annotation.append((target_phone, pronounced_phone, label, start_time))
 
         wave_path = os.path.join(path, speaker_id, "waveforms", file_id)
-        features = extract_features_for_audio(wave_path + ".wav")
+        features = get_features_for_logid(file_id)
 
         return (features, transcript, speaker_id, utterance_id, annotation)
 
-    def _load_audio(self, path: str, start_time: float, end_time: float, sample_rate: int = 16000) -> [Tensor, int]:
-        """Default load function used in TEDLIUM dataset, you can overwrite this function to customize functionality
-        and load individual sentences from a full ted audio talk file.
-
-        Args:
-            path (str): Path to audio file
-            start_time (int, optional): Time in seconds where the sample sentence stars
-            end_time (int, optional): Time in seconds where the sample sentence finishes
-
-        Returns:
-            [Tensor, int]: Audio tensor representation and sample rate
-        """
-        start_time = int(float(start_time) * sample_rate)
-        end_time = int(float(end_time) * sample_rate)
-
-        backend = torchaudio.get_audio_backend()
-        if backend == "sox" or (backend == "soundfile" and torchaudio.USE_SOUNDFILE_LEGACY_INTERFACE):
-            kwargs = {"offset": start_time, "num_frames": end_time - start_time}
-        else:
-            kwargs = {"frame_offset": start_time, "num_frames": end_time - start_time}
-
-        return torchaudio.load(path, **kwargs)
-
-    def __getitem__(self, n: int) -> Tuple[Tensor, str, str, str, List[Tuple[str, str, str, int]]]:
+   
+    def __getitem__(self, n: int) -> Tuple[Tensor, str, str, str, List[Tuple[str, str, str, int, int]]]:
         """Load the n-th sample from the dataset.
 
         Args:
@@ -181,6 +161,7 @@ class EpaDB(Dataset):
 
         Returns:
             tuple: ``(features, transcript, speaker_id, utterance_id, annotation)``
+                    annotation is List[(correct_phone, pronounced_phone, label, start_time, end_time]]        
         """
         fileid = self._filelist[n]
         return self._load_epa_item(fileid, self._path)
