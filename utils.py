@@ -56,7 +56,7 @@ def get_features_for_logid(logid, data_path='epadb/test/data', ivector_period=10
         ivectors = np.repeat(ivectors, ivector_period, axis=0) 
         ivectors = ivectors[:mfccs.shape[0],:]
         x = np.concatenate((mfccs,ivectors), axis=1)
-        x = np.expand_dims(x, axis=0)
+        #x = np.expand_dims(x, axis=0)
         feats = torch.from_numpy(x)
 
         return feats

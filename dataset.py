@@ -44,10 +44,6 @@ _RELEASE_CONFIGS = {
 }
 
 
-#dummy
-def extract_features_for_audio(waveform_name):
-    return Tensor([[1., -1.], [1., -1.]])
-
 class EpaDB(Dataset):
     """
     Create a Dataset for EpaDB.
@@ -175,16 +171,3 @@ class EpaDB(Dataset):
         """
         return len(self._filelist)
 
-    @property
-    def phoneme_dict(self):
-        """dict[str, tuple[str]]: Phonemes. Mapping from word to tuple of phonemes.
-        Note that some words have empty phonemes.
-        """
-        # Read phoneme dictionary
-        if not self._phoneme_dict:
-            self._phoneme_dict = {}
-            with open(self._dict_path, "r", encoding="utf-8") as f:
-                for line in f.readlines():
-                    content = line.strip().split()
-                    self._phoneme_dict[content[0]] = tuple(content[1:])  # content[1:] can be empty list
-        return self._phoneme_dict.copy()
