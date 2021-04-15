@@ -87,7 +87,7 @@ class OutputLayer(nn.Module):
 
     def forward(self, x):
         x = self.linear(x)
-        x = self.nl(x)
+        #x = self.nl(x)
         return x
 
 class InputLayer(nn.Module):
@@ -143,11 +143,11 @@ def sum_outputs_and_feed_to_layer(x, x_2, layer):
 
 class FTDNN(nn.Module):
 
-    def __init__(self, in_dim=220):
+    def __init__(self, in_dim=220, out_dim=40):
 
         super(FTDNN, self).__init__()
 
-        self.layer01 = InputLayer(input_dim=220, output_dim=1536)
+        self.layer01 = InputLayer(input_dim=in_dim, output_dim=1536)
         self.layer02 = FTDNNLayer(3072, 160, 320, 1536, 1)
         self.layer03 = FTDNNLayer(3072, 160, 320, 1536, 1)
         self.layer04 = FTDNNLayer(3072, 160, 320, 1536, 1)
@@ -165,7 +165,7 @@ class FTDNN(nn.Module):
         self.layer16 = FTDNNLayer(3072, 160, 320, 1536, 3)
         self.layer17 = FTDNNLayer(3072, 160, 320, 1536, 3)
         self.layer18 = nn.Linear(1536, 256, bias=False) #This is the prefinal-l layer
-        self.layer19 = OutputLayer(256, 40)
+        self.layer19 = OutputLayer(256, out_dim)
         
     def forward(self, x):
 

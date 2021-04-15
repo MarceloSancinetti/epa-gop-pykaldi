@@ -13,40 +13,59 @@ from pytorch_models import *
 
 def collate_fn_padd(batch):
     '''
-    Padds batch of variable length
+    Padds batch of variable length (both features and labels)
     '''
     ## padd
-    features = [ sample for sample, _,_,_,_ in batch ]
-    features = torch.nn.utils.rnn.pad_sequence(features, batch_first=True)
-    batch = [(features[i], batch[i][1], batch[i][2], batch[i][3], batch[i][4]) for i in range(len(features))]
+    batch_features = [ features for features, _,_,_,_ in batch ]
+    batch_features = torch.nn.utils.rnn.pad_sequence(batch_features, batch_first=True)
+    batch_labels = [ labels for _,_,_,_, labels in batch ]
+    batch_labels = torch.nn.utils.rnn.pad_sequence(batch_labels, batch_first=True)
+    batch = [(batch_features[i], batch[i][1], batch[i][2], batch[i][3], batch_labels[i]) for i in range(len(batch))]
     return batch
 
 
-trainset = EpaDB('.')
+trainset = EpaDB('.', 'phones_epa.txt')
 
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=2,
                                           shuffle=True, num_workers=1, collate_fn=collate_fn_padd)
 
 
 #Por ahora uso el trainset para testear porque no se de donde sacar el dataset para testear
-testloader = torch.utils.data.DataLoader(trainset, batch_size=1,
+testloader = torch.utils.data.DataLoader(trainset, batch_size=2,
                                           shuffle=False, num_workers=2)
 
 
-acoustic_model = FTDNN()
+phone_count = trainset.phone_count()
+acoustic_model = FTDNN(out_dim=phone_count)
 
 
-criterion = nn.CrossEntropyLoss()
+def criterion(outputs, batch_labels):
+    print(outputs.shape)
+    print(batch_labels.shape)
+    print(batch_labels[0][100])
+    print(outputs[0][100])
+    samples_in_batch = batch_labels.shape[0]
+    frame_count = batch_labels.shape[1]
+    phone_count = batch_labels.shape[2]
+    print(samples_in_batch)
+    print(frame_count)
+    print(phone_count)
+    #for sample in 
+    #for label in labels:
+    #    for anot_tuple in annotation:
+    #        correct_phone = 
+    #return
+
 optimizer = optim.SGD(acoustic_model.parameters(), lr=0.001, momentum=0.9)
 
 for epoch in range(1):  # loop over the dataset multiple times
 
     running_loss = 0.0
-    for i, data in enumerate(trainloader, 0):
+    for i, data in enumerate(trainloader, 0):            
 
-        # get the inputs; data is a list of (features, transcript, speaker_id, utterance_id, annotation)
+        # get the inputs; data is a list of (features, transcript, speaker_id, utterance_id, labels)
         inputs = torch.stack([features for features, _,_,_,_ in data])
-        annotations = torch.stack([annotation for _,_,_,_, annotation in data])
+        batch_labels = torch.stack([labels for _,_,_,_, labels in data])
 
 
         # zero the parameter gradients
@@ -55,8 +74,10 @@ for epoch in range(1):  # loop over the dataset multiple times
         # forward + backward + optimize
         outputs = acoustic_model(inputs)
 
+        #print(outputs.size())
+
         #Aca hay que ver que onda el criterion
-        loss = criterion(outputs, annotations)
+        loss = criterion(outputs, batch_labels)
         loss.backward()
         optimizer.step()
 
