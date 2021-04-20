@@ -40,21 +40,43 @@ acoustic_model = FTDNN(out_dim=phone_count)
 
 
 def criterion(outputs, batch_labels):
-    print(outputs.shape)
-    print(batch_labels.shape)
-    print(batch_labels[0][100])
-    print(outputs[0][100])
+    #Define loss function to use
+    crit = nn.BCEWithLogitsLoss(reduction='none')
+    
+    #Get sample, frame and phone counts
     samples_in_batch = batch_labels.shape[0]
     frame_count = batch_labels.shape[1]
     phone_count = batch_labels.shape[2]
-    print(samples_in_batch)
-    print(frame_count)
-    print(phone_count)
-    #for sample in 
-    #for label in labels:
-    #    for anot_tuple in annotation:
-    #        correct_phone = 
-    #return
+
+    #Iterate over samples and calculate loss for each one
+    for sample in range(samples_in_batch):
+        print ("Sample " + str(sample))
+        #phones_by_frame = []
+        labels_by_phone = []
+        relevant_scores_by_phone = []
+        current_phone = None
+        current_label = None
+        current_phone_scores = []
+        #relevant_scores_by phone will store the average score over the frames for each phone present in labels
+        for frame in range(frame_count):
+            for phone in range(phone_count):
+                label = batch_labels[sample, frame, phone]
+                if label != 0:
+                    if phone != current_phone:
+                        if current_phone != None:
+                            labels_by_phone.append(int(current_label.item()))
+                            relevant_scores_by_phone.append(current_phone_scores)
+                        current_phone = phone
+                        current_label = label
+                        current_phone_scores = []
+                    current_phone_scores.append(outputs[sample,frame,phone].item())
+                    #phones_by_frame.append(phone)
+        target = torch.Tensor([0 if x == -1 else x for x in labels_by_phone])
+        relevant_scores_by_phone = [np.average(np.array(x)) for x in relevant_scores_by_phone]
+        relevant_scores_by_phone = torch.FloatTensor(relevant_scores_by_phone)
+        loss = crit(relevant_scores_by_phone, target)
+        print("Loss " + str(loss))
+    return
 
 optimizer = optim.SGD(acoustic_model.parameters(), lr=0.001, momentum=0.9)
 
@@ -62,7 +84,7 @@ for epoch in range(1):  # loop over the dataset multiple times
 
     running_loss = 0.0
     for i, data in enumerate(trainloader, 0):            
-
+        print("Batch " + str(i))
         # get the inputs; data is a list of (features, transcript, speaker_id, utterance_id, labels)
         inputs = torch.stack([features for features, _,_,_,_ in data])
         batch_labels = torch.stack([labels for _,_,_,_, labels in data])
@@ -78,15 +100,15 @@ for epoch in range(1):  # loop over the dataset multiple times
 
         #Aca hay que ver que onda el criterion
         loss = criterion(outputs, batch_labels)
-        loss.backward()
+        #loss.backward()
         optimizer.step()
 
         # print statistics
-        running_loss += loss.item()
-        if i % 100 == 99:    # print every 2000 mini-batches
-            print('[%d, %5d] loss: %.3f' %
-                  (epoch + 1, i + 1, running_loss / 2000))
-            running_loss = 0.0
+        #running_loss += loss.item()
+        #if i % 100 == 99:    # print every 2000 mini-batches
+        #    print('[%d, %5d] loss: %.3f' %
+        #          (epoch + 1, i + 1, running_loss / 2000))
+        #    running_loss = 0.0
 
 print('Finished Training')
 
