@@ -34,3 +34,22 @@ if not os.path.exists(ivectors_path):
 
 wav_scp_file.close()
 spk2utt_file.close()
+
+
+
+#Handle symbolic links for labels used in evaluation stage
+if not os.path.exists('evaluate/epadb_30/reference_transcriptions.txt'):
+    os.system('ln -s EpaDB/reference_transcriptions.txt evaluate/epadb_30/reference_transcriptions.txt')
+
+for file in sorted(glob.glob('EpaDB/*/labels/*')):
+    fullpath = os.path.abspath(file)
+    basename = os.path.basename(file)
+    #Get spkr id
+    spkr = fullpath.split('/')[-3]
+    labels_dir_for_spkr = 'evaluate/epadb_30/' + spkr+ '/labels/' 
+    #Create directory for speaker's labels
+    if not os.path.exists(labels_dir_for_spkr):
+        os.system('mkdir -p ' + labels_dir_for_spkr)
+    #Make symbolic link to speaker labels from EpaDB directory
+    if not os.path.exists(labels_dir_for_spkr + '/' + basename):
+        os.system('ln -s ' + fullpath + ' ' + labels_dir_for_spkr + '/')
