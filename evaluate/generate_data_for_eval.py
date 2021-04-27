@@ -241,7 +241,7 @@ if __name__ == '__main__':
     phone_pure_dict = phones2dic(args.phones_pure_path)
     gop_alignments = get_gop_alignments(args.gop_path, args.phones_pure_path)
 
-    utterance_list = [re.sub('.txt','', re.sub('.*\/','',s)) for s in glob.glob("%s/*/*"%args.labels_dir)]
+    utterance_list = [re.sub('.txt','', re.sub('.*\/','',s)) for s in glob.glob("%s/*/%s/*.txt"%(args.reference_path, "labels"))]
 
     # Now, iterate over utterances
     for utterance in utterance_list:
