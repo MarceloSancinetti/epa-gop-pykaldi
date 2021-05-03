@@ -15,35 +15,6 @@ from utils import *
 
 import pickle5
 
-_RELEASE_CONFIGS = {
-    "release1": {
-        "folder_in_archive": "TEDLIUM_release1",
-        "url": "http://www.openslr.org/resources/7/TEDLIUM_release1.tar.gz",
-        "checksum": "30301975fd8c5cac4040c261c0852f57cfa8adbbad2ce78e77e4986957445f27",
-        "data_path": "",
-        "subset": "train",
-        "supported_subsets": ["train", "test", "dev"],
-        "dict": "TEDLIUM.150K.dic",
-    },
-    "release2": {
-        "folder_in_archive": "TEDLIUM_release2",
-        "url": "http://www.openslr.org/resources/19/TEDLIUM_release2.tar.gz",
-        "checksum": "93281b5fcaaae5c88671c9d000b443cb3c7ea3499ad12010b3934ca41a7b9c58",
-        "data_path": "",
-        "subset": "train",
-        "supported_subsets": ["train", "test", "dev"],
-        "dict": "TEDLIUM.152k.dic",
-    },
-    "release3": {
-        "folder_in_archive": "TEDLIUM_release-3",
-        "url": "http://www.openslr.org/resources/51/TEDLIUM_release-3.tgz",
-        "checksum": "ad1e454d14d1ad550bc2564c462d87c7a7ec83d4dc2b9210f22ab4973b9eccdb",
-        "data_path": "data/",
-        "subset": None,
-        "supported_subsets": [None],
-        "dict": "TEDLIUM.152k.dic",
-    },
-}
 
 def collapse_target_phone(target_phone):
     phone_replacements = {}
@@ -61,55 +32,47 @@ class EpaDB(Dataset):
     Create a Dataset for EpaDB.
 
     Args:
-        root (str or Path): Path to the directory where the dataset is found or downloaded.
-        subset (str, optional): The subset of dataset to use. Valid options are ``"train"``, ``"dev"``,
-            and ``"test"``.
-        download (bool, optional):
-            Whether to download the dataset if it is not found at root path. (default: ``False``).
+        sample_list_path (str or Path): Path to the dataset sample list.
+        root_path (str or Path): Path to where the EpaDB directory is found.
     """
+
     def __init__(
         self,
-        root: Union[str, Path],
-        phones_list: Union[str, Path],
-        subset: str = None,
-        #download: bool = False,
+        root_path: Union[str, Path],
+        sample_list_path: Union[str, Path],
+        phones_list_path: Union[str, Path],
         audio_ext=".wav"
     ) -> None:
         self._ext_audio = audio_ext
 
-        # Get string representation of 'root' in case Path object is passed
-        root = os.fspath(root)
-        phones_list = os.fspath(phones_list)
+        # Get string representation of 'path' in case Path object is passed
+        root_path = os.fspath(root_path)
+        sample_list_path = os.fspath(sample_list_path)
+        phones_list_path = os.fspath(phones_list_path)
 
-        #basename = os.path.basename(url)
+
         basename = "EpaDB"
-        archive = os.path.join(root, basename)
+        archive = os.path.join(root_path, basename)
 
-        #basename = basename.split(".")[0]
+        self._root_path = archive
 
-        self._path = archive
-        #if subset in ["train", "dev", "test"]:
-            #self._path = os.path.join(self._path, subset)
-
-        #if download:
-        #    if not os.path.isdir(self._path):
-        #        if not os.path.isfile(archive):
-        #            checksum = _RELEASE_CONFIGS[release]["checksum"]
-        #            download_url(url, root, hash_value=checksum)
-        #        extract_archive(archive)
-
-        # Create list for all samples
-        filelist = []
-        for file in sorted(glob.glob('EpaDB/*/waveforms/*')):
-            if file.endswith(".wav"):
-                fileid = os.path.basename(file).split('.')[0]
-                filelist.append(fileid)
-        self._filelist = filelist
+        # Read from sample list and create dictionary mapping fileid to .wav path and file list mapping int to logid
+        file_dict = {}
+        file_id_list = []
+        sample_list_fh = open(sample_list_path, "r")
+        for line in sample_list_fh.readlines():
+            line = line.split()
+            logid = line[0]
+            sample_path = line[1]
+            file_dict[logid] = sample_path
+            file_id_list.append(logid)
+        self._file_dict = file_dict
+        self._filelist = file_id_list
         
         #Define pure phone dictionary to map pure phone symbols to a label vector index  
         self._pure_phone_dict = {}
         #Open file that contains list of pure phones
-        phones_list_fh = open(phones_list, "r")
+        phones_list_fh = open(phones_list_path, "r")
 
         #Get phone number for each phone
         for i, phone_pure_name in enumerate(phones_list_fh.readlines()):
@@ -121,7 +84,7 @@ class EpaDB(Dataset):
 
         Args:
             file_id (str): File id to identify both text and audio files corresponding to the sample
-            path (str): Dataset root path
+            path (dict): Dataset root path
 
         Returns:
             tuple: ``(features, transcript, speaker_id, utterance_id, annotation)``
@@ -131,7 +94,6 @@ class EpaDB(Dataset):
         speaker_id = file_id.split("_")[0]
         utterance_id = file_id.split("_")[1]
 
-        wave_path = os.path.join(path, speaker_id, "waveforms", file_id)
         features = get_features_for_logid(file_id)
 
         transcript_path = os.path.join(path, speaker_id, "transcriptions", file_id)
@@ -151,19 +113,47 @@ class EpaDB(Dataset):
                 label = line[3]
                 start_time = int(line[4])  
                 end_time = int(line[5])
-                #If the phone was mispronounced, put a -1 in the labels
-                if target_phone != pronounced_phone:
-                    labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], -1)
-                    #If the target phone is not defined, collapse it into similar Kaldi phone (i.e Th -> T)
-                    if target_phone not in self._pure_phone_dict.keys():
-                        target_phone = collapse_target_phone(target_phone)                    
-                #If the phone was pronounced correcly, put a 1 in the labels
-                if label == '+' and pronounced_phone != '0' :
-                    labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], 1)
-                    #If the target phone is not defined, collapse it into similar Kaldi phone (i.e Th -> T)
-                    if target_phone not in self._pure_phone_dict.keys():
-                        target_phone = collapse_target_phone(target_phone)
-                
+                try:
+                    #These two if statements fix the mismatch between #frames in annotations and feature matrix
+                    if end_time > features.shape[0]:
+                        if  end_time > features.shape[0] + 2:
+                            raise Exception('End time in annotations longer than feature length by ' + str(features.shape[0] - end_time))
+                        end_time = features.shape[0]
+                    if start_time > end_time:
+                        if  start_time > end_time + 2:
+                            raise Exception('Start time in annotations longer than end time by ' + str(end_time - start_time))    
+                        start_time = end_time
+
+
+                        #If the phone was mispronounced, put a -1 in the labels
+                    if target_phone != pronounced_phone:
+                        labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], -1)
+                        #If the target phone is not defined, collapse it into similar Kaldi phone (i.e Th -> T)
+                        if target_phone not in self._pure_phone_dict.keys():
+                            target_phone = collapse_target_phone(target_phone)                    
+                    #If the phone was pronounced correcly, put a 1 in the labels
+                    if label == '+' and pronounced_phone != '0' :
+                        labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], 1)
+                        #If the target phone is not defined, collapse it into similar Kaldi phone (i.e Th -> T)
+                        if target_phone not in self._pure_phone_dict.keys():
+                            target_phone = collapse_target_phone(target_phone)
+                except ValueError as e:
+                    print("Bad item:")
+                    print("Speaker: " + speaker_id)
+                    print("Utterance: " + utterance_id)
+                    print("#Frames in features: ")
+                    print(features.shape[0])
+                    print(line)
+                    print(e)
+                except KeyError as e:
+                    print("Bad item:")
+                    print("Speaker: " + speaker_id)
+                    print("Utterance: " + utterance_id)
+                    print("#Frames in features: ")
+                    print(features.shape[0])
+                    print(line)
+                    print(e)
+
         return (features, transcript, speaker_id, utterance_id, torch.from_numpy(labels))
 
    
@@ -178,7 +168,7 @@ class EpaDB(Dataset):
                     annotation is List[(correct_phone, pronounced_phone, label, start_time, end_time]]        
         """
         fileid = self._filelist[n]
-        return self._load_epa_item(fileid, self._path)
+        return self._load_epa_item(fileid, self._root_path)
 
 
     def __len__(self) -> int:

@@ -138,7 +138,9 @@ while not finished:
 	# The code used to parse the chain head parameters has been removed because a new layer will be used instead.
 
 
-ftdnn = FTDNN()
+phone_count = 44
+
+ftdnn = FTDNN(out_dim=phone_count)
 
 state_dict = {}
 
@@ -161,8 +163,8 @@ for layer_number in range(2, 18):
 
 state_dict['layer18.weight'] = torch.from_numpy(components['prefinal-l']['linear_params'])
 
-state_dict['layer19.linear.weight'] = torch.randn([40, 256])
-state_dict['layer19.linear.bias'] = torch.randn([40])
+state_dict['layer19.linear.weight'] = torch.randn([phone_count, 256])
+state_dict['layer19.linear.bias'] = torch.randn([phone_count])
 
 torch.nn.init.xavier_uniform(ftdnn.layer19.linear.weight)
 
