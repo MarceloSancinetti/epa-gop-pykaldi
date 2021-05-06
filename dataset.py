@@ -104,6 +104,7 @@ class EpaDB(Dataset):
         annotation = []
         phone_count = self.phone_count()
         labels = np.zeros([features.shape[0], phone_count])
+        phone_times = []
 
         with open(annotation_path + ".txt") as f:
             for line in f.readlines():
@@ -113,9 +114,11 @@ class EpaDB(Dataset):
                 label = line[3]
                 start_time = int(line[4])  
                 end_time = int(line[5])
+                phone_times.append((target_phone, start_time, end_time))
                 try:
                     #These two if statements fix the mismatch between #frames in annotations and feature matrix
                     if end_time > features.shape[0]:
+                        #Printear warning aca
                         if  end_time > features.shape[0] + 2:
                             raise Exception('End time in annotations longer than feature length by ' + str(features.shape[0] - end_time))
                         end_time = features.shape[0]
@@ -125,7 +128,7 @@ class EpaDB(Dataset):
                         start_time = end_time
 
 
-                        #If the phone was mispronounced, put a -1 in the labels
+                    #If the phone was mispronounced, put a -1 in the labels
                     if target_phone != pronounced_phone:
                         labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], -1)
                         #If the target phone is not defined, collapse it into similar Kaldi phone (i.e Th -> T)
@@ -137,6 +140,7 @@ class EpaDB(Dataset):
                         #If the target phone is not defined, collapse it into similar Kaldi phone (i.e Th -> T)
                         if target_phone not in self._pure_phone_dict.keys():
                             target_phone = collapse_target_phone(target_phone)
+
                 except ValueError as e:
                     print("Bad item:")
                     print("Speaker: " + speaker_id)
@@ -154,7 +158,7 @@ class EpaDB(Dataset):
                     print(line)
                     print(e)
 
-        return (features, transcript, speaker_id, utterance_id, torch.from_numpy(labels))
+        return (features, transcript, speaker_id, utterance_id, torch.from_numpy(labels), phone_times)
 
    
     def __getitem__(self, n: int) -> Tuple[Tensor, str, str, str, List[Tuple[str, str, str, int, int]]]:
