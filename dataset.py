@@ -114,7 +114,6 @@ class EpaDB(Dataset):
                 label = line[3]
                 start_time = int(line[4])  
                 end_time = int(line[5])
-                phone_times.append((target_phone, start_time, end_time))
                 try:
                     #These two if statements fix the mismatch between #frames in annotations and feature matrix
                     if end_time > features.shape[0]:
@@ -127,6 +126,7 @@ class EpaDB(Dataset):
                             raise Exception('Start time in annotations longer than end time by ' + str(end_time - start_time))    
                         start_time = end_time
 
+                    phone_times.append((target_phone, start_time, end_time))
 
                     #If the phone was mispronounced, put a -1 in the labels
                     if target_phone != pronounced_phone:
