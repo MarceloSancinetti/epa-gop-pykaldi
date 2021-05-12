@@ -124,6 +124,6 @@ GOP results in text form will be found in gop/gop_epa.txt
 ```
 cd evaluate
 python generate_data_for_eval.py --transcription-file=epadb_30/reference_transcriptions.txt --labels-dir=labels/ --output-dir=output --gop-file=../gop/gop_epa.txt --phones-pure-file=../gop/phones/phones-pure.txt --reference-file=epadb_30/
-python generate_plots.py --data-for-eval-dir=output ----output-dir=output
+python generate_plots.py --data-for-eval-dir=output --output-dir=output
 ```
 Plots will be found in evaluate/output

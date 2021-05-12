@@ -36,11 +36,6 @@ wav_scp_file.close()
 spk2utt_file.close()
 
 
-
-#Handle symbolic links for labels used in evaluation stage
-if not os.path.exists('evaluate/epadb_30/reference_transcriptions.txt'):
-    os.system('ln -s EpaDB/reference_transcriptions.txt evaluate/epadb_30/reference_transcriptions.txt')
-
 for file in sorted(glob.glob('EpaDB/*/labels/*')):
     fullpath = os.path.abspath(file)
     basename = os.path.basename(file)
@@ -53,3 +48,11 @@ for file in sorted(glob.glob('EpaDB/*/labels/*')):
     #Make symbolic link to speaker labels from EpaDB directory
     if not os.path.exists(labels_dir_for_spkr + '/' + basename):
         os.system('ln -s ' + fullpath + ' ' + labels_dir_for_spkr + '/')
+
+#Handle symbolic links for labels used in evaluation stage
+if not os.path.exists('evaluate/epadb_30/reference_transcriptions.txt'):
+    current_path = os.getcwd()
+    print('ln -s ' + current_path + '/EpaDB/reference_transcriptions.txt ' + current_path + '/evaluate/epadb_30/reference_transcriptions.txt')
+    os.system('ln -s ' + current_path + '/EpaDB/reference_transcriptions.txt ' + current_path + '/evaluate/epadb_30/reference_transcriptions.txt')
+
+
