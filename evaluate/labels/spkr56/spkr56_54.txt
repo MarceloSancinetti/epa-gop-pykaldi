@@ -1,7 +1,0 @@
-spkr56_54_0 SH SH +
-spkr56_54_1 IY IY +
-spkr56_54_2 Z S -
-spkr56_54_3 AX A -
-spkr56_54_4 L L +
-spkr56_54_5 AY AY +
-spkr56_54_6 ER E+DX -

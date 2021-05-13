@@ -11,6 +11,7 @@ import torch
 import numpy as np
 import pickle
 import os
+import IPython
 
 # Set the paths and read/write specifiers
 acoustic_model_path = "model.pt"
@@ -52,6 +53,7 @@ with SequentialMatrixReader(mfccs_rspec) as mfccs_reader, \
     for (mkey, mfccs), (ikey, ivectors), line in zip(mfccs_reader, ivectors_reader, t):
         if mkey != ikey:
             print("Algo anda mal")
+            embed()
         tkey, text = line.strip().split(None, 1)
         ivectors = np.repeat(ivectors, 10, axis=0)
         ivectors = ivectors[:mfccs.shape[0],:]

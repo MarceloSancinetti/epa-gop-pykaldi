@@ -1,7 +1,0 @@
-spkr55_54_0 SH SH +
-spkr55_54_1 IY IY +
-spkr55_54_2 Z S -
-spkr55_54_3 AX AX +
-spkr55_54_4 L L +
-spkr55_54_5 AY AY +
-spkr55_54_6 ER ER +

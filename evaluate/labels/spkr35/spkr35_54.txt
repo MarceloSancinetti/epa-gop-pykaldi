@@ -1,7 +1,0 @@
-spkr35_54_0 SH SH +
-spkr35_54_1 IY IY +
-spkr35_54_2 Z S -
-spkr35_54_3 AX AH -
-spkr35_54_4 L L +
-spkr35_54_5 AY AY +
-spkr35_54_6 ER ER +

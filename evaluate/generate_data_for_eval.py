@@ -127,7 +127,9 @@ def generate_dict_from_transcripctions(transcriptions):
 def get_gop_alignments(path_filename, phone_pure_dic):
 
     output = []
+    print(path_filename)
     for line in open(path_filename).readlines():
+        print(line)
         l=line.split()
 
         if len(l) < 2:
@@ -220,7 +222,7 @@ def get_reference(file):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--transcription-file', dest='transcriptions', help='File with reference phonetic transcriptions of each of the phrases', default=None)
-    parser.add_argument('--labels-dir', dest='labels_dir', help='Directory with textgrid files with annotations', default=None)
+    parser.add_argument('--utterance-list', dest='utterance_list', help='File with utt list', default=None)
     parser.add_argument('--output-dir', dest='output_dir', help='Output dir', default=None)
     parser.add_argument('--gop-file', dest='gop_path', help='File with gop results', default=None)
     parser.add_argument('--phones-pure-file', dest='phones_pure_path', help='file that matches phone ints to phone symbols', default=None)
@@ -241,7 +243,13 @@ if __name__ == '__main__':
     phone_pure_dict = phones2dic(args.phones_pure_path)
     gop_alignments = get_gop_alignments(args.gop_path, args.phones_pure_path)
 
-    utterance_list = [re.sub('.txt','', re.sub('.*\/','',s)) for s in glob.glob("%s/*/*"%args.labels_dir)]
+    utterance_list = []
+    utt_list_fh = open(args.utterance_list, 'r')
+    for line in utt_list_fh.readlines():
+        logid = line.split(' ')[0]
+        utterance_list.append(logid)
+
+    #utterance_list = [re.sub('.txt','', re.sub('.*\/','',s)) for s in glob.glob("%s/*/*"%args.labels_dir)]
 
     # Now, iterate over utterances
     for utterance in utterance_list:
