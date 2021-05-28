@@ -41,6 +41,7 @@ class EpaDB(Dataset):
         root_path: Union[str, Path],
         sample_list_path: Union[str, Path],
         phones_list_path: Union[str, Path],
+        labels_path: Union[str, Path],
         audio_ext=".wav"
     ) -> None:
         self._ext_audio = audio_ext
@@ -49,26 +50,28 @@ class EpaDB(Dataset):
         root_path = os.fspath(root_path)
         sample_list_path = os.fspath(sample_list_path)
         phones_list_path = os.fspath(phones_list_path)
+        labels_path = os.fspath(labels_path)
 
-
-        basename = "EpaDB"
-        archive = os.path.join(root_path, basename)
-
-        self._root_path = archive
+        self._root_path = root_path
+        self._labels_path = labels_path
 
         # Read from sample list and create dictionary mapping fileid to .wav path and file list mapping int to logid
-        file_dict = {}
         file_id_list = []
+        logids_by_speaker = {}
         sample_list_fh = open(sample_list_path, "r")
         for line in sample_list_fh.readlines():
             line = line.split()
             logid = line[0]
+            speaker_id = logid.split('_')[0]
             sample_path = line[1]
-            file_dict[logid] = sample_path
             file_id_list.append(logid)
-        self._file_dict = file_dict
+            if speaker_id in logids_by_speaker:
+                logids_by_speaker[speaker_id].append(logid)
+            else:
+                logids_by_speaker[speaker_id] = []
         self._filelist = file_id_list
-        
+        self._logids_by_speaker = logids_by_speaker
+
         #Define pure phone dictionary to map pure phone symbols to a label vector index  
         self._pure_phone_dict = {}
         #Open file that contains list of pure phones
@@ -79,7 +82,7 @@ class EpaDB(Dataset):
             self._pure_phone_dict[phone_pure_name.strip()] = i
             
 
-    def _load_epa_item(self, file_id: str, path: str) -> Tuple[Tensor, str, str, str, List[Tuple[str, str, str, int, int]]]:
+    def _load_epa_item(self, file_id: str, path: str, labels_path: str) -> Tuple[Tensor, str, str, str, List[Tuple[str, str, str, int, int]]]:
         """Loads an EpaDB dataset sample given a file name and corresponding sentence name.
 
         Args:
@@ -100,7 +103,7 @@ class EpaDB(Dataset):
         with open(transcript_path + ".lab") as f:
             transcript = f.readlines()[0]
 
-        annotation_path = os.path.join(path, speaker_id, "labels", file_id)
+        annotation_path = os.path.join(labels_path, speaker_id, file_id)
         annotation = []
         phone_count = self.phone_count()
         labels = np.zeros([features.shape[0], phone_count])
@@ -172,7 +175,7 @@ class EpaDB(Dataset):
                     annotation is List[(correct_phone, pronounced_phone, label, start_time, end_time]]        
         """
         fileid = self._filelist[n]
-        return self._load_epa_item(fileid, self._root_path)
+        return self._load_epa_item(fileid, self._root_path, self._labels_path)
 
 
     def __len__(self) -> int:
@@ -182,6 +185,36 @@ class EpaDB(Dataset):
             int: EpaDB dataset length
         """
         return len(self._filelist)
+
+    def get_sample_indexes_from_spkr_indexes(self, spkr_indexes):
+        """Takes list of valid indexes from the speaker list and returns
+        list of logid indexes for the samples of said speakers. The logid
+        indexes are positions in self._filelist.
+
+        Returns:
+            list: indexes of self._filelist
+        """
+        spkr_ids = self.get_speaker_list()
+        spkr_ids = [spkr_ids[spkr_ix] for spkr_ix in spkr_indexes]
+        logids_for_spkrs = []
+        [logids_for_spkrs.extend(self.get_sample_logids_for_spkr(spkr_id)) for spkr_id in spkr_ids] 
+        sample_indexes = [self._filelist.index(logid) for logid in logids_for_spkrs]
+        return sample_indexes
+
+    def get_sample_logids_for_spkr(self, spkr_id):
+        """
+        Returns:
+            list: sample logid list for given spkr 
+        """
+        return self._logids_by_speaker[spkr_id]
+
+    def get_speaker_list(self):
+        """
+        Returns:
+            list: speaker list 
+        """
+        return list(self._logids_by_speaker.keys())
+
 
     def phone_count(self) ->int:
         """

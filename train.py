@@ -11,6 +11,8 @@ from finetuning_utils import *
 from utils import *
 from dataset import *
 
+from torch.utils.data import DataLoader, ConcatDataset
+
 from pytorch_models import *
 
 import wandb
@@ -31,7 +33,7 @@ def criterion(batch_outputs, batch_labels):
     loss = loss_fn(batch_outputs, batch_labels)
     return loss
 
-def train(model, trainloader, testloader, run_name='test'):
+def train(model, trainloader, testloader, fold, run_name='test'):
 
     #Freeze all layers except the last
     for name, param in model.named_parameters():
@@ -40,7 +42,14 @@ def train(model, trainloader, testloader, run_name='test'):
 
     optimizer = optim.Adam(model.parameters())
 
-    for epoch in range(20):  # loop over the dataset multiple times
+    for epoch in range(10):  # loop over the dataset multiple times
+        PATH = 'saved_state_dicts/' + run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) + '.pth'
+        #If the checkpoint for the current epoch is already present, checkpoint is loaded and training is skipped
+        if os.path.isfile(PATH):
+            checkpoint = torch.load(PATH)
+            model.load_state_dict(checkpoint['model_state_dict'])
+            optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+            continue
 
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):            
@@ -48,7 +57,6 @@ def train(model, trainloader, testloader, run_name='test'):
             # get the inputs; data is a list of (features, transcript, speaker_id, utterance_id, labels)
             inputs = unpack_features_from_batch(data)
             batch_labels = unpack_labels_from_batch(data)
-
 
             # zero the parameter gradients
             optimizer.zero_grad()
@@ -65,19 +73,21 @@ def train(model, trainloader, testloader, run_name='test'):
             #print statistics
             running_loss += loss.item()
 
-            if i % 20 == 19:    # print every 2000 mini-batches
-                print('[%d, %5d] train_loss: %.3f' %
-                      (epoch + 1, i + 1, running_loss / 20))
-                wandb.log({"train_loss": running_loss/20})
+            if i % 20 == 19:    # log every 20 mini-batches
+                print('Fold ' + str(fold), ' Epoch ' + str(epoch) + ' Batch ' + str(i))
+                print('running_loss ' + str(running_loss/20))
+                wandb.log({'train_loss_fold_' + str(fold): running_loss/20})
                 running_loss = 0.0
                 
         test_loss = test(model, testloader)
-        wandb.log({"test_loss": test_loss})
+        wandb.log({'test_loss_fold_' + str(fold) : test_loss})
+        
+        torch.save(model.state_dict(), PATH)
+        torch.save({
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            }, PATH)
 
-    print('Finished Training')
-
-    PATH = run_name + '.pth'
-    torch.save(model.state_dict(), PATH)
 
     return model
 
@@ -97,25 +107,39 @@ def test(model, testloader):
 
 def main():
     wandb.init(project="gop-finetuning")
+    wandb.run.name = 'cross_validation_kaldi_phones'
     run_name = wandb.run.name
 
-    trainset = EpaDB('.', 'epadb_train_path_list', 'phones_epa.txt')
+    dataset = EpaDB('EpaDB', 'epadb_full_path_list', 'phones_kaldi.txt', 'labels_with_kaldi_phones')
 
-    testset = EpaDB('.', 'epadb_test_path_list', 'phones_epa.txt')
+    seed = 42
+    torch.manual_seed(seed)
 
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=4,
-                                      shuffle=True, num_workers=2, collate_fn=collate_fn_padd)
+    kfold = KFold(n_splits=5, shuffle=True, random_state = seed)
 
-    testloader = torch.utils.data.DataLoader(testset, batch_size=32,
-                                          shuffle=False, num_workers=2, collate_fn=collate_fn_padd)
+    spkr_list = dataset.get_speaker_list()
 
-    phone_count = trainset.phone_count()
+    for fold, (train_spkr_indexes, test_spkr_indexes) in enumerate(kfold.split(spkr_list)):
 
-    #Get acoustic model to train
-    model = FTDNN(out_dim=phone_count)
-    model.load_state_dict(torch.load('model_finetuning.pt'))
+        train_sample_indexes = dataset.get_sample_indexes_from_spkr_indexes(train_spkr_indexes)
+        test_sample_indexes  = dataset.get_sample_indexes_from_spkr_indexes(test_spkr_indexes)
 
-    wandb.watch(model, log_freq=100)
-    model = train(model, trainloader, testloader, run_name=run_name)
+        train_subsampler = torch.utils.data.SubsetRandomSampler(train_sample_indexes)
+        test_subsampler = torch.utils.data.SubsetRandomSampler(test_sample_indexes)
+
+        trainloader = torch.utils.data.DataLoader(dataset, batch_size=4,
+                                     num_workers=1, sampler=train_subsampler, collate_fn=collate_fn_padd)
+
+        testloader = torch.utils.data.DataLoader(dataset, batch_size=32, 
+                                     num_workers=1, sampler=test_subsampler, collate_fn=collate_fn_padd)
+
+        phone_count = testset.phone_count()
+
+        #Get acoustic model to train
+        model = FTDNN(out_dim=phone_count)
+        model.load_state_dict(torch.load('model_finetuning.pt'))
+
+        wandb.watch(model, log_freq=100)
+        model = train(model, trainloader, testloader, fold, run_name=run_name)
 
 main()

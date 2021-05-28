@@ -4,10 +4,11 @@ import os
 data_path = 'epadb/test/data'
 mfcc_path =  data_path + '/mfccs.ark'
 ivectors_path =  data_path + '/ivectors.ark'
-
+text_path = 'epadb/test/text'
 
 wav_scp_file = open("wav.scp","w+")
 spk2utt_file = open("spk2utt","w+")
+text_file = open(text_path, 'w+')
 
 for file in sorted(glob.glob('EpaDB/*/waveforms/*')):
     fullpath = os.path.abspath(file)
@@ -15,7 +16,10 @@ for file in sorted(glob.glob('EpaDB/*/waveforms/*')):
     wav_scp_file.write(basename + ' ' + fullpath + '\n')
     spkr = basename.split('_')[0]
     spk2utt_file.write(spkr + ' ' + basename + '\n')
-
+    transcription_path = 'EpaDB/' + spkr + '/transcriptions/' + basename +'.lab'
+    transcription_fh = open(transcription_path, 'r')
+    transcription = transcription_fh.readline().upper()
+    text_file.write(basename + ' ' + transcription + '\n')
 
 if not os.path.isdir(data_path) or not os.path.exists('feats.scp'):
         os.mkdir(data_path)
