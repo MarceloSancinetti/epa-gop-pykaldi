@@ -1,11 +1,1 @@
-spkr57_2_0 AX AX +
-spkr57_2_1 Kh Kh +
-spkr57_2_2 AH AH +
-spkr57_2_3 P P +
-spkr57_2_4 AX O -
-spkr57_2_5 V F -
-spkr57_2_6 HH HH +
-spkr57_2_7 AA O -
-spkr57_2_8 Th T -
-spkr57_2_9 Th Th +
-spkr57_2_10 IY IY +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr57/labels/spkr57_2.txt

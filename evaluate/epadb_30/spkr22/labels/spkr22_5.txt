@@ -1,15 +1,1 @@
-spkr22_5_0 CH CH +
-spkr22_5_1 R R +
-spkr22_5_2 AY AY +
-spkr22_5_3 Th T -
-spkr22_5_4 UW UW +
-spkr22_5_5 S S +
-spkr22_5_6 IH IY -
-spkr22_5_7 NG NG +
-spkr22_5_8 AX AX +
-spkr22_5_9 N N +
-spkr22_5_10 0 0 +
-spkr22_5_11 JH CH -
-spkr22_5_12 AH AH +
-spkr22_5_13 M M +
-spkr22_5_14 P P +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr22/labels/spkr22_5.txt

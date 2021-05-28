@@ -1,10 +1,1 @@
-spkr64_1_0 AW AW +
-spkr64_1_1 ER ER +
-spkr64_1_2 N N +
-spkr64_1_3 AY AY +
-spkr64_1_4 S S +
-spkr64_1_5 R RR -
-spkr64_1_6 EH EH +
-spkr64_1_7 D T -
-spkr64_1_8 Th T -
-spkr64_1_9 OY OY +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr64/labels/spkr64_1.txt

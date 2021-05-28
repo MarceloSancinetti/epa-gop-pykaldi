@@ -1,15 +1,1 @@
-spkr50_29_0 HH HH +
-spkr50_29_1 IY IY +
-spkr50_29_2 TH TH +
-spkr50_29_3 R R +
-spkr50_29_4 UW UW +
-spkr50_29_5 S S +
-spkr50_29_6 AH AH +
-spkr50_29_7 M M +
-spkr50_29_8 TH TH +
-spkr50_29_9 IH IH +
-spkr50_29_10 NG NG +
-spkr50_29_11 AE AX -
-spkr50_29_12 CH CH +
-spkr50_29_13 Y Y +
-spkr50_29_14 UW UW +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr50/labels/spkr50_29.txt

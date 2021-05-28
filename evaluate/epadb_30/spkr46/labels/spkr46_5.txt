@@ -1,15 +1,1 @@
-spkr46_5_0 T T +
-spkr46_5_1 R DX -
-spkr46_5_2 AY AY +
-spkr46_5_3 Th T -
-spkr46_5_4 UH UH +
-spkr46_5_5 S S +
-spkr46_5_6 IH IY -
-spkr46_5_7 NG N+K -
-spkr46_5_8 AX AH -
-spkr46_5_9 N N +
-spkr46_5_10 0 0 +
-spkr46_5_11 JH SH -
-spkr46_5_12 AH AH +
-spkr46_5_13 M M +
-spkr46_5_14 P P +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr46/labels/spkr46_5.txt

@@ -1,14 +1,1 @@
-spkr41_74_0 DH DH +
-spkr41_74_1 AE AH -
-spkr41_74_2 T T +
-spkr41_74_3 S S +
-spkr41_74_4 P P +
-spkr41_74_5 Y Y +
-spkr41_74_6 UH UH +
-spkr41_74_7 R AX -
-spkr41_74_8 L L +
-spkr41_74_9 AH AH +
-spkr41_74_10 G G +
-spkr41_74_11 ZH ZH +
-spkr41_74_12 ER ER +
-spkr41_74_13 IY IY +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr41/labels/spkr41_74.txt

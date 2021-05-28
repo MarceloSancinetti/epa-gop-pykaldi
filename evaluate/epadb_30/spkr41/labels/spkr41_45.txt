@@ -1,11 +1,1 @@
-spkr41_45_0 Ph P -
-spkr41_45_1 UH UH +
-spkr41_45_2 CH CH +
-spkr41_45_3 Y Y +
-spkr41_45_4 AO AO +
-spkr41_45_5 R R +
-spkr41_45_6 Kh Kh +
-spkr41_45_7 OW OW +
-spkr41_45_8 T Th -
-spkr41_45_9 AO AO +
-spkr41_45_10 N N +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr41/labels/spkr41_45.txt

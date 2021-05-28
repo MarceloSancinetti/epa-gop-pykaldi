@@ -1,10 +1,1 @@
-spkr109_56_0 Y Y +
-spkr109_56_1 UW UW +
-spkr109_56_2 Kh Kh +
-spkr109_56_3 AA O -
-spkr109_56_4 L L +
-spkr109_56_5 D 0 -
-spkr109_56_6 AX A -
-spkr109_56_7 Kh Kh +
-spkr109_56_8 AE A -
-spkr109_56_9 B BH -
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr109/labels/spkr109_56.txt

@@ -1,10 +1,1 @@
-spkr31_56_0 Y Y +
-spkr31_56_1 UW UW +
-spkr31_56_2 Kh K -
-spkr31_56_3 AO AO +
-spkr31_56_4 L L +
-spkr31_56_5 D D +
-spkr31_56_6 AX AX +
-spkr31_56_7 Kh K -
-spkr31_56_8 AE A -
-spkr31_56_9 B B +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr31/labels/spkr31_56.txt

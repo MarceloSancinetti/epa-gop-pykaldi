@@ -1,11 +1,1 @@
-spkr42_2_0 AX AX +
-spkr42_2_1 Kh K -
-spkr42_2_2 AH AA -
-spkr42_2_3 P P +
-spkr42_2_4 AX AO+F+AO -
-spkr42_2_5 V F -
-spkr42_2_6 HH X -
-spkr42_2_7 AA AO -
-spkr42_2_8 Th T -
-spkr42_2_9 Th Th +
-spkr42_2_10 IY IY +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr42/labels/spkr42_2.txt

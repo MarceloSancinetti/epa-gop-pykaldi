@@ -1,14 +1,1 @@
-spkr109_37_0 AY AY +
-spkr109_37_1 L L +
-spkr109_37_2 ER ER +
-spkr109_37_3 N 0 -
-spkr109_37_4 0 0 +
-spkr109_37_5 Th T -
-spkr109_37_6 UW UW +
-spkr109_37_7 Th Th +
-spkr109_37_8 AY AY +
-spkr109_37_9 M M +
-spkr109_37_10 AY AY +
-spkr109_37_11 SH SH +
-spkr109_37_12 UW OW -
-spkr109_37_13 Z S -
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr109/labels/spkr109_37.txt

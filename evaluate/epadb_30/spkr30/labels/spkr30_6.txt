@@ -1,12 +1,1 @@
-spkr30_6_0 HH HH +
-spkr30_6_1 UW UW +
-spkr30_6_2 IH IH +
-spkr30_6_3 Z Z +
-spkr30_6_4 R R +
-spkr30_6_5 AO AO +
-spkr30_6_6 B B +
-spkr30_6_7 IH IH +
-spkr30_6_8 N N +
-spkr30_6_9 HH HH +
-spkr30_6_10 UH UH +
-spkr30_6_11 D D +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr30/labels/spkr30_6.txt

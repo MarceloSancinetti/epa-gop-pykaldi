@@ -1,14 +1,1 @@
-spkr18_11_0 DH DH +
-spkr18_11_1 AX E -
-spkr18_11_2 G G +
-spkr18_11_3 ER ER +
-spkr18_11_4 L L +
-spkr18_11_5 G G +
-spkr18_11_6 OW OW +
-spkr18_11_7 Z S -
-spkr18_11_8 Th T -
-spkr18_11_9 UW UW +
-spkr18_11_10 DH DH +
-spkr18_11_11 AX AX +
-spkr18_11_12 Z S -
-spkr18_11_13 UW UW +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr18/labels/spkr18_11.txt

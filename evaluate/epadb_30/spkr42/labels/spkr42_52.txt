@@ -1,11 +1,1 @@
-spkr42_52_0 L L +
-spkr42_52_1 EH EH +
-spkr42_52_2 T T +
-spkr42_52_3 S S +
-spkr42_52_4 P P +
-spkr42_52_5 L L +
-spkr42_52_6 EY EY +
-spkr42_52_7 S S +
-spkr42_52_8 AO AO +
-spkr42_52_9 K K +
-spkr42_52_10 ER ER +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr42/labels/spkr42_52.txt

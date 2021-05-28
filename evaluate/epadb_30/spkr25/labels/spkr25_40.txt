@@ -1,15 +1,1 @@
-spkr25_40_0 DH DH +
-spkr25_40_1 AX AX +
-spkr25_40_2 G G +
-spkr25_40_3 AA AA +
-spkr25_40_4 R R +
-spkr25_40_5 D D +
-spkr25_40_6 AX AX +
-spkr25_40_7 N N +
-spkr25_40_8 IH IH +
-spkr25_40_9 Z Z +
-spkr25_40_10 P P +
-spkr25_40_11 R R +
-spkr25_40_12 IH IY -
-spkr25_40_13 T T +
-spkr25_40_14 IY IY +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr25/labels/spkr25_40.txt

@@ -1,11 +1,1 @@
-spkr14_52_0 L L +
-spkr14_52_1 EH EH +
-spkr14_52_2 T T +
-spkr14_52_3 S S +
-spkr14_52_4 P P +
-spkr14_52_5 L L +
-spkr14_52_6 EY EY +
-spkr14_52_7 S S +
-spkr14_52_8 AO AO +
-spkr14_52_9 K Kh -
-spkr14_52_10 ER EH+DX -
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr14/labels/spkr14_52.txt

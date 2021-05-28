@@ -1,13 +1,1 @@
-spkr32_43_0 W W +
-spkr32_43_1 IY IY +
-spkr32_43_2 S S +
-spkr32_43_3 AO AO +
-spkr32_43_4 AX AH -
-spkr32_43_5 N N +
-spkr32_43_6 OW O -
-spkr32_43_7 L 0 -
-spkr32_43_8 0 0 +
-spkr32_43_9 F F +
-spkr32_43_10 IH IH +
-spkr32_43_11 L L +
-spkr32_43_12 M M +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr32/labels/spkr32_43.txt

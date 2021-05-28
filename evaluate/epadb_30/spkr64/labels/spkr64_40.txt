@@ -1,15 +1,1 @@
-spkr64_40_0 DH DH +
-spkr64_40_1 AX E -
-spkr64_40_2 G G +
-spkr64_40_3 AA A -
-spkr64_40_4 R DX -
-spkr64_40_5 D DH -
-spkr64_40_6 AX E -
-spkr64_40_7 N N +
-spkr64_40_8 IH IH +
-spkr64_40_9 Z S -
-spkr64_40_10 P Ph -
-spkr64_40_11 R R +
-spkr64_40_12 IH IH +
-spkr64_40_13 T T +
-spkr64_40_14 IY IY +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr64/labels/spkr64_40.txt

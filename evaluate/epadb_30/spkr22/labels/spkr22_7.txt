@@ -1,16 +1,1 @@
-spkr22_7_0 HH HH +
-spkr22_7_1 ER ER +
-spkr22_7_2 L L +
-spkr22_7_3 IH IH +
-spkr22_7_4 DX DX +
-spkr22_7_5 0 0 +
-spkr22_7_6 L L +
-spkr22_7_7 S S +
-spkr22_7_8 IH IY -
-spkr22_7_9 S S +
-spkr22_7_10 T Th -
-spkr22_7_11 ER ER +
-spkr22_7_12 Z S -
-spkr22_7_13 Th Th +
-spkr22_7_14 IY IY +
-spkr22_7_15 TH TH +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr22/labels/spkr22_7.txt

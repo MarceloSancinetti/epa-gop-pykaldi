@@ -1,12 +1,1 @@
-spkr65_6_0 HH HH +
-spkr65_6_1 UW UW +
-spkr65_6_2 IH IH +
-spkr65_6_3 Z S -
-spkr65_6_4 R R +
-spkr65_6_5 AA O -
-spkr65_6_6 B B +
-spkr65_6_7 IH IY -
-spkr65_6_8 N N +
-spkr65_6_9 HH HH +
-spkr65_6_10 UH UH +
-spkr65_6_11 T T +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr65/labels/spkr65_6.txt

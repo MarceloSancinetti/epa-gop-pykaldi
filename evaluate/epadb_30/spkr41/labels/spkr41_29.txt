@@ -1,15 +1,1 @@
-spkr41_29_0 HH HH +
-spkr41_29_1 IY IY +
-spkr41_29_2 TH TH +
-spkr41_29_3 R R +
-spkr41_29_4 UW UW +
-spkr41_29_5 S S +
-spkr41_29_6 AH AH +
-spkr41_29_7 M M +
-spkr41_29_8 TH TH +
-spkr41_29_9 IH IH +
-spkr41_29_10 NG NG +
-spkr41_29_11 AE AE +
-spkr41_29_12 CH CH +
-spkr41_29_13 Y Y +
-spkr41_29_14 UW UW +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr41/labels/spkr41_29.txt

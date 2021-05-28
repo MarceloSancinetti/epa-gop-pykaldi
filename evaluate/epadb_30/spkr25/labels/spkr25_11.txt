@@ -1,14 +1,1 @@
-spkr25_11_0 DH DH +
-spkr25_11_1 AX AX +
-spkr25_11_2 G G +
-spkr25_11_3 ER ER +
-spkr25_11_4 L L +
-spkr25_11_5 G G +
-spkr25_11_6 OW OW +
-spkr25_11_7 Z Z +
-spkr25_11_8 Th CH -
-spkr25_11_9 UW UW +
-spkr25_11_10 DH DH +
-spkr25_11_11 AX AX +
-spkr25_11_12 Z Z +
-spkr25_11_13 UW UW +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr25/labels/spkr25_11.txt

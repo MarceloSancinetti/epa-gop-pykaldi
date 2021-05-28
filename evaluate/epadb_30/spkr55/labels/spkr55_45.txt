@@ -1,11 +1,1 @@
-spkr55_45_0 Ph Ph +
-spkr55_45_1 UH UH +
-spkr55_45_2 T Th -
-spkr55_45_3 Y Y +
-spkr55_45_4 AA O -
-spkr55_45_5 R R +
-spkr55_45_6 Kh Kh +
-spkr55_45_7 OW OW +
-spkr55_45_8 T T +
-spkr55_45_9 AO AO +
-spkr55_45_10 N N +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr55/labels/spkr55_45.txt

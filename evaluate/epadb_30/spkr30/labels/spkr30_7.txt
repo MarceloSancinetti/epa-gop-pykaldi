@@ -1,16 +1,1 @@
-spkr30_7_0 HH HH +
-spkr30_7_1 ER ER +
-spkr30_7_2 L L +
-spkr30_7_3 IH IH +
-spkr30_7_4 DX DX +
-spkr30_7_5 AX AH -
-spkr30_7_6 L L +
-spkr30_7_7 S S +
-spkr30_7_8 IH IH +
-spkr30_7_9 S S +
-spkr30_7_10 T T +
-spkr30_7_11 ER AX -
-spkr30_7_12 Z S -
-spkr30_7_13 Th Th +
-spkr30_7_14 IY IY +
-spkr30_7_15 TH TH +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr30/labels/spkr30_7.txt

@@ -1,15 +1,1 @@
-spkr34_46_0 AY AY +
-spkr34_46_1 D DH -
-spkr34_46_2 AO AO +
-spkr34_46_3 N N +
-spkr34_46_4 0 0 +
-spkr34_46_5 L L +
-spkr34_46_6 AY AY +
-spkr34_46_7 K K +
-spkr34_46_8 R R +
-spkr34_46_9 EY EY +
-spkr34_46_10 N N +
-spkr34_46_11 IY IY +
-spkr34_46_12 D D +
-spkr34_46_13 EY EY +
-spkr34_46_14 Z S -
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr34/labels/spkr34_46.txt

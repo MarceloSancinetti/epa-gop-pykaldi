@@ -1,13 +1,1 @@
-spkr27_68_0 W W +
-spkr27_68_1 IY IY +
-spkr27_68_2 M M +
-spkr27_68_3 EH E -
-spkr27_68_4 T Th -
-spkr27_68_5 AX A -
-spkr27_68_6 T DH -
-spkr27_68_7 D DH -
-spkr27_68_8 AX E -
-spkr27_68_9 K K +
-spkr27_68_10 W W +
-spkr27_68_11 AY AY +
-spkr27_68_12 ER ER +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr27/labels/spkr27_68.txt

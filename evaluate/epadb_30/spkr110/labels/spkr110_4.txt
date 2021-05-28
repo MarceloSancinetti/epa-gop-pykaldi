@@ -1,13 +1,1 @@
-spkr110_4_0 M M +
-spkr110_4_1 AY AY +
-spkr110_4_2 F F +
-spkr110_4_3 AA AA +
-spkr110_4_4 DH DH +
-spkr110_4_5 ER EH+DX -
-spkr110_4_6 IH IY -
-spkr110_4_7 Z S -
-spkr110_4_8 AX AA -
-spkr110_4_9 T T +
-spkr110_4_10 HH X -
-spkr110_4_11 OW AO -
-spkr110_4_12 M M +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr110/labels/spkr110_4.txt

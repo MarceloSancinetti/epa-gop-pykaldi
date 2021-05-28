@@ -1,14 +1,1 @@
-spkr112_51_0 W W +
-spkr112_51_1 IY IY +
-spkr112_51_2 R R* -
-spkr112_51_3 AE A -
-spkr112_51_4 N N +
-spkr112_51_5 AW AW +
-spkr112_51_6 T T +
-spkr112_51_7 AX AX +
-spkr112_51_8 V V +
-spkr112_51_9 SH SH +
-spkr112_51_10 AE A -
-spkr112_51_11 M M +
-spkr112_51_12 Ph P -
-spkr112_51_13 UW UW +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr112/labels/spkr112_51.txt

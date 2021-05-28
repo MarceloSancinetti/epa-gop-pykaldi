@@ -1,15 +1,1 @@
-spkr22_67_0 AY AY +
-spkr22_67_1 N N +
-spkr22_67_2 0 0 +
-spkr22_67_3 UW UW +
-spkr22_67_4 AX A -
-spkr22_67_5 V V +
-spkr22_67_6 EH EH +
-spkr22_67_7 R R +
-spkr22_67_8 IY IY +
-spkr22_67_9 Th CH -
-spkr22_67_10 AO AO +
-spkr22_67_11 L L +
-spkr22_67_12 M M +
-spkr22_67_13 AE A -
-spkr22_67_14 N N +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr22/labels/spkr22_67.txt

@@ -1,11 +1,1 @@
-spkr50_52_0 L L +
-spkr50_52_1 EH EH +
-spkr50_52_2 T T +
-spkr50_52_3 S S +
-spkr50_52_4 P P +
-spkr50_52_5 L L +
-spkr50_52_6 EY EY +
-spkr50_52_7 S S +
-spkr50_52_8 AO AO +
-spkr50_52_9 K Kh -
-spkr50_52_10 ER AX -
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr50/labels/spkr50_52.txt

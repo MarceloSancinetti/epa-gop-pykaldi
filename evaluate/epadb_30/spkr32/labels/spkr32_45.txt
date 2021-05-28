@@ -1,11 +1,1 @@
-spkr32_45_0 Ph P -
-spkr32_45_1 UH UH +
-spkr32_45_2 T DH -
-spkr32_45_3 Y Y +
-spkr32_45_4 AO AO +
-spkr32_45_5 R 0 -
-spkr32_45_6 Kh K -
-spkr32_45_7 OW AA+UW -
-spkr32_45_8 DX DX +
-spkr32_45_9 AA AA +
-spkr32_45_10 N N +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr32/labels/spkr32_45.txt

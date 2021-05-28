@@ -1,14 +1,1 @@
-spkr35_74_0 DH DH +
-spkr35_74_1 AE AA -
-spkr35_74_2 T T +
-spkr35_74_3 S S +
-spkr35_74_4 P P +
-spkr35_74_5 Y Y +
-spkr35_74_6 UH UH +
-spkr35_74_7 R R +
-spkr35_74_8 L L +
-spkr35_74_9 AH UH -
-spkr35_74_10 G G +
-spkr35_74_11 ZH S -
-spkr35_74_12 ER UW+R -
-spkr35_74_13 IY IY +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr35/labels/spkr35_74.txt

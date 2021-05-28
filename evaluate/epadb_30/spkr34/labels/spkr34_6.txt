@@ -1,12 +1,1 @@
-spkr34_6_0 HH HH +
-spkr34_6_1 UW UW +
-spkr34_6_2 IH IH +
-spkr34_6_3 Z Z +
-spkr34_6_4 R R +
-spkr34_6_5 AA AA +
-spkr34_6_6 B B +
-spkr34_6_7 IH AH -
-spkr34_6_8 N N +
-spkr34_6_9 HH HH +
-spkr34_6_10 UH UH +
-spkr34_6_11 D D +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr34/labels/spkr34_6.txt

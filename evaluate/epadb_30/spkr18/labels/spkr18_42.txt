@@ -1,11 +1,1 @@
-spkr18_42_0 AW AW +
-spkr18_42_1 L L +
-spkr18_42_2 Z S -
-spkr18_42_3 HH HH +
-spkr18_42_4 AE A -
-spkr18_42_5 V BH -
-spkr18_42_6 B BH -
-spkr18_42_7 IH IY -
-spkr18_42_8 G G +
-spkr18_42_9 AY AY +
-spkr18_42_10 Z S -
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr18/labels/spkr18_42.txt

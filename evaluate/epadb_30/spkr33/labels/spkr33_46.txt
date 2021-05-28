@@ -1,15 +1,1 @@
-spkr33_46_0 AY AY +
-spkr33_46_1 D D +
-spkr33_46_2 OW OW +
-spkr33_46_3 N N +
-spkr33_46_4 T T +
-spkr33_46_5 L L +
-spkr33_46_6 AY AY +
-spkr33_46_7 K K +
-spkr33_46_8 R R +
-spkr33_46_9 EY EY +
-spkr33_46_10 N N +
-spkr33_46_11 IY IY +
-spkr33_46_12 D D +
-spkr33_46_13 EY EY +
-spkr33_46_14 Z S -
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr33/labels/spkr33_46.txt

@@ -1,11 +1,1 @@
-spkr89_45_0 Ph Ph +
-spkr89_45_1 UH UH +
-spkr89_45_2 CH CH +
-spkr89_45_3 Y Y +
-spkr89_45_4 AA O -
-spkr89_45_5 R R +
-spkr89_45_6 Kh Kh +
-spkr89_45_7 OW OW +
-spkr89_45_8 T Th -
-spkr89_45_9 AA O -
-spkr89_45_10 N N +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr89/labels/spkr89_45.txt

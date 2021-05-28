@@ -1,15 +1,1 @@
-spkr64_53_0 M M +
-spkr64_53_1 AH AH +
-spkr64_53_2 M M +
-spkr64_53_3 S S +
-spkr64_53_4 EH EH +
-spkr64_53_5 N N +
-spkr64_53_6 0 0 +
-spkr64_53_7 M M +
-spkr64_53_8 IY IY +
-spkr64_53_9 AX A -
-spkr64_53_10 M M +
-spkr64_53_11 EH EH +
-spkr64_53_12 S S +
-spkr64_53_13 AX A -
-spkr64_53_14 JH SH -
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr64/labels/spkr64_53.txt

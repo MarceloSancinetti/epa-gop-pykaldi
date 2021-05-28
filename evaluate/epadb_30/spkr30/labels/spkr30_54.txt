@@ -1,7 +1,1 @@
-spkr30_54_0 SH SH +
-spkr30_54_1 IY IY +
-spkr30_54_2 Z Z +
-spkr30_54_3 AX AX +
-spkr30_54_4 L L +
-spkr30_54_5 AY AY +
-spkr30_54_6 ER AX -
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr30/labels/spkr30_54.txt

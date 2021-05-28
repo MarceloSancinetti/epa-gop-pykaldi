@@ -1,11 +1,1 @@
-spkr114_42_0 AW AW +
-spkr114_42_1 L L +
-spkr114_42_2 Z Z +
-spkr114_42_3 HH HH +
-spkr114_42_4 AE AE +
-spkr114_42_5 V V +
-spkr114_42_6 B B +
-spkr114_42_7 IH IH +
-spkr114_42_8 G G +
-spkr114_42_9 AY AY +
-spkr114_42_10 Z Z +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr114/labels/spkr114_42.txt

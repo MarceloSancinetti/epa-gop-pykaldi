@@ -1,11 +1,1 @@
-spkr46_73_0 AY AY +
-spkr46_73_1 M M +
-spkr46_73_2 SH SH +
-spkr46_73_3 UH UH +
-spkr46_73_4 R DX -
-spkr46_73_5 IH IH +
-spkr46_73_6 T 0 -
-spkr46_73_7 S S +
-spkr46_73_8 OW O -
-spkr46_73_9 K K +
-spkr46_73_10 EY EY +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr46/labels/spkr46_73.txt

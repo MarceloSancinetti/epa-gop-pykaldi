@@ -1,15 +1,1 @@
-spkr89_40_0 DH DH +
-spkr89_40_1 AX AX +
-spkr89_40_2 G G +
-spkr89_40_3 AA AA +
-spkr89_40_4 R R +
-spkr89_40_5 D D +
-spkr89_40_6 AX E -
-spkr89_40_7 N N +
-spkr89_40_8 IH IY -
-spkr89_40_9 Z S -
-spkr89_40_10 P P +
-spkr89_40_11 R R +
-spkr89_40_12 IH IH +
-spkr89_40_13 DX DX +
-spkr89_40_14 IY IY +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr89/labels/spkr89_40.txt

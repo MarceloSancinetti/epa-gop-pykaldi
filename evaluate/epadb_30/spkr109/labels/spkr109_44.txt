@@ -1,16 +1,1 @@
-spkr109_44_0 AY AY +
-spkr109_44_1 M AA+M -
-spkr109_44_2 IH IH +
-spkr109_44_3 N N +
-spkr109_44_4 DH DH +
-spkr109_44_5 AX EH -
-spkr109_44_6 M M +
-spkr109_44_7 UW UW +
-spkr109_44_8 D D +
-spkr109_44_9 F F +
-spkr109_44_10 AA AA +
-spkr109_44_11 R R +
-spkr109_44_12 AX AA -
-spkr109_44_13 W W +
-spkr109_44_14 AO AO +
-spkr109_44_15 K K +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr109/labels/spkr109_44.txt

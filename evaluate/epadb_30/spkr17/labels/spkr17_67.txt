@@ -1,15 +1,1 @@
-spkr17_67_0 AY AY +
-spkr17_67_1 N N +
-spkr17_67_2 Y Y +
-spkr17_67_3 UW UW +
-spkr17_67_4 AX AX +
-spkr17_67_5 V V +
-spkr17_67_6 EH EH +
-spkr17_67_7 R R +
-spkr17_67_8 IY IY +
-spkr17_67_9 Th Th +
-spkr17_67_10 AO AO +
-spkr17_67_11 L L +
-spkr17_67_12 M M +
-spkr17_67_13 AE AE +
-spkr17_67_14 N N +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr17/labels/spkr17_67.txt

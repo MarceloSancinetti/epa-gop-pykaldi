@@ -1,11 +1,1 @@
-spkr18_52_0 L L +
-spkr18_52_1 EH EH +
-spkr18_52_2 T T +
-spkr18_52_3 S S +
-spkr18_52_4 P P +
-spkr18_52_5 L L +
-spkr18_52_6 EY EY +
-spkr18_52_7 S S +
-spkr18_52_8 AA O -
-spkr18_52_9 K K +
-spkr18_52_10 ER ER +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr18/labels/spkr18_52.txt

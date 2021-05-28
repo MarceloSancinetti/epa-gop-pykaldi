@@ -1,11 +1,1 @@
-spkr34_62_0 AY AY +
-spkr34_62_1 G G +
-spkr34_62_2 EH EH +
-spkr34_62_3 CH CH +
-spkr34_62_4 Y Y +
-spkr34_62_5 AO AO +
-spkr34_62_6 R R +
-spkr34_62_7 Ph P -
-spkr34_62_8 OY OY +
-spkr34_62_9 N N +
-spkr34_62_10 T 0 -
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr34/labels/spkr34_62.txt

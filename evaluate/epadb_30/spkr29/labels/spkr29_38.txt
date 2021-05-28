@@ -1,15 +1,1 @@
-spkr29_38_0 AY AY +
-spkr29_38_1 Kh K -
-spkr29_38_2 IY IY +
-spkr29_38_3 P P +
-spkr29_38_4 AX AA -
-spkr29_38_5 P P +
-spkr29_38_6 R R +
-spkr29_38_7 AY AY +
-spkr29_38_8 V BH -
-spkr29_38_9 AX AX +
-spkr29_38_10 0 0 +
-spkr29_38_11 D D +
-spkr29_38_12 AY AY +
-spkr29_38_13 ER AA+R -
-spkr29_38_14 IY IY +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr29/labels/spkr29_38.txt

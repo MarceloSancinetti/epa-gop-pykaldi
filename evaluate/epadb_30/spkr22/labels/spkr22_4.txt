@@ -1,13 +1,1 @@
-spkr22_4_0 M M +
-spkr22_4_1 AY AY +
-spkr22_4_2 F F +
-spkr22_4_3 AA AA +
-spkr22_4_4 DH DH +
-spkr22_4_5 ER AX -
-spkr22_4_6 IH IH +
-spkr22_4_7 Z S -
-spkr22_4_8 AX AX +
-spkr22_4_9 T T +
-spkr22_4_10 HH HH +
-spkr22_4_11 OW OW +
-spkr22_4_12 M M +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr22/labels/spkr22_4.txt

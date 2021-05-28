@@ -1,15 +1,1 @@
-spkr45_35_0 DH DH +
-spkr45_35_1 EY EY +
-spkr45_35_2 S S +
-spkr45_35_3 EH EH +
-spkr45_35_4 D DH -
-spkr45_35_5 S S +
-spkr45_35_6 OW OW +
-spkr45_35_7 AA O -
-spkr45_35_8 N N +
-spkr45_35_9 DH DH +
-spkr45_35_10 AH EH -
-spkr45_35_11 N N +
-spkr45_35_12 Y IY -
-spkr45_35_13 UW UW +
-spkr45_35_14 Z S -
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr45/labels/spkr45_35.txt

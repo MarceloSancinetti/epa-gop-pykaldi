@@ -1,15 +1,1 @@
-spkr33_5_0 CH CH +
-spkr33_5_1 R R +
-spkr33_5_2 AY AY +
-spkr33_5_3 Th T -
-spkr33_5_4 UW UW +
-spkr33_5_5 S S +
-spkr33_5_6 IH IY -
-spkr33_5_7 NG NG +
-spkr33_5_8 AX AX +
-spkr33_5_9 N N +
-spkr33_5_10 0 0 +
-spkr33_5_11 JH JH* -
-spkr33_5_12 AH AH +
-spkr33_5_13 M M +
-spkr33_5_14 P P +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr33/labels/spkr33_5.txt

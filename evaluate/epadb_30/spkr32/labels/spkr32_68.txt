@@ -1,13 +1,1 @@
-spkr32_68_0 W W +
-spkr32_68_1 IY IY +
-spkr32_68_2 M M +
-spkr32_68_3 EH EH +
-spkr32_68_4 T T +
-spkr32_68_5 AX AX +
-spkr32_68_6 T DH -
-spkr32_68_7 D DH -
-spkr32_68_8 AX AX +
-spkr32_68_9 K K +
-spkr32_68_10 W W +
-spkr32_68_11 AY AY +
-spkr32_68_12 ER ER +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr32/labels/spkr32_68.txt

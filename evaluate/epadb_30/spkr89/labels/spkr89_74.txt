@@ -1,14 +1,1 @@
-spkr89_74_0 DH DH +
-spkr89_74_1 AE A -
-spkr89_74_2 T T +
-spkr89_74_3 S S +
-spkr89_74_4 P P +
-spkr89_74_5 Y Y +
-spkr89_74_6 UH UH +
-spkr89_74_7 R R +
-spkr89_74_8 L L +
-spkr89_74_9 AH AH +
-spkr89_74_10 G G +
-spkr89_74_11 ZH S -
-spkr89_74_12 ER UW+R -
-spkr89_74_13 IY IY +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr89/labels/spkr89_74.txt

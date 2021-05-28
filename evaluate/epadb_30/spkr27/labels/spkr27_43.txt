@@ -1,13 +1,1 @@
-spkr27_43_0 W W +
-spkr27_43_1 IY IY +
-spkr27_43_2 S S +
-spkr27_43_3 AA O -
-spkr27_43_4 AX A -
-spkr27_43_5 N N +
-spkr27_43_6 OW O -
-spkr27_43_7 L L +
-spkr27_43_8 D D +
-spkr27_43_9 F F +
-spkr27_43_10 IH IH +
-spkr27_43_11 L L +
-spkr27_43_12 M M +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr27/labels/spkr27_43.txt

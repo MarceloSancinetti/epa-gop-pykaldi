@@ -1,11 +1,1 @@
-spkr15_42_0 AW AW +
-spkr15_42_1 L L +
-spkr15_42_2 Z S -
-spkr15_42_3 HH HH +
-spkr15_42_4 AE AE +
-spkr15_42_5 V B -
-spkr15_42_6 B B +
-spkr15_42_7 IH IY -
-spkr15_42_8 G G +
-spkr15_42_9 AY AY +
-spkr15_42_10 Z S -
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr15/labels/spkr15_42.txt

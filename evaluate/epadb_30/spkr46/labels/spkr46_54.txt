@@ -1,7 +1,1 @@
-spkr46_54_0 SH SH +
-spkr46_54_1 IY IY+IH -
-spkr46_54_2 Z S -
-spkr46_54_3 AX AX +
-spkr46_54_4 L L +
-spkr46_54_5 AY AY +
-spkr46_54_6 ER ER +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr46/labels/spkr46_54.txt

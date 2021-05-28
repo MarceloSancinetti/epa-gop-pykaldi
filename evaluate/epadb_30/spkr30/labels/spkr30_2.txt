@@ -1,11 +1,1 @@
-spkr30_2_0 AX AX +
-spkr30_2_1 Kh Kh +
-spkr30_2_2 AH AH +
-spkr30_2_3 P P +
-spkr30_2_4 AX AO -
-spkr30_2_5 V V +
-spkr30_2_6 HH HH +
-spkr30_2_7 AA AO -
-spkr30_2_8 Th T -
-spkr30_2_9 Th Th +
-spkr30_2_10 IY IY +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr30/labels/spkr30_2.txt

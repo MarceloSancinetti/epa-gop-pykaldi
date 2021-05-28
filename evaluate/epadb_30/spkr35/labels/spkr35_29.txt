@@ -1,15 +1,1 @@
-spkr35_29_0 HH HH +
-spkr35_29_1 IY IY +
-spkr35_29_2 TH TH +
-spkr35_29_3 R DX -
-spkr35_29_4 UW UW +
-spkr35_29_5 S S +
-spkr35_29_6 AH AH +
-spkr35_29_7 M M +
-spkr35_29_8 TH TH +
-spkr35_29_9 IH IH +
-spkr35_29_10 NG NG +
-spkr35_29_11 AE AE +
-spkr35_29_12 T T +
-spkr35_29_13 Y Y +
-spkr35_29_14 UW UW +
+/home/marcelo/Desktop/pasantia/epa-gop-pykaldi/EpaDB/spkr35/labels/spkr35_29.txt
