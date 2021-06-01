@@ -138,7 +138,7 @@ while not finished:
 	# The code used to parse the chain head parameters has been removed because a new layer will be used instead.
 
 
-phone_count = 44
+phone_count = 39
 
 ftdnn = FTDNN(out_dim=phone_count)
 

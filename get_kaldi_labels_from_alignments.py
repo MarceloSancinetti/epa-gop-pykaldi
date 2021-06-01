@@ -165,7 +165,35 @@ def get_reference(file):
 
     return reference, annot_manual, labels, start_times, end_times
 
+def remove_deletion_labels_and_times(trans_zero, trans_reff_complete, labels, start_times, end_times):
+    clean_labels = []
+    clean_trans_reff = []
+    clean_start_times = []
+    clean_end_times = []
+    for i, phone in enumerate(trans_zero):
+        if phone != '0':
+            clean_labels.append(labels[i])
+            clean_trans_reff.append(trans_reff_complete[i])
+            clean_start_times.append(start_times[i])
+            clean_end_times.append(end_times[i])
 
+    return clean_labels, clean_trans_reff, clean_start_times, clean_end_times
+
+def remove_0_canonic_phone(trans_reff_complete, annot_kaldi, labels, start_times, end_times):
+    clean_trans_reff = []
+    clean_annot_kaldi = []
+    clean_labels = []
+    clean_start_times = []
+    clean_end_times = []
+    for i, phone in enumerate(trans_reff_complete):
+        if phone != '0':
+            clean_trans_reff.append(phone)
+            clean_annot_kaldi.append(annot_kaldi[i])
+            clean_labels.append(labels[i])
+            clean_start_times.append(start_times[i])
+            clean_end_times.append(end_times[i])
+
+    return clean_trans_reff, clean_annot_kaldi, clean_labels,  clean_start_times, clean_end_times
 
 
 if __name__ == '__main__':
@@ -249,6 +277,7 @@ if __name__ == '__main__':
             trans_zero = trans_dict_complete[sent][best_trans]
 
 
+
             print("TRANS_REFF:           %s (chosen out of %d transcriptions)"%(phonelist2str(trans), len(trans_dict_clean_complete[sent])))
             print("TRANS_KALDI:          "+phonelist2str(annot_kaldi))
             print("LABEL:                "+phonelist2str(labels))
@@ -257,11 +286,19 @@ if __name__ == '__main__':
             print("TRANS_REFF_COMPLETE:  "+phonelist2str(trans_reff_complete))
             print("TRANS_WITHOUT_ZERO:   "+phonelist2str(trans))
 
+            if len(labels) > len(annot_kaldi):
+                labels, trans_reff_complete, start_times, end_times = remove_deletion_labels_and_times(trans_zero, trans_reff_complete, labels, start_times, end_times)
+            if len(labels) < len(annot_kaldi):
+                #annot_kaldi = remove_non_labeled_phones_from_kaldi_annotation(annot_kaldi, annot_manual)  
+                raise Exception('Kaldi annotaton is longer than manual annotation. Logid: ' + utterance)
+
+            if '0' in trans_reff_complete:
+                trans_reff_complete, annot_kaldi, labels, start_times, end_times = remove_0_canonic_phone(trans_reff_complete, annot_kaldi, labels, start_times, end_times)
+            
             outdir  = "%s/labels_with_kaldi_phones/%s" % (args.output_dir, spk)
             outfile = "%s/%s.txt" % (outdir, utterance)
             mkdirs(outdir)
-            np.savetxt(outfile, np.c_[np.arange(len(annot_manual)), trans_reff_complete, annot_manual, labels, start_times, end_times], fmt=utterance+"_%s %s %s %s %s %s")
-
+            np.savetxt(outfile, np.c_[np.arange(len(annot_kaldi)), trans_reff_complete, annot_kaldi, labels, start_times, end_times], fmt=utterance+"_%s %s %s %s %s %s")
 
 
         else:

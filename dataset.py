@@ -13,13 +13,15 @@ from torchaudio.datasets.utils import (
 from typing import List
 from utils import *
 
+from IPython import embed
+
 import pickle5
 
 
 def collapse_target_phone(target_phone):
     phone_replacements = {}
     for phone_name in ['Th', 'Ph', 'Kh']:
-        phone_replacement[phone_name] = phone_name[:-1]
+        phone_replacements[phone_name] = phone_name[:-1]
     phone_replacements['AX'] = 'AH'
     phone_replacements['DX'] = 'T'
     target_phone = phone_replacements[target_phone]
@@ -131,18 +133,16 @@ class EpaDB(Dataset):
 
                     phone_times.append((target_phone, start_time, end_time))
 
+                    #If the target phone is not defined, collapse it into similar Kaldi phone (i.e Th -> T)
+                    if target_phone not in self._pure_phone_dict.keys():
+                        target_phone = collapse_target_phone(target_phone)                    
+
                     #If the phone was mispronounced, put a -1 in the labels
                     if target_phone != pronounced_phone:
                         labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], -1)
-                        #If the target phone is not defined, collapse it into similar Kaldi phone (i.e Th -> T)
-                        if target_phone not in self._pure_phone_dict.keys():
-                            target_phone = collapse_target_phone(target_phone)                    
                     #If the phone was pronounced correcly, put a 1 in the labels
                     if label == '+' and pronounced_phone != '0' :
                         labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], 1)
-                        #If the target phone is not defined, collapse it into similar Kaldi phone (i.e Th -> T)
-                        if target_phone not in self._pure_phone_dict.keys():
-                            target_phone = collapse_target_phone(target_phone)
 
                 except ValueError as e:
                     print("Bad item:")
@@ -151,6 +151,7 @@ class EpaDB(Dataset):
                     print("#Frames in features: ")
                     print(features.shape[0])
                     print(line)
+                    embed()
                     print(e)
                 except KeyError as e:
                     print("Bad item:")
@@ -159,6 +160,7 @@ class EpaDB(Dataset):
                     print("#Frames in features: ")
                     print(features.shape[0])
                     print(line)
+                    embed()
                     print(e)
 
         return (features, transcript, speaker_id, utterance_id, torch.from_numpy(labels), phone_times)

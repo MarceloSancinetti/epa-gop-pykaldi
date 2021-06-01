@@ -133,11 +133,11 @@ def main():
         testloader = torch.utils.data.DataLoader(dataset, batch_size=32, 
                                      num_workers=1, sampler=test_subsampler, collate_fn=collate_fn_padd)
 
-        phone_count = testset.phone_count()
+        phone_count = dataset.phone_count()
 
         #Get acoustic model to train
         model = FTDNN(out_dim=phone_count)
-        model.load_state_dict(torch.load('model_finetuning.pt'))
+        model.load_state_dict(torch.load('model_finetuning_kaldi.pt'))
 
         wandb.watch(model, log_freq=100)
         model = train(model, trainloader, testloader, fold, run_name=run_name)
