@@ -123,20 +123,29 @@ def get_kaldi_alignments(path_filename):
             logid = l[0]
             data = l[2:]
             i = 0
-            phones_name = []
+            phones = []
+            start_times = []
+            end_times = []
             while i < len(data):
-                phone_name = re.sub(unwanted_characters, '', data[i])
+                phone = re.sub(unwanted_characters, '', data[i])
                 #Turn phone into pure phone (i.e. remove _context)
-                if '_' in phone_name:
-                    phone_name = phone_name[:-2]
-                if '0' in phone_name or '1' in phone_name:
-                    phone_name = phone_name[:-1]
-                print(phone_name)
-                phones_name.append(phone_name)
+                if '_' in phone:
+                    phone = phone[:-2]
+                if phone[-1] in ['1', '0', '2']:
+                    phone = phone[:-1]
+
+                if phone not in ['sil', '[key]', 'sp', '', 'SIL', '[KEY]', 'SP']:
+                    phones.append(phone)
+                    start_time  = re.sub(unwanted_characters, '', data[i+1])
+                    duration    = re.sub(unwanted_characters, '', data[i+2])
+                    start_times.append(start_time)
+                    end_times.append(str(int(start_time) + int(duration)))
                 i = i + 3
 
             output.append({'logid': str(logid),
-                           'phones_name':phones_name})
+                           'phones' :phones,
+                           'start_times' :start_times,
+                           'end_times'   :end_times })
 
     df_phones = pd.DataFrame(output).set_index("logid")
 
@@ -150,20 +159,13 @@ def get_reference(file):
     start_times = []
     end_times = []
     
-    i = 0
     for line in open(file).readlines():
         l=line.split()
         reference.append(l[1])
         annot_manual.append(l[2])
         labels.append(l[3])
-        start_times.append(l[4])
-        end_times.append(l[5])
 
-
-
-        i += 1
-
-    return reference, annot_manual, labels, start_times, end_times
+    return reference, annot_manual, labels
 
 def remove_deletion_labels_and_times(trans_zero, trans_reff_complete, labels, start_times, end_times):
     clean_labels = []
@@ -195,6 +197,27 @@ def remove_0_canonic_phone(trans_reff_complete, annot_kaldi, labels, start_times
 
     return clean_trans_reff, clean_annot_kaldi, clean_labels,  clean_start_times, clean_end_times
 
+def get_times(labels_file, kaldi_alignments, utterance, times_source):
+    
+    if times_source == 'kaldi':
+        start_times = kaldi_alignments.loc[utterance].start_times
+        end_times = kaldi_alignments.loc[utterance].end_times
+    
+    if times_source == 'manual':
+        start_times = []
+        end_times = []
+        
+        for line in open(labels_file).readlines():
+            l=line.split()
+            start_times.append(l[4])
+            end_times.append(l[5])
+
+    return start_times, end_times
+
+
+#TODO
+def assign_kaldi_labels(kaldi_alignments, utterance, annot_manual):
+    pass
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -203,6 +226,9 @@ if __name__ == '__main__':
     parser.add_argument('--reference-file', dest='reference_path', help='', default=None)
     parser.add_argument('--alignment-file', dest='align_path', help='', default=None)
     parser.add_argument('--output', dest='output_dir', help='Output directory for labels', default=None)
+    parser.add_argument('--labels', dest='label_source', help='Method to use for labels, \'kaldi\' or \'ref\' ', default=None)
+    parser.add_argument('--target', dest='target_source', help='Transcription to use as target column, \'kaldi\' or \'ref\' ', default=None)
+    parser.add_argument('--times', dest='times_source', help='Annotation to use for start/end times, \'kaldi\' or \'manual\' ', default=None)
 
 
     args = parser.parse_args()
@@ -235,24 +261,20 @@ if __name__ == '__main__':
         print("Speaker %s, sentence %s: %s (File: %s)"%(spk, sent, " ".join(sent_dict_complete[sent]), file))
         
         #Get phone list from manual annotation 
-        trans_reff_complete, annot_manual, labels, start_times, end_times = get_reference(file)
+        trans_reff_complete, annot_manual, labels_ref = get_reference(file)
+
+        start_times, end_times = get_times(file, kaldi_alignments, utterance, args.times_source)
+
+        if args.label_source == 'kaldi':
+            labels = assign_kaldi_labels(kaldi_alignments, utterance, annot_manual)
+        if args.label_source == 'ref':
+            labels = labels_ref
+
 
 
         if utterance in kaldi_alignments.index.values:
-            phones = kaldi_alignments.loc[utterance].phones_name
-            annot_kaldi = []
-            for phone in phones:
-                if phone not in ['sil', '[key]', 'sp', '', 'SIL', '[KEY]', 'SP']:
-                    if phone[-1] not in ['1', '0', '2']:
-                        annot_kaldi += [phone]
-                    else:
-                        # If it has an int at the end, delete it, except for AH0
-
-                        #annot_kaldi += [phone] if(phone == 'AH0') else [phone[:-1]]
-                        #For the time being, remove AH0 aswell
-                        annot_kaldi += [phone[:-1]]
+            annot_kaldi = kaldi_alignments.loc[utterance].phones
         else:
-
             raise Exception("WARNING: Missing alignment for "+ utterance)
 
 
@@ -285,21 +307,30 @@ if __name__ == '__main__':
             print("TRANS_MANUAL:         "+phonelist2str(annot_manual))
             print("TRANS_REFF_COMPLETE:  "+phonelist2str(trans_reff_complete))
             print("TRANS_WITHOUT_ZERO:   "+phonelist2str(trans))
-
-            if len(labels) > len(annot_kaldi):
-                labels, trans_reff_complete, start_times, end_times = remove_deletion_labels_and_times(trans_zero, trans_reff_complete, labels, start_times, end_times)
-            if len(labels) < len(annot_kaldi):
-                #annot_kaldi = remove_non_labeled_phones_from_kaldi_annotation(annot_kaldi, annot_manual)  
-                raise Exception('Kaldi annotaton is longer than manual annotation. Logid: ' + utterance)
-
+       
             if '0' in trans_reff_complete:
-                trans_reff_complete, annot_kaldi, labels, start_times, end_times = remove_0_canonic_phone(trans_reff_complete, annot_kaldi, labels, start_times, end_times)
+                trans_reff_complete, annot_manual, labels, start_times, end_times = remove_0_canonic_phone(trans_reff_complete, annot_manual, labels, start_times, end_times)
+
+            if args.target_source == 'kaldi':
+                target_column = annot_kaldi
+            if args.target_source == 'ref':
+                target_column = trans_reff_complete
+
+            #if len(labels) > len(target_column):
+            #    labels, target_column, start_times, end_times = remove_deletion_labels_and_times(trans_zero, trans_reff_complete, labels, start_times, end_times)
+            #if len(labels) < len(annot_kaldi):
+                #annot_kaldi = remove_non_labeled_phones_from_kaldi_annotation(annot_kaldi, annot_manual)  
+            #    raise Exception('Kaldi annotaton is longer than manual annotation. Logid: ' + utterance)
+
             
+
             outdir  = "%s/labels_with_kaldi_phones/%s" % (args.output_dir, spk)
             outfile = "%s/%s.txt" % (outdir, utterance)
             mkdirs(outdir)
-            np.savetxt(outfile, np.c_[np.arange(len(annot_kaldi)), trans_reff_complete, annot_kaldi, labels, start_times, end_times], fmt=utterance+"_%s %s %s %s %s %s")
-
+            try:
+                np.savetxt(outfile, np.c_[np.arange(len(target_column)), target_column, annot_manual, labels, start_times, end_times], fmt=utterance+"_%s %s %s %s %s %s")
+            except ValueError as e:
+                embed()
 
         else:
 

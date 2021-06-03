@@ -1,45 +1,30 @@
 import glob
 import os
+from FeatureManager import FeatureManager
 
-data_path = 'epadb/test/data'
-mfcc_path =  data_path + '/mfccs.ark'
-ivectors_path =  data_path + '/ivectors.ark'
+
+features_path = 'epadb/test/data'
+conf_path = 'conf'
+epadb_root_path = 'EpaDB'
+
+feature_manager = FeatureManager(features_path, conf_path)
+
+feature_manager.extract_features_using_kaldi(epadb_root_path)
+
+
+#Create text file with transcriptions of all phrases
 text_path = 'epadb/test/text'
-
-wav_scp_file = open("wav.scp","w+")
-spk2utt_file = open("spk2utt","w+")
 text_file = open(text_path, 'w+')
-
-for file in sorted(glob.glob('EpaDB/*/waveforms/*')):
+for file in sorted(glob.glob(epadb_root_path + '/*/waveforms/*')):
     fullpath = os.path.abspath(file)
     basename = os.path.splitext(os.path.basename(file))[0]
-    wav_scp_file.write(basename + ' ' + fullpath + '\n')
-    spkr = basename.split('_')[0]
-    spk2utt_file.write(spkr + ' ' + basename + '\n')
-    transcription_path = 'EpaDB/' + spkr + '/transcriptions/' + basename +'.lab'
+    transcription_path = epadb_root_path + '/' + spkr + '/transcriptions/' + basename +'.lab'
     transcription_fh = open(transcription_path, 'r')
     transcription = transcription_fh.readline().upper()
     text_file.write(basename + ' ' + transcription + '\n')
 
-if not os.path.isdir(data_path) or not os.path.exists('feats.scp'):
-        os.mkdir(data_path)
 
-
-if not os.path.exists(mfcc_path):
-    os.system('compute-mfcc-feats --config=conf/mfcc_hires.conf \
-              scp,p:wav.scp ark:- | copy-feats \
-              --compress=true ark:- ark,scp:' + mfcc_path + ',feats.scp')
-
-
-
-if not os.path.exists(ivectors_path):
-    os.system('ivector-extract-online2 --config=conf/ivector_extractor.conf ark:spk2utt \
-    	      scp:feats.scp ark:' + ivectors_path)
-
-wav_scp_file.close()
-spk2utt_file.close()
-
-
+#Create symbolic links to labels used in evaluation stage
 for file in sorted(glob.glob('EpaDB/*/labels/*')):
     fullpath = os.path.abspath(file)
     basename = os.path.basename(file)
@@ -53,7 +38,7 @@ for file in sorted(glob.glob('EpaDB/*/labels/*')):
     if not os.path.exists(labels_dir_for_spkr + '/' + basename):
         os.system('ln -s ' + fullpath + ' ' + labels_dir_for_spkr + '/')
 
-#Handle symbolic links for labels used in evaluation stage
+#Handle symbolic links for reference transcriptions used in evaluation stage
 if not os.path.exists('evaluate/epadb_30/reference_transcriptions.txt'):
     current_path = os.getcwd()
     print('ln -s ' + current_path + '/EpaDB/reference_transcriptions.txt ' + current_path + '/evaluate/epadb_30/reference_transcriptions.txt')

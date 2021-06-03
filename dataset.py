@@ -82,6 +82,10 @@ class EpaDB(Dataset):
         #Get phone number for each phone
         for i, phone_pure_name in enumerate(phones_list_fh.readlines()):
             self._pure_phone_dict[phone_pure_name.strip()] = i
+
+        #Create dictionary to turn +/- labels into 1/-1
+        self._label_dict = {'+' :  1,
+                            '-' : -1}
             
 
     def _load_epa_item(self, file_id: str, path: str, labels_path: str) -> Tuple[Tensor, str, str, str, List[Tuple[str, str, str, int, int]]]:
@@ -138,11 +142,10 @@ class EpaDB(Dataset):
                         target_phone = collapse_target_phone(target_phone)                    
 
                     #If the phone was mispronounced, put a -1 in the labels
-                    if target_phone != pronounced_phone:
-                        labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], -1)
                     #If the phone was pronounced correcly, put a 1 in the labels
-                    if label == '+' and pronounced_phone != '0' :
-                        labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], 1)
+                    #(Deletions are ignored)
+                    if pronounced_phone != '0' :
+                        labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], self._label_dict[label])
 
                 except ValueError as e:
                     print("Bad item:")
