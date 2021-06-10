@@ -142,6 +142,7 @@ def get_kaldi_alignments(path_filename):
                     end_times.append(str(int(start_time) + int(duration)))
                 i = i + 3
 
+
             output.append({'logid': str(logid),
                            'phones' :phones,
                            'start_times' :start_times,
@@ -164,38 +165,41 @@ def get_reference(file):
         reference.append(l[1])
         annot_manual.append(l[2])
         labels.append(l[3])
+    	
 
     return reference, annot_manual, labels
 
-def remove_deletion_labels_and_times(trans_zero, trans_reff_complete, labels, start_times, end_times):
-    clean_labels = []
-    clean_trans_reff = []
-    clean_start_times = []
-    clean_end_times = []
-    for i, phone in enumerate(trans_zero):
-        if phone != '0':
-            clean_labels.append(labels[i])
-            clean_trans_reff.append(trans_reff_complete[i])
-            clean_start_times.append(start_times[i])
-            clean_end_times.append(end_times[i])
-
-    return clean_labels, clean_trans_reff, clean_start_times, clean_end_times
-
-def remove_0_canonic_phone(trans_reff_complete, annot_kaldi, labels, start_times, end_times):
-    clean_trans_reff = []
-    clean_annot_kaldi = []
+def remove_deletion_lines_with_times(trans1, trans2, labels, start_times, end_times):
+    clean_trans1 = []
+    clean_trans2 = []
     clean_labels = []
     clean_start_times = []
     clean_end_times = []
-    for i, phone in enumerate(trans_reff_complete):
+    for i, phone in enumerate(trans1):
         if phone != '0':
-            clean_trans_reff.append(phone)
-            clean_annot_kaldi.append(annot_kaldi[i])
-            clean_labels.append(labels[i])
-            clean_start_times.append(start_times[i])
-            clean_end_times.append(end_times[i])
+            try:
+                clean_trans1.append(phone)
+                clean_trans2.append(trans2[i])            
+                clean_labels.append(labels[i])
+                clean_start_times.append(start_times[i])
+                clean_end_times.append(end_times[i])
+            except IndexError as e:
+                embed()
+    return clean_trans1, clean_trans2, clean_labels, clean_start_times, clean_end_times
 
-    return clean_trans_reff, clean_annot_kaldi, clean_labels,  clean_start_times, clean_end_times
+def remove_deletion_lines(trans1, trans2, labels, remove_times=False, start_times=None, end_times=None):
+    #Times should be provided iff their deletion lines should be removed
+    if remove_times and (start_times == None or end_times == None):
+        raise Exception('remove_times is True but start or end times are missing')
+    if not remove_times and (start_times != None or end_times != None):
+        raise Exception('remove_times is False but start or end times were given')
+    
+    if remove_times:
+       return remove_deletion_lines_with_times(trans1, trans2, labels, start_times, end_times)
+    else:
+        #If start or end times are not needed, dummy times are passed
+        trans1, trans2, labels, _, _ = remove_deletion_lines_with_times(trans1, trans2, labels, range(len(trans1)), range(len(trans1)))  
+        return trans1, trans2, labels
 
 def get_times(labels_file, kaldi_alignments, utterance, times_source):
     
@@ -307,17 +311,19 @@ if __name__ == '__main__':
             print("TRANS_MANUAL:         "+phonelist2str(annot_manual))
             print("TRANS_REFF_COMPLETE:  "+phonelist2str(trans_reff_complete))
             print("TRANS_WITHOUT_ZERO:   "+phonelist2str(trans))
-       
-            if '0' in trans_reff_complete:
-                trans_reff_complete, annot_manual, labels, start_times, end_times = remove_0_canonic_phone(trans_reff_complete, annot_manual, labels, start_times, end_times)
 
             if args.target_source == 'kaldi':
                 target_column = annot_kaldi
+                if len(target_column) != len(annot_manual):
+                    _, annot_manual, labels = remove_deletion_lines(trans_zero, annot_manual, labels)
+                if len(target_column) != len(annot_manual):
+                    annot_manual, target_column, labels, start_times, end_times = remove_deletion_lines(annot_manual, target_column, labels, remove_times=True, start_times=start_times, end_times=end_times)
             if args.target_source == 'ref':
                 target_column = trans_reff_complete
+                target_column, annot_manual, labels, start_times, end_times = remove_deletion_lines(target_column, annot_manual, labels, start_times, end_times)
+       
+            #target_column, annot_manual, labels, start_times, end_times = remove_deletion_lines(target_column, annot_manual, labels, start_times, end_times)
 
-            #if len(labels) > len(target_column):
-            #    labels, target_column, start_times, end_times = remove_deletion_labels_and_times(trans_zero, trans_reff_complete, labels, start_times, end_times)
             #if len(labels) < len(annot_kaldi):
                 #annot_kaldi = remove_non_labeled_phones_from_kaldi_annotation(annot_kaldi, annot_manual)  
             #    raise Exception('Kaldi annotaton is longer than manual annotation. Logid: ' + utterance)

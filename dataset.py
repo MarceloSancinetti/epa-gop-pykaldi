@@ -143,8 +143,8 @@ class EpaDB(Dataset):
 
                     #If the phone was mispronounced, put a -1 in the labels
                     #If the phone was pronounced correcly, put a 1 in the labels
-                    #(Deletions are ignored)
-                    if pronounced_phone != '0' :
+                    #(If start_time == end_time we cant assign a label)
+                    if start_time != end_time :
                         labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], self._label_dict[label])
 
                 except ValueError as e:

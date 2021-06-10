@@ -23,6 +23,7 @@ from sklearn.model_selection import KFold
 
 
 
+
 def criterion(batch_outputs, batch_labels):
     '''
     Calculates loss
@@ -42,13 +43,14 @@ def train(model, trainloader, testloader, fold, run_name='test'):
 
     optimizer = optim.Adam(model.parameters())
 
-    for epoch in range(10):  # loop over the dataset multiple times
+    for epoch in range(20):  # loop over the dataset multiple times
         PATH = 'saved_state_dicts/' + run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) + '.pth'
         #If the checkpoint for the current epoch is already present, checkpoint is loaded and training is skipped
         if os.path.isfile(PATH):
             checkpoint = torch.load(PATH)
             model.load_state_dict(checkpoint['model_state_dict'])
             optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+            #embed()
             continue
 
         running_loss = 0.0
@@ -77,10 +79,12 @@ def train(model, trainloader, testloader, fold, run_name='test'):
                 print('Fold ' + str(fold), ' Epoch ' + str(epoch) + ' Batch ' + str(i))
                 print('running_loss ' + str(running_loss/20))
                 wandb.log({'train_loss_fold_' + str(fold): running_loss/20})
+                wandb.log({'step': i})
                 running_loss = 0.0
                 
         test_loss = test(model, testloader)
         wandb.log({'test_loss_fold_' + str(fold) : test_loss})
+        wandb.log({'step': i})
         
         torch.save(model.state_dict(), PATH)
         torch.save({
@@ -110,7 +114,8 @@ def main():
     wandb.run.name = 'cross_validation_kaldi_phones'
     run_name = wandb.run.name
 
-    dataset = EpaDB('EpaDB', 'epadb_full_path_list', 'phones_kaldi.txt', 'labels_with_kaldi_phones')
+    epa_root_path = 'EpaDB'
+    dataset = EpaDB(epa_root_path, 'epadb_full_path_list', 'phones_kaldi.txt', 'labels_with_kaldi_phones2')
 
     seed = 42
     torch.manual_seed(seed)
@@ -141,5 +146,8 @@ def main():
 
         wandb.watch(model, log_freq=100)
         model = train(model, trainloader, testloader, fold, run_name=run_name)
+
+        #Generate test sample list for current fold
+        generate_test_sample_list(testloader, epa_root_path, 'sample_lists', 'test_sample_list_fold_' + str(fold))
 
 main()

@@ -67,10 +67,10 @@ def get_outputs_and_labels_for_loss(outputs, labels):
 
 #Returns the canonic phone number at a given frame in the labels 
 def get_phone_number_at_frame(labels, frame):
-    try: 
-	    res = labels[frame].nonzero().item()
-    except ValueError as e:
-    	embed()
+    #try: 
+    res = labels[frame].nonzero().item()
+    #except ValueError as e:
+    #	embed()
     return res
 
 #Collapses multiple frame level scores using sum or mean  
@@ -94,3 +94,16 @@ def log_phone_number_and_score(log_fh, labels, scores, start_time, end_time, met
 	        raise Exception('Phones at start and end time in labels differ')
 	    phone_level_score = get_phone_score_from_frame_scores(scores, start_time, end_time, method)
 	    log_fh.write( '[ ' + str(phone_number_start) + ' ' + str(phone_level_score) + ' ] ')
+
+
+#This function takes a testloader and writes the logids and paths of all samples
+#in the testloader to directory/filename. The generated sample list is used to test 
+#the model for each fold. 
+def generate_test_sample_list(testloader, epa_root_path, directory, filename):
+    sample_list_fh = open(directory + '/' + filename, 'w+')
+    for i, data in enumerate(testloader, 0):
+        logids = unpack_logids_from_batch(data)
+        for logid in logids:
+            spkr_id = logid.split('_')[0]
+            sample_path = epa_root_path + '/' + spkr_id + '/waveforms/' + logid + '.wav'
+            sample_list_fh.write(logid + ' ' + sample_path + '\n')
