@@ -11,7 +11,10 @@ from torchaudio.datasets.utils import (
     extract_archive,
 )
 from typing import List
+
 from utils import *
+from FeatureManager import FeatureManager
+
 
 from IPython import embed
 
@@ -56,6 +59,9 @@ class EpaDB(Dataset):
 
         self._root_path = root_path
         self._labels_path = labels_path
+
+        #Create FeatureManager
+        self._feature_manager = FeatureManager('EpaDB', 'epadb/test/data','conf')
 
         # Read from sample list and create dictionary mapping fileid to .wav path and file list mapping int to logid
         file_id_list = []
@@ -103,11 +109,8 @@ class EpaDB(Dataset):
         speaker_id = file_id.split("_")[0]
         utterance_id = file_id.split("_")[1]
 
-        features = get_features_for_logid(file_id)
+        features, transcript = self._feature_manager.get_features_for_logid(file_id)
 
-        transcript_path = os.path.join(path, speaker_id, "transcriptions", file_id)
-        with open(transcript_path + ".lab") as f:
-            transcript = f.readlines()[0]
 
         annotation_path = os.path.join(labels_path, speaker_id, file_id)
         annotation = []

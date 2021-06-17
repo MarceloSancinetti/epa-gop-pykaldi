@@ -1,6 +1,7 @@
 import os
 import glob
 from pathlib import Path
+import argparse
 
 import torchaudio
 import torch
@@ -43,7 +44,7 @@ def train(model, trainloader, testloader, fold, run_name='test'):
 
     optimizer = optim.Adam(model.parameters())
 
-    for epoch in range(20):  # loop over the dataset multiple times
+    for epoch in range(35):  # loop over the dataset multiple times
         PATH = 'saved_state_dicts/' + run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) + '.pth'
         #If the checkpoint for the current epoch is already present, checkpoint is loaded and training is skipped
         if os.path.isfile(PATH):
@@ -66,8 +67,6 @@ def train(model, trainloader, testloader, fold, run_name='test'):
             # forward + backward + optimize
             outputs = model(inputs)
 
-            #print(outputs.size())
-
             loss = criterion(outputs, batch_labels)
             loss.backward()
             optimizer.step()
@@ -86,7 +85,6 @@ def train(model, trainloader, testloader, fold, run_name='test'):
         wandb.log({'test_loss_fold_' + str(fold) : test_loss})
         wandb.log({'step': i})
         
-        torch.save(model.state_dict(), PATH)
         torch.save({
             'model_state_dict': model.state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),
@@ -110,12 +108,23 @@ def test(model, testloader):
     return loss
 
 def main():
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--run-name', dest='run_name', help='Run name', default=None)
+    parser.add_argument('--utterance-list', dest='utterance_list', help='File with utt list', default=None)
+    parser.add_argument('--folds', dest='fold_amount', help='Amount of folds to use in training', default=None)
+    parser.add_argument('--phones-file', dest='phones_file', help='File with list of phones', default=None)
+    parser.add_argument('--labels-dir', dest='labels_dir', help='Directory with labels used in training', default=None)
+    parser.add_argument('--model-path', dest='model_path', help='Path to .pth/pt file with model to finetune', default=None)
+
+    args = parser.parse_args()
+    run_name = args.run_name
+
     wandb.init(project="gop-finetuning")
-    wandb.run.name = 'cross_validation_kaldi_phones'
-    run_name = wandb.run.name
+    wandb.run.name = run_name
 
     epa_root_path = 'EpaDB'
-    dataset = EpaDB(epa_root_path, 'epadb_full_path_list', 'phones_kaldi.txt', 'labels_with_kaldi_phones2')
+    dataset = EpaDB(epa_root_path, args.utterance_list, args.phones_file, args.labels_dir)
 
     seed = 42
     torch.manual_seed(seed)
@@ -142,7 +151,7 @@ def main():
 
         #Get acoustic model to train
         model = FTDNN(out_dim=phone_count)
-        model.load_state_dict(torch.load('model_finetuning_kaldi.pt'))
+        model.load_state_dict(torch.load(args.model_path))
 
         wandb.watch(model, log_freq=100)
         model = train(model, trainloader, testloader, fold, run_name=run_name)

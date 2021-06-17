@@ -184,7 +184,8 @@ def remove_deletion_lines_with_times(trans1, trans2, labels, start_times, end_ti
                 clean_start_times.append(start_times[i])
                 clean_end_times.append(end_times[i])
             except IndexError as e:
-                embed()
+                #embed()
+                pass
     return clean_trans1, clean_trans2, clean_labels, clean_start_times, clean_end_times
 
 def remove_deletion_lines(trans1, trans2, labels, remove_times=False, start_times=None, end_times=None):
@@ -315,7 +316,10 @@ if __name__ == '__main__':
             if args.target_source == 'kaldi':
                 target_column = annot_kaldi
                 if len(target_column) != len(annot_manual):
-                    _, annot_manual, labels = remove_deletion_lines(trans_zero, annot_manual, labels)
+                    try:
+                    	_, annot_manual, labels = remove_deletion_lines(trans_zero, annot_manual, labels)
+                    except IndexError as e:
+                    	embed()
                 if len(target_column) != len(annot_manual):
                     annot_manual, target_column, labels, start_times, end_times = remove_deletion_lines(annot_manual, target_column, labels, remove_times=True, start_times=start_times, end_times=end_times)
             if args.target_source == 'ref':
