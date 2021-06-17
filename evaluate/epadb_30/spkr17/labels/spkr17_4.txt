@@ -1,13 +1,1 @@
-spkr17_4_0 M M +
-spkr17_4_1 AY AY +
-spkr17_4_2 F F +
-spkr17_4_3 AA AA +
-spkr17_4_4 DH DH +
-spkr17_4_5 ER EH+DX -
-spkr17_4_6 IH IY -
-spkr17_4_7 Z S -
-spkr17_4_8 AX AX +
-spkr17_4_9 CH CH +
-spkr17_4_10 HH HH +
-spkr17_4_11 OW OW +
-spkr17_4_12 M M +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr17/labels/spkr17_4.txt

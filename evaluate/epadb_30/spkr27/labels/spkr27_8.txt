@@ -1,16 +1,1 @@
-spkr27_8_0 Th Th +
-spkr27_8_1 ER ER +
-spkr27_8_2 N N +
-spkr27_8_3 DH DH +
-spkr27_8_4 AX E -
-spkr27_8_5 T T +
-spkr27_8_6 EH EH +
-spkr27_8_7 L L +
-spkr27_8_8 AX AX +
-spkr27_8_9 V BH -
-spkr27_8_10 IH IH +
-spkr27_8_11 ZH SH -
-spkr27_8_12 AX AX +
-spkr27_8_13 N N +
-spkr27_8_14 AA AA +
-spkr27_8_15 F F +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr27/labels/spkr27_8.txt

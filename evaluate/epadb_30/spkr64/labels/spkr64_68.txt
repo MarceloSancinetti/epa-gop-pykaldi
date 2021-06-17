@@ -1,13 +1,1 @@
-spkr64_68_0 W W +
-spkr64_68_1 IY IY +
-spkr64_68_2 M M +
-spkr64_68_3 EH EH +
-spkr64_68_4 T T +
-spkr64_68_5 AX A -
-spkr64_68_6 T DH -
-spkr64_68_7 D DH -
-spkr64_68_8 AX E -
-spkr64_68_9 K CH -
-spkr64_68_10 W O -
-spkr64_68_11 AY IY -
-spkr64_68_12 ER R -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr64/labels/spkr64_68.txt

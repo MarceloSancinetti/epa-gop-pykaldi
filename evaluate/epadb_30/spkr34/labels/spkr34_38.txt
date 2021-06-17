@@ -1,15 +1,1 @@
-spkr34_38_0 AY AY +
-spkr34_38_1 Kh Kh +
-spkr34_38_2 IY IY +
-spkr34_38_3 P P +
-spkr34_38_4 AX AX +
-spkr34_38_5 P P +
-spkr34_38_6 R R +
-spkr34_38_7 AY AY +
-spkr34_38_8 V V +
-spkr34_38_9 AX EH -
-spkr34_38_10 T T +
-spkr34_38_11 D D +
-spkr34_38_12 AY AY+AA -
-spkr34_38_13 R R +
-spkr34_38_14 IY IY +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr34/labels/spkr34_38.txt

@@ -1,14 +1,1 @@
-spkr25_37_0 AY AY +
-spkr25_37_1 L L +
-spkr25_37_2 ER ER +
-spkr25_37_3 N N +
-spkr25_37_4 0 0 +
-spkr25_37_5 Th Th +
-spkr25_37_6 UH AX -
-spkr25_37_7 Th Th +
-spkr25_37_8 AY AY +
-spkr25_37_9 M M +
-spkr25_37_10 AY AY +
-spkr25_37_11 SH SH +
-spkr25_37_12 UW UW +
-spkr25_37_13 Z Z +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr25/labels/spkr25_37.txt

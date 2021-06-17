@@ -1,13 +1,1 @@
-spkr64_4_0 M M +
-spkr64_4_1 AY AY +
-spkr64_4_2 F F +
-spkr64_4_3 AA AA +
-spkr64_4_4 DH DH +
-spkr64_4_5 ER EH+DX -
-spkr64_4_6 IH IY -
-spkr64_4_7 Z S -
-spkr64_4_8 AE AE +
-spkr64_4_9 T T +
-spkr64_4_10 HH X -
-spkr64_4_11 OW AO -
-spkr64_4_12 M M +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr64/labels/spkr64_4.txt

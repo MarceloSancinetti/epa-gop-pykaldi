@@ -1,13 +1,1 @@
-spkr22_43_0 W W +
-spkr22_43_1 IY IY +
-spkr22_43_2 S S +
-spkr22_43_3 AO AO +
-spkr22_43_4 AX A -
-spkr22_43_5 N N +
-spkr22_43_6 OW OW +
-spkr22_43_7 L L +
-spkr22_43_8 D D +
-spkr22_43_9 F F +
-spkr22_43_10 IH IH +
-spkr22_43_11 L L +
-spkr22_43_12 M M +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr22/labels/spkr22_43.txt

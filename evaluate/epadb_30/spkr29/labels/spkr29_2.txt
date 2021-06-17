@@ -1,11 +1,1 @@
-spkr29_2_0 AX A -
-spkr29_2_1 Kh K -
-spkr29_2_2 AH A -
-spkr29_2_3 P P +
-spkr29_2_4 AX O -
-spkr29_2_5 V V +
-spkr29_2_6 HH HH +
-spkr29_2_7 AA O -
-spkr29_2_8 0 0 +
-spkr29_2_9 Th Th +
-spkr29_2_10 IY IY +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr29/labels/spkr29_2.txt

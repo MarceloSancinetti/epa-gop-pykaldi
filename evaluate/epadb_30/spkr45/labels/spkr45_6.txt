@@ -1,12 +1,1 @@
-spkr45_6_0 HH HH +
-spkr45_6_1 UW UW +
-spkr45_6_2 IH IH +
-spkr45_6_3 Z S -
-spkr45_6_4 R RR -
-spkr45_6_5 AA O -
-spkr45_6_6 B B +
-spkr45_6_7 IH IY -
-spkr45_6_8 N N +
-spkr45_6_9 HH HH +
-spkr45_6_10 UH UH +
-spkr45_6_11 D DH -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr45/labels/spkr45_6.txt

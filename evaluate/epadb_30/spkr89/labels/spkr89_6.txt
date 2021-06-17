@@ -1,12 +1,1 @@
-spkr89_6_0 HH HH +
-spkr89_6_1 UW UW +
-spkr89_6_2 IH IY -
-spkr89_6_3 Z S -
-spkr89_6_4 R R +
-spkr89_6_5 AA O -
-spkr89_6_6 B B +
-spkr89_6_7 IH IY -
-spkr89_6_8 N N +
-spkr89_6_9 HH HH +
-spkr89_6_10 UH UH +
-spkr89_6_11 T T +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr89/labels/spkr89_6.txt

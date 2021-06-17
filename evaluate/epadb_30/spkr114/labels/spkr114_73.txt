@@ -1,11 +1,1 @@
-spkr114_73_0 AY AH -
-spkr114_73_1 M M +
-spkr114_73_2 SH SH +
-spkr114_73_3 UH UH +
-spkr114_73_4 R R +
-spkr114_73_5 IH IH +
-spkr114_73_6 T T +
-spkr114_73_7 S S +
-spkr114_73_8 OW OW +
-spkr114_73_9 K K +
-spkr114_73_10 EY EY +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr114/labels/spkr114_73.txt

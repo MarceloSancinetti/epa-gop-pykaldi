@@ -1,13 +1,1 @@
-spkr41_43_0 W W +
-spkr41_43_1 IY IY +
-spkr41_43_2 S S +
-spkr41_43_3 AO AO +
-spkr41_43_4 AX AX +
-spkr41_43_5 N N +
-spkr41_43_6 OW OW +
-spkr41_43_7 L L +
-spkr41_43_8 D D +
-spkr41_43_9 F F +
-spkr41_43_10 IH IY -
-spkr41_43_11 L L +
-spkr41_43_12 M M +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr41/labels/spkr41_43.txt

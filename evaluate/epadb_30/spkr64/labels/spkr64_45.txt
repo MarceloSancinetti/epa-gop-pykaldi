@@ -1,11 +1,1 @@
-spkr64_45_0 Ph P -
-spkr64_45_1 UH UH +
-spkr64_45_2 T T +
-spkr64_45_3 Y Y +
-spkr64_45_4 AA O -
-spkr64_45_5 R DX -
-spkr64_45_6 Kh Kh +
-spkr64_45_7 OW OW +
-spkr64_45_8 T T +
-spkr64_45_9 AA O -
-spkr64_45_10 N N +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr64/labels/spkr64_45.txt

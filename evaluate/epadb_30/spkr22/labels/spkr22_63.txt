@@ -1,10 +1,1 @@
-spkr22_63_0 CH CH +
-spkr22_63_1 UH UW -
-spkr22_63_2 P P +
-spkr22_63_3 L L +
-spkr22_63_4 EY EY +
-spkr22_63_5 ER ER +
-spkr22_63_6 G G +
-spkr22_63_7 EY EY +
-spkr22_63_8 M M +
-spkr22_63_9 Z S -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr22/labels/spkr22_63.txt

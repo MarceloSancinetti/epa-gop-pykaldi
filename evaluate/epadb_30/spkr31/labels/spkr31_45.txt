@@ -1,11 +1,1 @@
-spkr31_45_0 Ph P -
-spkr31_45_1 UH UH +
-spkr31_45_2 CH CH +
-spkr31_45_3 Y Y +
-spkr31_45_4 AA O -
-spkr31_45_5 R R +
-spkr31_45_6 Kh Kh +
-spkr31_45_7 OW OW +
-spkr31_45_8 T T +
-spkr31_45_9 AO AO +
-spkr31_45_10 N N +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr31/labels/spkr31_45.txt

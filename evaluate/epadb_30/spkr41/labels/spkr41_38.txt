@@ -1,15 +1,1 @@
-spkr41_38_0 AY AY +
-spkr41_38_1 Kh Kh +
-spkr41_38_2 IY IY +
-spkr41_38_3 P P +
-spkr41_38_4 AX A -
-spkr41_38_5 P P +
-spkr41_38_6 R R +
-spkr41_38_7 AY AY +
-spkr41_38_8 V V +
-spkr41_38_9 AX EH -
-spkr41_38_10 T T +
-spkr41_38_11 D D +
-spkr41_38_12 AY AY +
-spkr41_38_13 ER ER +
-spkr41_38_14 IY IY +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr41/labels/spkr41_38.txt

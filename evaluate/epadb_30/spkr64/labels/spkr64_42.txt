@@ -1,11 +1,1 @@
-spkr64_42_0 AW O -
-spkr64_42_1 L L +
-spkr64_42_2 Z S -
-spkr64_42_3 HH X -
-spkr64_42_4 AE A -
-spkr64_42_5 V B -
-spkr64_42_6 B B +
-spkr64_42_7 IH IY -
-spkr64_42_8 G G +
-spkr64_42_9 AY AY +
-spkr64_42_10 Z S -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr64/labels/spkr64_42.txt

@@ -1,15 +1,1 @@
-spkr17_30_0 DH DH +
-spkr17_30_1 AX AX +
-spkr17_30_2 M M +
-spkr17_30_3 UW UW +
-spkr17_30_4 N N +
-spkr17_30_5 L L +
-spkr17_30_6 UH UH +
-spkr17_30_7 K K +
-spkr17_30_8 S S +
-spkr17_30_9 L L +
-spkr17_30_10 AY AY +
-spkr17_30_11 K G -
-spkr17_30_12 CH CH +
-spkr17_30_13 IY IY +
-spkr17_30_14 Z Z +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr17/labels/spkr17_30.txt

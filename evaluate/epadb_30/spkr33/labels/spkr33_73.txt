@@ -1,11 +1,1 @@
-spkr33_73_0 AY AY +
-spkr33_73_1 M M +
-spkr33_73_2 SH SH +
-spkr33_73_3 UH UH +
-spkr33_73_4 R ER -
-spkr33_73_5 IH IH +
-spkr33_73_6 T T +
-spkr33_73_7 S S +
-spkr33_73_8 OW O -
-spkr33_73_9 K K +
-spkr33_73_10 EY EY +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr33/labels/spkr33_73.txt

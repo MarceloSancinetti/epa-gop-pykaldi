@@ -1,15 +1,1 @@
-spkr50_5_0 T T +
-spkr50_5_1 R R +
-spkr50_5_2 AY AY +
-spkr50_5_3 DX DX +
-spkr50_5_4 UW UW +
-spkr50_5_5 S S +
-spkr50_5_6 IH IH +
-spkr50_5_7 NG NG +
-spkr50_5_8 AX AX +
-spkr50_5_9 N N +
-spkr50_5_10 0 0 +
-spkr50_5_11 JH JH +
-spkr50_5_12 AH AH +
-spkr50_5_13 M M +
-spkr50_5_14 P P +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr50/labels/spkr50_5.txt

@@ -1,11 +1,1 @@
-spkr15_73_0 AY A -
-spkr15_73_1 M M +
-spkr15_73_2 SH SH +
-spkr15_73_3 UH O -
-spkr15_73_4 R R +
-spkr15_73_5 IH IY -
-spkr15_73_6 T T +
-spkr15_73_7 S S +
-spkr15_73_8 OW OW +
-spkr15_73_9 K K +
-spkr15_73_10 EY EY +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr15/labels/spkr15_73.txt

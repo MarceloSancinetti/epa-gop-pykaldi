@@ -1,13 +1,1 @@
-spkr56_4_0 M M +
-spkr56_4_1 AY AY +
-spkr56_4_2 F F +
-spkr56_4_3 AA AA +
-spkr56_4_4 DH DH +
-spkr56_4_5 ER EH+DX -
-spkr56_4_6 IH IY -
-spkr56_4_7 Z S -
-spkr56_4_8 AX AA -
-spkr56_4_9 T T +
-spkr56_4_10 HH X -
-spkr56_4_11 OW OW +
-spkr56_4_12 M M +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr56/labels/spkr56_4.txt

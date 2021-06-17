@@ -1,15 +1,1 @@
-spkr27_29_0 HH HH +
-spkr27_29_1 IY IY +
-spkr27_29_2 TH TH +
-spkr27_29_3 R RR -
-spkr27_29_4 UW UW +
-spkr27_29_5 S S +
-spkr27_29_6 AH AH +
-spkr27_29_7 M M +
-spkr27_29_8 TH TH +
-spkr27_29_9 IH IH +
-spkr27_29_10 NG NG +
-spkr27_29_11 AE AX -
-spkr27_29_12 T T +
-spkr27_29_13 Y Y +
-spkr27_29_14 UW UW +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr27/labels/spkr27_29.txt

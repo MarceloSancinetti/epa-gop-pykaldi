@@ -1,11 +1,1 @@
-spkr65_52_0 L L +
-spkr65_52_1 EH EH +
-spkr65_52_2 T T +
-spkr65_52_3 S S +
-spkr65_52_4 P P +
-spkr65_52_5 L L +
-spkr65_52_6 EY EY +
-spkr65_52_7 S S +
-spkr65_52_8 AA O -
-spkr65_52_9 K K +
-spkr65_52_10 ER ER +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr65/labels/spkr65_52.txt

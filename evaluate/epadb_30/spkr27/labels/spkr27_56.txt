@@ -1,10 +1,1 @@
-spkr27_56_0 Y Y +
-spkr27_56_1 UW UW +
-spkr27_56_2 Kh K -
-spkr27_56_3 AO AO +
-spkr27_56_4 L L +
-spkr27_56_5 D D +
-spkr27_56_6 AX A -
-spkr27_56_7 Kh Kh +
-spkr27_56_8 AE A -
-spkr27_56_9 B B +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr27/labels/spkr27_56.txt

@@ -1,14 +1,1 @@
-spkr46_11_0 DH DH +
-spkr46_11_1 AX IY -
-spkr46_11_2 G G +
-spkr46_11_3 ER IY+R -
-spkr46_11_4 L 0 -
-spkr46_11_5 G G +
-spkr46_11_6 OW OW +
-spkr46_11_7 Z 0 -
-spkr46_11_8 Th T -
-spkr46_11_9 UW UW +
-spkr46_11_10 DH DH +
-spkr46_11_11 AX EH -
-spkr46_11_12 Z TH -
-spkr46_11_13 UW UW +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr46/labels/spkr46_11.txt

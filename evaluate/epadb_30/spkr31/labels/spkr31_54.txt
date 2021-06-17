@@ -1,7 +1,1 @@
-spkr31_54_0 SH SH +
-spkr31_54_1 IY IY +
-spkr31_54_2 Z IH+S -
-spkr31_54_3 AX AX +
-spkr31_54_4 L L +
-spkr31_54_5 AY AY +
-spkr31_54_6 ER ER +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr31/labels/spkr31_54.txt

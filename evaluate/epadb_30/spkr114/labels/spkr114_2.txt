@@ -1,11 +1,1 @@
-spkr114_2_0 AX AX +
-spkr114_2_1 Kh K -
-spkr114_2_2 AH AH +
-spkr114_2_3 P P +
-spkr114_2_4 AX AX +
-spkr114_2_5 V V +
-spkr114_2_6 HH HH +
-spkr114_2_7 AA AA +
-spkr114_2_8 Th T -
-spkr114_2_9 Th Th +
-spkr114_2_10 IY IY +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr114/labels/spkr114_2.txt

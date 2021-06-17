@@ -1,15 +1,1 @@
-spkr14_67_0 AY AY +
-spkr14_67_1 N N +
-spkr14_67_2 Y IY -
-spkr14_67_3 UW UW +
-spkr14_67_4 AX E -
-spkr14_67_5 V V +
-spkr14_67_6 EH EH +
-spkr14_67_7 R R +
-spkr14_67_8 IY IY +
-spkr14_67_9 Th Th +
-spkr14_67_10 AO AO +
-spkr14_67_11 L L +
-spkr14_67_12 M M +
-spkr14_67_13 AE A -
-spkr14_67_14 N N +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr14/labels/spkr14_67.txt

@@ -1,13 +1,1 @@
-spkr18_4_0 M M +
-spkr18_4_1 AY AY +
-spkr18_4_2 F F +
-spkr18_4_3 AA AA +
-spkr18_4_4 DH DH +
-spkr18_4_5 ER ER +
-spkr18_4_6 IH IY -
-spkr18_4_7 Z S -
-spkr18_4_8 AX A -
-spkr18_4_9 T T +
-spkr18_4_10 HH X -
-spkr18_4_11 OW O -
-spkr18_4_12 M M +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr18/labels/spkr18_4.txt

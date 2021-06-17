@@ -1,11 +1,1 @@
-spkr32_42_0 AW AW +
-spkr32_42_1 L L +
-spkr32_42_2 Z S -
-spkr32_42_3 HH HH +
-spkr32_42_4 AE AE +
-spkr32_42_5 V B -
-spkr32_42_6 B B +
-spkr32_42_7 IH IH +
-spkr32_42_8 G G +
-spkr32_42_9 AY AY +
-spkr32_42_10 Z 0 -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr32/labels/spkr32_42.txt

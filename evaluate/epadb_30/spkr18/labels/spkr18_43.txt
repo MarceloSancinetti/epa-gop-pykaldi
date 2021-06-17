@@ -1,13 +1,1 @@
-spkr18_43_0 W W +
-spkr18_43_1 IY IY +
-spkr18_43_2 S S +
-spkr18_43_3 AA O -
-spkr18_43_4 AX A -
-spkr18_43_5 N N +
-spkr18_43_6 OW O -
-spkr18_43_7 L L +
-spkr18_43_8 D DH -
-spkr18_43_9 F F +
-spkr18_43_10 IH IY -
-spkr18_43_11 L L +
-spkr18_43_12 M M +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr18/labels/spkr18_43.txt

@@ -1,15 +1,1 @@
-spkr64_29_0 HH DH -
-spkr64_29_1 IY EY -
-spkr64_29_2 TH TH +
-spkr64_29_3 R R +
-spkr64_29_4 UW UW +
-spkr64_29_5 S S +
-spkr64_29_6 AH AH +
-spkr64_29_7 M M +
-spkr64_29_8 TH S -
-spkr64_29_9 IH IY -
-spkr64_29_10 NG N -
-spkr64_29_11 AE A -
-spkr64_29_12 T T +
-spkr64_29_13 Y Y +
-spkr64_29_14 UW UW +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr64/labels/spkr64_29.txt

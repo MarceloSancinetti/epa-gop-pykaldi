@@ -1,11 +1,1 @@
-spkr25_45_0 Ph Ph +
-spkr25_45_1 UH UH +
-spkr25_45_2 T T +
-spkr25_45_3 Y Y +
-spkr25_45_4 UH UH +
-spkr25_45_5 R R +
-spkr25_45_6 Kh Kh +
-spkr25_45_7 OW OW +
-spkr25_45_8 T T +
-spkr25_45_9 AO AO +
-spkr25_45_10 N N +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr25/labels/spkr25_45.txt

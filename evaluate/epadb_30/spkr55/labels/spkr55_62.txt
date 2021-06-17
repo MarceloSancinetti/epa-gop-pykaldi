@@ -1,11 +1,1 @@
-spkr55_62_0 AY AY +
-spkr55_62_1 G G +
-spkr55_62_2 EH EH +
-spkr55_62_3 T Th -
-spkr55_62_4 Y Y +
-spkr55_62_5 AO AO +
-spkr55_62_6 R R +
-spkr55_62_7 Ph P -
-spkr55_62_8 OY AO -
-spkr55_62_9 N N +
-spkr55_62_10 T Th -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr55/labels/spkr55_62.txt

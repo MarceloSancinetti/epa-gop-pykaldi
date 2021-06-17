@@ -1,15 +1,1 @@
-spkr64_46_0 AY AY +
-spkr64_46_1 D DH -
-spkr64_46_2 AO AO +
-spkr64_46_3 N N +
-spkr64_46_4 0 0 +
-spkr64_46_5 L L +
-spkr64_46_6 AY AY +
-spkr64_46_7 K K +
-spkr64_46_8 R R +
-spkr64_46_9 EY EY +
-spkr64_46_10 N N +
-spkr64_46_11 IY IY+N -
-spkr64_46_12 D D +
-spkr64_46_13 EY EY +
-spkr64_46_14 Z S -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr64/labels/spkr64_46.txt

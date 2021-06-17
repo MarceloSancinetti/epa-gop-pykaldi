@@ -1,16 +1,1 @@
-spkr34_7_0 HH HH +
-spkr34_7_1 ER ER +
-spkr34_7_2 L L +
-spkr34_7_3 IH IH +
-spkr34_7_4 T T +
-spkr34_7_5 0 0 +
-spkr34_7_6 L L +
-spkr34_7_7 S S +
-spkr34_7_8 IH IH +
-spkr34_7_9 S S +
-spkr34_7_10 T T +
-spkr34_7_11 ER ER +
-spkr34_7_12 Z S -
-spkr34_7_13 Th Th +
-spkr34_7_14 IY IY +
-spkr34_7_15 TH TH +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr34/labels/spkr34_7.txt

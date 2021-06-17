@@ -1,7 +1,1 @@
-spkr18_54_0 SH HH -
-spkr18_54_1 IY IY+IY -
-spkr18_54_2 Z S -
-spkr18_54_3 AX AX +
-spkr18_54_4 L L +
-spkr18_54_5 AY AY +
-spkr18_54_6 ER ER +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr18/labels/spkr18_54.txt

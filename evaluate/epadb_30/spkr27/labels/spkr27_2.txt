@@ -1,11 +1,1 @@
-spkr27_2_0 AX A -
-spkr27_2_1 Kh K -
-spkr27_2_2 AH AH +
-spkr27_2_3 P P +
-spkr27_2_4 AX O -
-spkr27_2_5 V F -
-spkr27_2_6 HH HH +
-spkr27_2_7 AA AO -
-spkr27_2_8 Th Th +
-spkr27_2_9 Th Th +
-spkr27_2_10 IY IY +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr27/labels/spkr27_2.txt

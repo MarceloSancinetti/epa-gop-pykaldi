@@ -1,11 +1,1 @@
-spkr25_59_0 AX AX +
-spkr25_59_1 G G +
-spkr25_59_2 EH EH +
-spkr25_59_3 N N +
-spkr25_59_4 S S +
-spkr25_59_5 T T +
-spkr25_59_6 AO AO +
-spkr25_59_7 L L +
-spkr25_59_8 AO AO +
-spkr25_59_9 D D +
-spkr25_59_10 Z Z +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr25/labels/spkr25_59.txt

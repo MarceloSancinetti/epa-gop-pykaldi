@@ -1,13 +1,1 @@
-spkr65_4_0 M M +
-spkr65_4_1 AY A -
-spkr65_4_2 F F +
-spkr65_4_3 AA AA +
-spkr65_4_4 DH DH +
-spkr65_4_5 ER ER +
-spkr65_4_6 IH IH +
-spkr65_4_7 Z S -
-spkr65_4_8 AX A -
-spkr65_4_9 T T +
-spkr65_4_10 HH HH +
-spkr65_4_11 OW O -
-spkr65_4_12 M M +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr65/labels/spkr65_4.txt

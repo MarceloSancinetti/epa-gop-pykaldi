@@ -1,14 +1,1 @@
-spkr56_37_0 AY AY +
-spkr56_37_1 L L +
-spkr56_37_2 ER EH+DX -
-spkr56_37_3 N N +
-spkr56_37_4 0 0 +
-spkr56_37_5 Th Th +
-spkr56_37_6 UW UW +
-spkr56_37_7 Th CH -
-spkr56_37_8 AY AY +
-spkr56_37_9 M M +
-spkr56_37_10 AY AY +
-spkr56_37_11 SH SH +
-spkr56_37_12 UW UW +
-spkr56_37_13 Z S -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr56/labels/spkr56_37.txt

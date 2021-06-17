@@ -1,14 +1,1 @@
-spkr29_51_0 W W +
-spkr29_51_1 IY IY +
-spkr29_51_2 R R +
-spkr29_51_3 AE A -
-spkr29_51_4 N N +
-spkr29_51_5 AW AW +
-spkr29_51_6 T T +
-spkr29_51_7 AX O -
-spkr29_51_8 V F -
-spkr29_51_9 SH SH +
-spkr29_51_10 AE A -
-spkr29_51_11 M M +
-spkr29_51_12 Ph Ph +
-spkr29_51_13 UW UW +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr29/labels/spkr29_51.txt

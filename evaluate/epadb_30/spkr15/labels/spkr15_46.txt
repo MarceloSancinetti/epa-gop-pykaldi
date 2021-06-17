@@ -1,15 +1,1 @@
-spkr15_46_0 AY AY +
-spkr15_46_1 D D +
-spkr15_46_2 OW OW +
-spkr15_46_3 N N +
-spkr15_46_4 T T +
-spkr15_46_5 L L +
-spkr15_46_6 AY AY +
-spkr15_46_7 K K +
-spkr15_46_8 R R +
-spkr15_46_9 EY EY +
-spkr15_46_10 N N +
-spkr15_46_11 IY IY +
-spkr15_46_12 D D +
-spkr15_46_13 EY EY +
-spkr15_46_14 Z S -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr15/labels/spkr15_46.txt

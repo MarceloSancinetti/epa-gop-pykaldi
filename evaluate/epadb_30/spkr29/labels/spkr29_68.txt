@@ -1,13 +1,1 @@
-spkr29_68_0 W W +
-spkr29_68_1 IY IY +
-spkr29_68_2 M M +
-spkr29_68_3 EH IY -
-spkr29_68_4 T T +
-spkr29_68_5 AX A -
-spkr29_68_6 T DH -
-spkr29_68_7 D DH -
-spkr29_68_8 AX E -
-spkr29_68_9 K K +
-spkr29_68_10 W W +
-spkr29_68_11 AY AY +
-spkr29_68_12 ER ER +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr29/labels/spkr29_68.txt

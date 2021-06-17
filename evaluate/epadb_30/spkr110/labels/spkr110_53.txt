@@ -1,15 +1,1 @@
-spkr110_53_0 M M +
-spkr110_53_1 AH AH +
-spkr110_53_2 M M +
-spkr110_53_3 S S +
-spkr110_53_4 EH E -
-spkr110_53_5 N N +
-spkr110_53_6 T D -
-spkr110_53_7 M M +
-spkr110_53_8 IY IY +
-spkr110_53_9 AX AX +
-spkr110_53_10 M M +
-spkr110_53_11 EH EH +
-spkr110_53_12 S S +
-spkr110_53_13 AX IY -
-spkr110_53_14 JH SH -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr110/labels/spkr110_53.txt

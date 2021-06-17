@@ -1,14 +1,1 @@
-spkr17_11_0 DH DH +
-spkr17_11_1 AX AX +
-spkr17_11_2 G G +
-spkr17_11_3 ER ER +
-spkr17_11_4 L L +
-spkr17_11_5 G G +
-spkr17_11_6 OW OW +
-spkr17_11_7 Z Z +
-spkr17_11_8 Th Th +
-spkr17_11_9 UW UW +
-spkr17_11_10 DH DH +
-spkr17_11_11 AX E -
-spkr17_11_12 Z Z +
-spkr17_11_13 UW UW +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr17/labels/spkr17_11.txt

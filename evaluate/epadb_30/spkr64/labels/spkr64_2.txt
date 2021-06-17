@@ -1,11 +1,1 @@
-spkr64_2_0 AX A -
-spkr64_2_1 Kh Kh +
-spkr64_2_2 AH AH +
-spkr64_2_3 P P +
-spkr64_2_4 AX O -
-spkr64_2_5 V F -
-spkr64_2_6 HH X -
-spkr64_2_7 AA O -
-spkr64_2_8 Th T -
-spkr64_2_9 Th T -
-spkr64_2_10 IY IY +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr64/labels/spkr64_2.txt

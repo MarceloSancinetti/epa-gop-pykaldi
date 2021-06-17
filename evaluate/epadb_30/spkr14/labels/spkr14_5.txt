@@ -1,15 +1,1 @@
-spkr14_5_0 CH CH +
-spkr14_5_1 R R +
-spkr14_5_2 AY AY +
-spkr14_5_3 Th T -
-spkr14_5_4 UW UW +
-spkr14_5_5 S S +
-spkr14_5_6 IH IY -
-spkr14_5_7 NG NG +
-spkr14_5_8 AE AE +
-spkr14_5_9 N N +
-spkr14_5_10 0 0 +
-spkr14_5_11 JH JH +
-spkr14_5_12 AH AH +
-spkr14_5_13 M M +
-spkr14_5_14 P Ph -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr14/labels/spkr14_5.txt

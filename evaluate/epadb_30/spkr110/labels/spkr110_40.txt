@@ -1,15 +1,1 @@
-spkr110_40_0 DH DH +
-spkr110_40_1 AX AX +
-spkr110_40_2 G GH -
-spkr110_40_3 AA AA +
-spkr110_40_4 R DX -
-spkr110_40_5 D DH -
-spkr110_40_6 AX EH -
-spkr110_40_7 N N +
-spkr110_40_8 IH IY -
-spkr110_40_9 Z S -
-spkr110_40_10 P P +
-spkr110_40_11 R DX -
-spkr110_40_12 IH IY -
-spkr110_40_13 DX DX +
-spkr110_40_14 IY IY +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr110/labels/spkr110_40.txt

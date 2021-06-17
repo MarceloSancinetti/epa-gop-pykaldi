@@ -1,14 +1,1 @@
-spkr14_9_0 DH DH +
-spkr14_9_1 AX EH -
-spkr14_9_2 S S +
-spkr14_9_3 AH A -
-spkr14_9_4 N N +
-spkr14_9_5 HH X -
-spkr14_9_6 IY IY +
-spkr14_9_7 T T +
-spkr14_9_8 S S +
-spkr14_9_9 M M +
-spkr14_9_10 AY AY +
-spkr14_9_11 B B +
-spkr14_9_12 EH EH +
-spkr14_9_13 D DH -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr14/labels/spkr14_9.txt

@@ -1,15 +1,1 @@
-spkr112_30_0 DH DH +
-spkr112_30_1 AX AX +
-spkr112_30_2 M M +
-spkr112_30_3 UW UW +
-spkr112_30_4 N N +
-spkr112_30_5 L L +
-spkr112_30_6 UH UH +
-spkr112_30_7 K K +
-spkr112_30_8 S S +
-spkr112_30_9 L L +
-spkr112_30_10 AY AY +
-spkr112_30_11 K G -
-spkr112_30_12 CH CH +
-spkr112_30_13 IY IY +
-spkr112_30_14 Z 0 -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr112/labels/spkr112_30.txt

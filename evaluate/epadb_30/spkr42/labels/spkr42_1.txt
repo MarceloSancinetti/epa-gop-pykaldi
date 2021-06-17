@@ -1,10 +1,1 @@
-spkr42_1_0 AA AO -
-spkr42_1_1 R R +
-spkr42_1_2 N N +
-spkr42_1_3 AY AY +
-spkr42_1_4 S S +
-spkr42_1_5 R R +
-spkr42_1_6 EH EH +
-spkr42_1_7 D T -
-spkr42_1_8 Th T -
-spkr42_1_9 OY OY +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr42/labels/spkr42_1.txt

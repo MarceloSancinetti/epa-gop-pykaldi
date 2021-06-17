@@ -1,13 +1,1 @@
-spkr22_68_0 W W +
-spkr22_68_1 IY IY +
-spkr22_68_2 M M +
-spkr22_68_3 EH EH +
-spkr22_68_4 T Th -
-spkr22_68_5 AX A -
-spkr22_68_6 T T +
-spkr22_68_7 D DH -
-spkr22_68_8 AX AX +
-spkr22_68_9 K Kh -
-spkr22_68_10 W W +
-spkr22_68_11 AY A -
-spkr22_68_12 ER R -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr22/labels/spkr22_68.txt

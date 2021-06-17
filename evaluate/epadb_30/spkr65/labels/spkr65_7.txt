@@ -1,16 +1,1 @@
-spkr65_7_0 HH HH +
-spkr65_7_1 ER ER +
-spkr65_7_2 L L +
-spkr65_7_3 IH IH +
-spkr65_7_4 DX DX +
-spkr65_7_5 0 0 +
-spkr65_7_6 L L +
-spkr65_7_7 S S +
-spkr65_7_8 IH IH +
-spkr65_7_9 S S +
-spkr65_7_10 T T +
-spkr65_7_11 ER E -
-spkr65_7_12 Z S -
-spkr65_7_13 Th T -
-spkr65_7_14 IY IY +
-spkr65_7_15 TH 0 -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr65/labels/spkr65_7.txt

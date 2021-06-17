@@ -1,15 +1,1 @@
-spkr52_53_0 M M +
-spkr52_53_1 AH AH +
-spkr52_53_2 M M +
-spkr52_53_3 S S +
-spkr52_53_4 EH EH +
-spkr52_53_5 N N +
-spkr52_53_6 T T+S -
-spkr52_53_7 M M +
-spkr52_53_8 IY IY +
-spkr52_53_9 AX AX +
-spkr52_53_10 M M +
-spkr52_53_11 EH EH +
-spkr52_53_12 S S +
-spkr52_53_13 IH IH +
-spkr52_53_14 JH CH -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr52/labels/spkr52_53.txt

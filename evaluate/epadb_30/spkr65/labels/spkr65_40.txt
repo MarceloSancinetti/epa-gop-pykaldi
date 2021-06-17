@@ -1,15 +1,1 @@
-spkr65_40_0 DH DH +
-spkr65_40_1 AX AX +
-spkr65_40_2 G G +
-spkr65_40_3 AA AA +
-spkr65_40_4 R R +
-spkr65_40_5 D 0 -
-spkr65_40_6 AX EH -
-spkr65_40_7 N N +
-spkr65_40_8 IH IH +
-spkr65_40_9 Z S -
-spkr65_40_10 P P +
-spkr65_40_11 R R +
-spkr65_40_12 IH IH +
-spkr65_40_13 DX DX +
-spkr65_40_14 IY IY +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr65/labels/spkr65_40.txt

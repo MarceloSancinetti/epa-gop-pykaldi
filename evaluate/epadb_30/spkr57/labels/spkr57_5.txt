@@ -1,15 +1,1 @@
-spkr57_5_0 CH CH +
-spkr57_5_1 R R +
-spkr57_5_2 AY AY +
-spkr57_5_3 Th Th +
-spkr57_5_4 UW UW +
-spkr57_5_5 S S +
-spkr57_5_6 IH IH +
-spkr57_5_7 NG NG +
-spkr57_5_8 AX AA -
-spkr57_5_9 N N +
-spkr57_5_10 0 0 +
-spkr57_5_11 JH JH +
-spkr57_5_12 AH AH +
-spkr57_5_13 M M +
-spkr57_5_14 P 0 -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr57/labels/spkr57_5.txt

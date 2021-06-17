@@ -1,14 +1,1 @@
-spkr42_51_0 W W +
-spkr42_51_1 IY IY +
-spkr42_51_2 R R +
-spkr42_51_3 AE AH -
-spkr42_51_4 N N +
-spkr42_51_5 AW AW +
-spkr42_51_6 T Th -
-spkr42_51_7 AX AO -
-spkr42_51_8 V F -
-spkr42_51_9 SH SH +
-spkr42_51_10 AE AH -
-spkr42_51_11 M M +
-spkr42_51_12 Ph P -
-spkr42_51_13 UW UW +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr42/labels/spkr42_51.txt

@@ -1,14 +1,1 @@
-spkr45_51_0 W W +
-spkr45_51_1 IY IY +
-spkr45_51_2 R R +
-spkr45_51_3 AE AA -
-spkr45_51_4 N N +
-spkr45_51_5 AW AW +
-spkr45_51_6 T T +
-spkr45_51_7 AX O -
-spkr45_51_8 V F -
-spkr45_51_9 SH SH +
-spkr45_51_10 AE AH -
-spkr45_51_11 M M +
-spkr45_51_12 Ph Ph +
-spkr45_51_13 UW UW +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr45/labels/spkr45_51.txt

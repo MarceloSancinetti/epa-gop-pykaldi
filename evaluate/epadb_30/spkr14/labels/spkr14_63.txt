@@ -1,10 +1,1 @@
-spkr14_63_0 Th Th +
-spkr14_63_1 UH UW -
-spkr14_63_2 P P +
-spkr14_63_3 L L +
-spkr14_63_4 EY EY +
-spkr14_63_5 ER EH+DX -
-spkr14_63_6 G G +
-spkr14_63_7 EY EY +
-spkr14_63_8 M M +
-spkr14_63_9 Z S -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr14/labels/spkr14_63.txt

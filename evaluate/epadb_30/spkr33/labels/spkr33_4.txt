@@ -1,13 +1,1 @@
-spkr33_4_0 M M +
-spkr33_4_1 AY AY +
-spkr33_4_2 F F +
-spkr33_4_3 AA AA +
-spkr33_4_4 DH DH +
-spkr33_4_5 ER ER +
-spkr33_4_6 IH IY -
-spkr33_4_7 Z S -
-spkr33_4_8 AX AX +
-spkr33_4_9 T T +
-spkr33_4_10 HH HH +
-spkr33_4_11 OW OW +
-spkr33_4_12 M M +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr33/labels/spkr33_4.txt

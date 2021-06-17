@@ -1,13 +1,1 @@
-spkr15_43_0 W W +
-spkr15_43_1 IY IY +
-spkr15_43_2 S S +
-spkr15_43_3 AO AO +
-spkr15_43_4 AX A -
-spkr15_43_5 N N +
-spkr15_43_6 OW OW +
-spkr15_43_7 L L +
-spkr15_43_8 D D +
-spkr15_43_9 F F +
-spkr15_43_10 IH IH +
-spkr15_43_11 L L +
-spkr15_43_12 M M +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr15/labels/spkr15_43.txt

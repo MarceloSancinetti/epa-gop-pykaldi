@@ -1,15 +1,1 @@
-spkr55_30_0 DH DH +
-spkr55_30_1 AX AX +
-spkr55_30_2 M M +
-spkr55_30_3 UW UW +
-spkr55_30_4 N N +
-spkr55_30_5 L L +
-spkr55_30_6 UH UH +
-spkr55_30_7 K K +
-spkr55_30_8 S S +
-spkr55_30_9 L L +
-spkr55_30_10 AY AY +
-spkr55_30_11 K K +
-spkr55_30_12 CH CH +
-spkr55_30_13 IY IY +
-spkr55_30_14 Z S -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr55/labels/spkr55_30.txt

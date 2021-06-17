@@ -1,11 +1,1 @@
-spkr14_59_0 AX E -
-spkr14_59_1 G G +
-spkr14_59_2 EY EY +
-spkr14_59_3 N N +
-spkr14_59_4 S S +
-spkr14_59_5 T Th -
-spkr14_59_6 AA O -
-spkr14_59_7 L L +
-spkr14_59_8 AO AO +
-spkr14_59_9 D D +
-spkr14_59_10 Z S -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr14/labels/spkr14_59.txt

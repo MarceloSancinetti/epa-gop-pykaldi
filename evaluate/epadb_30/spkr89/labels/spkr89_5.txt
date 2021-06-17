@@ -1,15 +1,1 @@
-spkr89_5_0 CH CH +
-spkr89_5_1 R R +
-spkr89_5_2 AY AY +
-spkr89_5_3 Th Th +
-spkr89_5_4 UW UW +
-spkr89_5_5 S S +
-spkr89_5_6 IH IY -
-spkr89_5_7 NG G -
-spkr89_5_8 AX AX +
-spkr89_5_9 N N +
-spkr89_5_10 0 0 +
-spkr89_5_11 JH JH +
-spkr89_5_12 AH AH +
-spkr89_5_13 M M +
-spkr89_5_14 P P +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr89/labels/spkr89_5.txt

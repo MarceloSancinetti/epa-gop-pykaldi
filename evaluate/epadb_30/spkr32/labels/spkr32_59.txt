@@ -1,11 +1,1 @@
-spkr32_59_0 AX A -
-spkr32_59_1 G G +
-spkr32_59_2 EH EH +
-spkr32_59_3 N N +
-spkr32_59_4 S S +
-spkr32_59_5 T T +
-spkr32_59_6 AA O -
-spkr32_59_7 L L +
-spkr32_59_8 AO AO +
-spkr32_59_9 D D +
-spkr32_59_10 Z S -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr32/labels/spkr32_59.txt

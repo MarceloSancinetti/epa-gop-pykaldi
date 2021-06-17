@@ -1,10 +1,1 @@
-spkr52_56_0 Y Y +
-spkr52_56_1 UW UW +
-spkr52_56_2 Kh Kh +
-spkr52_56_3 AO AO +
-spkr52_56_4 L L +
-spkr52_56_5 D D +
-spkr52_56_6 AX AX +
-spkr52_56_7 Kh Kh +
-spkr52_56_8 AE AE +
-spkr52_56_9 B B +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr52/labels/spkr52_56.txt

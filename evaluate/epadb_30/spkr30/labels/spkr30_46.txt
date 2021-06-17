@@ -1,15 +1,1 @@
-spkr30_46_0 AY AH -
-spkr30_46_1 DX DX +
-spkr30_46_2 AO AO +
-spkr30_46_3 N N +
-spkr30_46_4 0 0 +
-spkr30_46_5 L L +
-spkr30_46_6 AY AY +
-spkr30_46_7 K G -
-spkr30_46_8 R R +
-spkr30_46_9 EY EY +
-spkr30_46_10 N N +
-spkr30_46_11 IY IY +
-spkr30_46_12 D D +
-spkr30_46_13 EY EY +
-spkr30_46_14 Z S -
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr30/labels/spkr30_46.txt

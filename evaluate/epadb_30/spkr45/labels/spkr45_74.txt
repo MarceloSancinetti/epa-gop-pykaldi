@@ -1,14 +1,1 @@
-spkr45_74_0 DH DH +
-spkr45_74_1 AE AH -
-spkr45_74_2 T T +
-spkr45_74_3 S S +
-spkr45_74_4 P P +
-spkr45_74_5 Y Y +
-spkr45_74_6 UH UH +
-spkr45_74_7 R R +
-spkr45_74_8 L L +
-spkr45_74_9 AH UH -
-spkr45_74_10 G G +
-spkr45_74_11 ZH S -
-spkr45_74_12 ER ER +
-spkr45_74_13 IY IY +
+/home/marcelo/epa-gop-pykaldi/EpaDB/spkr45/labels/spkr45_74.txt
