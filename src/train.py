@@ -45,7 +45,7 @@ def train(model, trainloader, testloader, fold, run_name='test'):
     optimizer = optim.Adam(model.parameters())
 
     for epoch in range(35):  # loop over the dataset multiple times
-        PATH = 'saved_state_dicts/' + run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) + '.pth'
+        PATH = '../saved_state_dicts/' + run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) + '.pth'
         #If the checkpoint for the current epoch is already present, checkpoint is loaded and training is skipped
         if os.path.isfile(PATH):
             checkpoint = torch.load(PATH)

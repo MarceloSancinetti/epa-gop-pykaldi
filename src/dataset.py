@@ -61,7 +61,7 @@ class EpaDB(Dataset):
         self._labels_path = labels_path
 
         #Create FeatureManager
-        self._feature_manager = FeatureManager('EpaDB', 'epadb/test/data','conf')
+        self._feature_manager = FeatureManager('../EpaDB', '../epadb/test/data','../conf')
 
         # Read from sample list and create dictionary mapping fileid to .wav path and file list mapping int to logid
         file_id_list = []

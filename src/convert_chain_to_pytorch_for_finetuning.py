@@ -30,7 +30,6 @@ def read_linear_params(file):
 		line_array = np.fromstring(line.replace(']',''), dtype=float, sep=' ')
 		linear_params.append(line_array)
 	linear_params = np.array(linear_params)
-	#print(linear_params)
 	return linear_params
 
 def read_vector(file, prefix, advance):
@@ -40,11 +39,8 @@ def read_vector(file, prefix, advance):
 	line = line.replace(prefix, '')
 	line = line.replace(']', '')
 	if len(line) <= 1:
-		#print(np.array([]))
 		return np.array([])
-	#print(line)
 	vector = np.fromstring(line, dtype=float, sep=' ')
-	#print(vector)
 	return vector
 
 def read_bias(file):
@@ -87,7 +83,7 @@ def read_relu_component(file, layer_number, is_tdnnf=True):
 	return params_dict
 
 
-chain_file = open('exp/chain_cleaned/tdnn_1d_sp/final.txt', 'r') 
+chain_file = open('../exp/chain_cleaned/tdnn_1d_sp/final.txt', 'r') 
  
 components = {}
 finished = False  
@@ -139,25 +135,12 @@ while not finished:
 		components['prefinal-l'] = {}
 		components['prefinal-l']['linear_params'] = read_linear_params(chain_file)
 	
-	#Chain head
-	if '<ComponentName> prefinal-chain.affine' in line:
-		components['prefinal-chain.affine'] = read_affine_component(chain_file)
-
-	if '<ComponentName> prefinal-chain.linear' in line:
-		components['prefinal-chain.linear'] = {}
-		components['prefinal-chain.linear']['linear_params'] = read_linear_params(chain_file)
-
-	if '<ComponentName> prefinal-chain.batchnorm1' in line:
-	 	components['prefinal-chain.batchnorm1'] = read_batchnorm_component(chain_file, 19, component_name='prefinal-chain.batchnorm1')
-
-	if '<ComponentName> prefinal-chain.batchnorm2' in line:
-	 	components['prefinal-chain.batchnorm2'] = read_batchnorm_component(chain_file, 19, component_name='prefinal-chain.batchnorm2', dim='256')
-	
-	if '<ComponentName> output.affine' in line:
-		components['output.affine'] = read_affine_component(chain_file)
+	# The code used to parse the chain head parameters has been removed because a new layer will be used instead.
 
 
-ftdnn = FTDNN()
+phone_count = 39
+
+ftdnn = FTDNN(out_dim=phone_count)
 
 state_dict = {}
 
@@ -180,19 +163,10 @@ for layer_number in range(2, 18):
 
 state_dict['layer18.weight'] = torch.from_numpy(components['prefinal-l']['linear_params'])
 
+state_dict['layer19.linear.weight'] = torch.randn([phone_count, 256])
+state_dict['layer19.linear.bias'] = torch.randn([phone_count])
 
-state_dict['layer19.linear1.weight'] = torch.from_numpy(components['prefinal-chain.affine']['linear_params'])
-state_dict['layer19.linear1.bias'] = torch.from_numpy(components['prefinal-chain.affine']['bias'])
-state_dict['layer19.bn1.running_mean'] = torch.from_numpy(components['prefinal-chain.batchnorm1']['stats_mean'])
-state_dict['layer19.bn1.running_var'] = torch.from_numpy(components['prefinal-chain.batchnorm1']['stats_var'])
-state_dict['layer19.linear2.weight'] = torch.from_numpy(components['prefinal-chain.linear']['linear_params'])
-state_dict['layer19.bn2.running_mean'] = torch.from_numpy(components['prefinal-chain.batchnorm2']['stats_mean'])
-state_dict['layer19.bn2.running_var'] = torch.from_numpy(components['prefinal-chain.batchnorm2']['stats_var'])
-state_dict['layer19.linear3.weight'] = torch.from_numpy(components['output.affine']['linear_params'])
-state_dict['layer19.linear3.bias'] = torch.from_numpy(components['output.affine']['bias'])
-
-print(state_dict['layer19.linear3.weight'])
-
+torch.nn.init.xavier_uniform(ftdnn.layer19.linear.weight)
 
 for name, param in ftdnn.named_parameters():
 	print (name, param.shape)
@@ -201,4 +175,4 @@ chain_file.close()
 
 ftdnn.load_state_dict(state_dict)
 
-torch.save(ftdnn.state_dict(), './model.pt')
+torch.save(ftdnn.state_dict(), '../model_finetuning.pt')
