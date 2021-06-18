@@ -1,8 +1,5 @@
-from kaldi.asr import MappedLatticeFasterRecognizer
-from kaldi.decoder import LatticeFasterDecoderOptions
 from kaldi.matrix import Matrix
-from kaldi.util.table import SequentialMatrixReader, DoubleMatrixWriter
-from kaldi.nnet3 import NnetSimpleComputationOptions
+from kaldi.util.table import DoubleMatrixWriter
 from kaldi.alignment import MappedAligner
 from kaldi.fstext import SymbolTable
 from kaldi.lat.align import WordBoundaryInfoNewOpts, WordBoundaryInfo
@@ -14,32 +11,28 @@ import os
 from FeatureManager import FeatureManager
 
 # Set the paths and read/write specifiers
-acoustic_model_path = "model.pt"
+acoustic_model_path   = "model.pt"
 transition_model_path = "exp/chain_cleaned/tdnn_1d_sp/final.mdl"
-tree = 'exp/chain_cleaned/tdnn_1d_sp/tree'
-disam = 'data/lang_test_tgsmall/phones/disambig.int'
-lang_graph ='data/lang_test_tgsmall/L.fst' 
-symbols_path = 'data/lang_test_tgsmall/words.txt'
-phones = 'exp/chain_cleaned/tdnn_1d_sp/phones.txt'
-text_path = 'epadb/test/text'
-data_path = 'epadb/test/data'
-conf_path = 'conf'
-sample_list_path = 'epadb_full_path_list'
-epadb_root_path = 'EpaDB'
+tree_path             = 'exp/chain_cleaned/tdnn_1d_sp/tree'
+disam_path            = 'data/lang_test_tgsmall/phones/disambig.int'
+lang_graph_path       = 'data/lang_test_tgsmall/L.fst' 
+symbols_path          = 'data/lang_test_tgsmall/words.txt'
+phones_path           = 'exp/chain_cleaned/tdnn_1d_sp/phones.txt'
+data_path             = 'epadb/test/data'
+conf_path             = 'conf'
+sample_list_path      = 'epadb_full_path_list'
+epadb_root_path       = 'EpaDB'
 
-mfccs_rspec = ("ark:" + data_path + "/mfccs.ark")
-
+mfccs_rspec    = ("ark:" + data_path + "/mfccs.ark")
 ivectors_rspec = ("ark:" + data_path + "/ivectors.ark")
 
 loglikes_wspec = "ark:gop/loglikes.ark"
 
-aligner = MappedAligner.from_files(transition_model_path, tree, lang_graph, symbols_path,
-                                 disam, acoustic_scale = 1.0)
-phones = SymbolTable.read_text(phones)
+aligner = MappedAligner.from_files(transition_model_path, tree_path, lang_graph_path, symbols_path,
+                                 disam_path, acoustic_scale = 1.0)
+phones = SymbolTable.read_text(phones_path)
 wb_info = WordBoundaryInfo.from_file(WordBoundaryInfoNewOpts(),
                                      "data/lang_test_tgsmall/phones/word_boundary.int")
-
-
 
 
 # Instantiate the PyTorch acoustic model (subclass of torch.nn.Module)
@@ -56,12 +49,11 @@ align_out_file = open("gop/align_output","w+")
 with DoubleMatrixWriter(loglikes_wspec) as loglikes_writer:
     for line in open(sample_list_path,'r').readlines():
         logid = line.split()[0]
-        #tkey, text = line.strip().split(None, 1)
         feats, text = feature_manager.get_features_for_logid(logid)
         text = text.upper()
         feats = torch.unsqueeze(feats, 0)
-        loglikes = model(feats)                  # Compute log-likelihoods
-        loglikes = Matrix(loglikes.detach().numpy()[0])      # Convert to PyKaldi matrix
+        loglikes = model(feats)                         # Compute log-likelihoods
+        loglikes = Matrix(loglikes.detach().numpy()[0]) # Convert to PyKaldi matrix
         loglikes_writer[logid] = loglikes
         out = aligner.align(loglikes, text)
         phone_alignment = aligner.to_phone_alignment(out["alignment"], phones)

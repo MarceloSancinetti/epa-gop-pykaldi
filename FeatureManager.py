@@ -20,14 +20,13 @@ class FeatureManager:
 		self.ivector_period = self._read_ivector_period_from_conf()
 
 
-	def extract_features_using_kaldi(self, text_path):
+	def extract_features_using_kaldi(self):
 
 		if not os.path.isdir(self.features_path):
 			os.mkdir(self.features_path)
 
 		wav_scp_file = open(self.wav_scp_path,"w+")
 		spk2utt_file = open(self.spk2utt_path,"w+")
-		text_file = open(text_path, 'w+')
 
 		#Iterate over waveforms and write their names in wav.scp and spk2utt
 		#Also, create text file with transcriptions of all phrases
@@ -37,13 +36,9 @@ class FeatureManager:
 			wav_scp_file.write(logid + ' ' + fullpath + '\n')
 			spkr = logid.split('_')[0]
 			spk2utt_file.write(spkr + ' ' + logid + '\n')
-			transcription = self._get_transcription_for_logid(logid)
-			transcription = transcription.upper()
-			text_file.write(logid + ' ' + transcription + '\n')
 
 		wav_scp_file.close()
 		spk2utt_file.close()
-
 
 
 		if not os.path.exists(self.mfcc_path):
@@ -52,10 +47,11 @@ class FeatureManager:
 					   --compress=true ark:- ark,scp:' + self.mfcc_path + ',' + self.feats_scp_path)
 
 
-
 		if not os.path.exists(self.ivectors_path):
 			os.system('ivector-extract-online2 --config='+self.conf_path+'/ivector_extractor.conf ark:' + self.spk2utt_path + '\
 		    	      scp:' + self.feats_scp_path + ' ark:' + self.ivectors_path)
+
+
 
 	#Returns features (MFCCs+iVectors) for given logid in the format the acoustic model expects
 	def get_features_for_logid(self, logid):
