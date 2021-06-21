@@ -47,6 +47,8 @@ class EpaDB(Dataset):
         sample_list_path: Union[str, Path],
         phones_list_path: Union[str, Path],
         labels_path: Union[str, Path],
+        features_path : Union[str, Path],
+        conf_path: Union[str, Path],
         audio_ext=".wav"
     ) -> None:
         self._ext_audio = audio_ext
@@ -61,7 +63,7 @@ class EpaDB(Dataset):
         self._labels_path = labels_path
 
         #Create FeatureManager
-        self._feature_manager = FeatureManager('../EpaDB', '../epadb/test/data','../conf')
+        self._feature_manager = FeatureManager(root_path, features_path, conf_path)
 
         # Read from sample list and create dictionary mapping fileid to .wav path and file list mapping int to logid
         file_id_list = []

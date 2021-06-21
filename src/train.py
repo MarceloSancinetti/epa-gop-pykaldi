@@ -35,7 +35,7 @@ def criterion(batch_outputs, batch_labels):
     loss = loss_fn(batch_outputs, batch_labels)
     return loss
 
-def train(model, trainloader, testloader, fold, run_name='test'):
+def train(model, trainloader, testloader, fold, state_dict_dir, run_name='test'):
 
     #Freeze all layers except the last
     for name, param in model.named_parameters():
@@ -45,7 +45,7 @@ def train(model, trainloader, testloader, fold, run_name='test'):
     optimizer = optim.Adam(model.parameters())
 
     for epoch in range(35):  # loop over the dataset multiple times
-        PATH = '../saved_state_dicts/' + run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) + '.pth'
+        PATH = state_dict_dir + run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) + '.pth'
         #If the checkpoint for the current epoch is already present, checkpoint is loaded and training is skipped
         if os.path.isfile(PATH):
             checkpoint = torch.load(PATH)
@@ -116,6 +116,11 @@ def main():
     parser.add_argument('--phones-file', dest='phones_file', help='File with list of phones', default=None)
     parser.add_argument('--labels-dir', dest='labels_dir', help='Directory with labels used in training', default=None)
     parser.add_argument('--model-path', dest='model_path', help='Path to .pth/pt file with model to finetune', default=None)
+    parser.add_argument('--epa-root-path', dest='epa_root_path', help='EpaDB root path', default=None)
+    parser.add_argument('--features-path', dest='features_path', help='Path to features directory', default=None)
+    parser.add_argument('--conf-path', dest='conf_path', help='Path to config directory used in feature extraction', default=None)
+    parser.add_argument('--test-sample-list-dir', dest='test_sample_list_dir', help='Path to output directory to save test sample lists', default=None)
+    parser.add_argument('--state-dict-dir', dest='state_dict_dir', help='Path to output directory to save state dicts', default=None)
 
     args = parser.parse_args()
     run_name = args.run_name
@@ -123,8 +128,8 @@ def main():
     wandb.init(project="gop-finetuning")
     wandb.run.name = run_name
 
-    epa_root_path = 'EpaDB'
-    dataset = EpaDB(epa_root_path, args.utterance_list, args.phones_file, args.labels_dir)
+    epa_root_path = args.epa_root_path
+    dataset = EpaDB(epa_root_path, args.utterance_list, args.phones_file, args.labels_dir, args.features_path, args.conf_path)
 
     seed = 42
     torch.manual_seed(seed)
@@ -154,9 +159,9 @@ def main():
         model.load_state_dict(torch.load(args.model_path))
 
         wandb.watch(model, log_freq=100)
-        model = train(model, trainloader, testloader, fold, run_name=run_name)
+        model = train(model, trainloader, testloader, fold, state_dict_dir, run_name=run_name)
 
         #Generate test sample list for current fold
-        generate_test_sample_list(testloader, epa_root_path, 'sample_lists', 'test_sample_list_fold_' + str(fold))
+        generate_test_sample_list(testloader, epa_root_path, args.test_sample_list_dir, 'test_sample_list_fold_' + str(fold))
 
 main()

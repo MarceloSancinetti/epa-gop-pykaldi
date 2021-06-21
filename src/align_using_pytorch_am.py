@@ -15,28 +15,42 @@ from FeatureManager import FeatureManager
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--utterance-list', dest='sample_list_path', help='File with utt list', default=None)
+    parser.add_argument('--utterance-list', dest='sample_list_path', help='Path to file with utt list', default=None)
+    parser.add_argument('--acoustic-model-path', dest='acoustic_model_path', help='Path to acoustic model .pt', default=None)
+    parser.add_argument('--transition-model-path', dest='transition_model_path', help='Path to transition model .mdl', default=None)
+    parser.add_argument('--tree-path', dest='tree_path', help='Path to tree', default=None)
+    parser.add_argument('--disam-path', dest='disam_path', help='Path to disambig.int', default=None)
+    parser.add_argument('--word-boundary-path', dest='word_boundary_path', help='Path to word_boundary.int', default=None)
+    parser.add_argument('--lang-graph-path', dest='lang_graph_path', help='Path to language FST', default=None)
+    parser.add_argument('--words-path', dest='symbols_path', help='Path to word list', default=None)
+    parser.add_argument('--phones-path', dest='phones_path', help='Path to kaldi lang phones.txt', default=None)    
+    parser.add_argument('--features-path', dest='features_path', help='Path to features directory', default=None)
+    parser.add_argument('--conf-path', dest='conf_path', help='Path to directory containing config files for feature extraction', default=None)
+    parser.add_argument('--loglikes-path', dest='loglikes_path', help='Output path to save loglikes.ark', default=None)
+    parser.add_argument('--align-path', dest='align_path', help='Path to save alignment output', default=None)
+    parser.add_argument('--epadb-root-path', dest='epadb_root_path', help='EpaDB root path', default=None)
+
     args = parser.parse_args()
 
 
     # Set the paths and read/write specifiers
-    acoustic_model_path   = '../model.pt'
-    transition_model_path = '../exp/chain_cleaned/tdnn_1d_sp/final.mdl'
-    tree_path             = '../exp/chain_cleaned/tdnn_1d_sp/tree'
-    disam_path            = '../data/lang_test_tgsmall/phones/disambig.int'
-    word_boundary_path    = '../data/lang_test_tgsmall/phones/word_boundary.int'
-    lang_graph_path       = '../data/lang_test_tgsmall/L.fst' 
-    symbols_path          = '../data/lang_test_tgsmall/words.txt'
-    phones_path           = '../exp/chain_cleaned/tdnn_1d_sp/phones.txt'
-    data_path             = '../epadb/test/data'
-    conf_path             = '../conf'
+    acoustic_model_path   = args.acoustic_model_path
+    transition_model_path = args.transition_model_path
+    tree_path             = args.tree_path
+    disam_path            = args.disam_path
+    word_boundary_path    = args.word_boundary_path
+    lang_graph_path       = args.lang_graph_path
+    symbols_path          = args.symbols_path
+    phones_path           = args.phones_path
+    features_path         = args.features_path
+    conf_path             = args.conf_path
     sample_list_path      = args.sample_list_path
-    epadb_root_path       = '../EpaDB'
+    epadb_root_path       = args.epadb_root_path
 
-    mfccs_rspec    = "ark:" + data_path + "/mfccs.ark"
-    ivectors_rspec = "ark:" + data_path + "/ivectors.ark"
+    mfccs_rspec    = "ark:" + features_path + "/mfccs.ark"
+    ivectors_rspec = "ark:" + features_path + "/ivectors.ark"
 
-    loglikes_wspec = "ark:../gop/loglikes.ark"
+    loglikes_wspec = "ark:" + args.epadb_root_path
 
     aligner = MappedAligner.from_files(transition_model_path, tree_path, lang_graph_path, symbols_path,
                                      disam_path, acoustic_scale = 1.0)
@@ -51,10 +65,10 @@ if __name__ == '__main__':
     model.eval()
 
     #Create feature manager
-    feature_manager = FeatureManager(epadb_root_path, data_path, conf_path)
+    feature_manager = FeatureManager(epadb_root_path, features_path, conf_path)
 
 
-    align_out_file = open("../gop/align_output","w+")
+    align_out_file = open(args.align_path,"w+")
     # Decode and write output lattices
     with DoubleMatrixWriter(loglikes_wspec) as loglikes_writer:
         for line in open(sample_list_path,'r').readlines():

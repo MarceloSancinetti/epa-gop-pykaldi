@@ -91,4 +91,5 @@ def main():
     generate_score_txt(model, testloader, gop_txt_dir+ '/' +'gop-'+model_name+'.txt', phone_dict)
 
 
-main()
+if __name__ == '__main__':
+    main()

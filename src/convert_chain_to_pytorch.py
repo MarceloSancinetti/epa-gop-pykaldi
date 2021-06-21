@@ -1,8 +1,9 @@
-from pytorch_models import *
+from pytorch_models_old import *
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
+import argparse
 
 def get_layer_type(is_tdnnf):
 	layer_type = 'tdnn'
@@ -87,118 +88,125 @@ def read_relu_component(file, layer_number, is_tdnnf=True):
 	return params_dict
 
 
-chain_file = open('../exp/chain_cleaned/tdnn_1d_sp/final.txt', 'r') 
- 
-components = {}
-finished = False  
-while not finished: 
-  
-	line = chain_file.readline() 
+if __name__ == '__main__':
+	parser = argparse.ArgumentParser()
+	parser.add_argument('--chain-model', dest='chain_file',  help='Path to Kaldi chain model (FTDNN) in text form (final.txt)', default=None)
+	parser.add_argument('--output-path', dest='output_path', help='Path to save the torch model', default=None)
 
-	if line == '</Nnet3> ':
-		finished = True
+	args = parser.parse_args()
 
-	if '<ComponentName> lda' in line:
-		components['lda'] = read_affine_component(chain_file)
+	chain_file = open(args.chain_file, 'r') 
+	 
+	components = {}
+	finished = False  
+	while not finished: 
+	  
+		line = chain_file.readline() 
 
-	if '<ComponentName> tdnn1.affine' in line:
-		#If necessary, parse parameters such as learning rate here
-		components['tdnn1.affine'] = read_affine_component(chain_file)
+		if line == '</Nnet3> ':
+			finished = True
 
-	if '<ComponentName> tdnn1.relu' in line:
-		components['tdnn1.relu'] = read_relu_component(chain_file, 1, is_tdnnf=False)
+		if '<ComponentName> lda' in line:
+			components['lda'] = read_affine_component(chain_file)
 
-	if '<ComponentName> tdnn1.batchnorm' in line:
-		components['tdnn1.batchnorm'] = read_batchnorm_component(chain_file, 1, is_tdnnf=False)
+		if '<ComponentName> tdnn1.affine' in line:
+			#If necessary, parse parameters such as learning rate here
+			components['tdnn1.affine'] = read_affine_component(chain_file)
 
-	#No tdnn1.dropout yet
+		if '<ComponentName> tdnn1.relu' in line:
+			components['tdnn1.relu'] = read_relu_component(chain_file, 1, is_tdnnf=False)
+
+		if '<ComponentName> tdnn1.batchnorm' in line:
+			components['tdnn1.batchnorm'] = read_batchnorm_component(chain_file, 1, is_tdnnf=False)
+
+		#No tdnn1.dropout yet
 
 
-	#Reads parameters for layers 2-17
+		#Reads parameters for layers 2-17
+		for layer_number in range(2, 18):
+			layer_name = 'tdnnf'+str(layer_number)
+
+			if '<ComponentName> ' + layer_name + '.linear' in line:
+				line = chain_file.readline() #Skip unnecessary line
+				components[layer_name + '.linear'] = read_affine_component(chain_file)
+
+			if '<ComponentName> ' + layer_name + '.affine' in line:
+				line = chain_file.readline() #Skip unnecessary line
+				components[layer_name + '.affine'] = read_affine_component(chain_file)
+
+			if '<ComponentName> ' + layer_name + '.relu' in line:
+				components[layer_name + '.relu'] = read_relu_component(chain_file, layer_number)
+
+			if '<ComponentName> ' + layer_name + '.batchnorm' in line:
+				components[layer_name + '.batchnorm'] = read_batchnorm_component(chain_file, layer_number)
+
+			#No tdnnfx.dropout yet
+			#No tdnnfx.noop yet
+		
+		if '<ComponentName> prefinal-l' in line:
+			components['prefinal-l'] = {}
+			components['prefinal-l']['linear_params'] = read_linear_params(chain_file)
+		
+		#Chain head
+		if '<ComponentName> prefinal-chain.affine' in line:
+			components['prefinal-chain.affine'] = read_affine_component(chain_file)
+
+		if '<ComponentName> prefinal-chain.linear' in line:
+			components['prefinal-chain.linear'] = {}
+			components['prefinal-chain.linear']['linear_params'] = read_linear_params(chain_file)
+
+		if '<ComponentName> prefinal-chain.batchnorm1' in line:
+		 	components['prefinal-chain.batchnorm1'] = read_batchnorm_component(chain_file, 19, component_name='prefinal-chain.batchnorm1')
+
+		if '<ComponentName> prefinal-chain.batchnorm2' in line:
+		 	components['prefinal-chain.batchnorm2'] = read_batchnorm_component(chain_file, 19, component_name='prefinal-chain.batchnorm2', dim='256')
+		
+		if '<ComponentName> output.affine' in line:
+			components['output.affine'] = read_affine_component(chain_file)
+
+
+	ftdnn = FTDNN()
+
+	state_dict = {}
+
+	state_dict['layer01.lda.weight'] = torch.from_numpy(components['lda']['linear_params'])
+	state_dict['layer01.lda.bias'] = torch.from_numpy(components['lda']['bias'])
+	state_dict['layer01.kernel.weight'] = torch.from_numpy(components['tdnn1.affine']['linear_params'])
+	state_dict['layer01.kernel.bias'] = torch.from_numpy(components['tdnn1.affine']['bias'])
+	state_dict['layer01.bn.running_mean'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_mean'])
+	state_dict['layer01.bn.running_var'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_var'])
+
+
+
 	for layer_number in range(2, 18):
-		layer_name = 'tdnnf'+str(layer_number)
+		state_dict['layer'+ str("{:02d}".format(layer_number)) +'.sorth.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.linear']['linear_params'])
+		state_dict['layer'+ str("{:02d}".format(layer_number)) +'.affine.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.affine']['linear_params'])
+		state_dict['layer'+ str("{:02d}".format(layer_number)) +'.affine.bias'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.affine']['bias'])
+		state_dict['layer'+ str("{:02d}".format(layer_number)) +'.sorth.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.linear']['linear_params'])
+		state_dict['layer'+ str("{:02d}".format(layer_number)) +'.bn.running_mean'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.batchnorm']['stats_mean'])
+		state_dict['layer'+ str("{:02d}".format(layer_number)) +'.bn.running_var'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.batchnorm']['stats_var'])
 
-		if '<ComponentName> ' + layer_name + '.linear' in line:
-			line = chain_file.readline() #Skip unnecessary line
-			components[layer_name + '.linear'] = read_affine_component(chain_file)
-
-		if '<ComponentName> ' + layer_name + '.affine' in line:
-			line = chain_file.readline() #Skip unnecessary line
-			components[layer_name + '.affine'] = read_affine_component(chain_file)
-
-		if '<ComponentName> ' + layer_name + '.relu' in line:
-			components[layer_name + '.relu'] = read_relu_component(chain_file, layer_number)
-
-		if '<ComponentName> ' + layer_name + '.batchnorm' in line:
-			components[layer_name + '.batchnorm'] = read_batchnorm_component(chain_file, layer_number)
-
-		#No tdnnfx.dropout yet
-		#No tdnnfx.noop yet
-	
-	if '<ComponentName> prefinal-l' in line:
-		components['prefinal-l'] = {}
-		components['prefinal-l']['linear_params'] = read_linear_params(chain_file)
-	
-	#Chain head
-	if '<ComponentName> prefinal-chain.affine' in line:
-		components['prefinal-chain.affine'] = read_affine_component(chain_file)
-
-	if '<ComponentName> prefinal-chain.linear' in line:
-		components['prefinal-chain.linear'] = {}
-		components['prefinal-chain.linear']['linear_params'] = read_linear_params(chain_file)
-
-	if '<ComponentName> prefinal-chain.batchnorm1' in line:
-	 	components['prefinal-chain.batchnorm1'] = read_batchnorm_component(chain_file, 19, component_name='prefinal-chain.batchnorm1')
-
-	if '<ComponentName> prefinal-chain.batchnorm2' in line:
-	 	components['prefinal-chain.batchnorm2'] = read_batchnorm_component(chain_file, 19, component_name='prefinal-chain.batchnorm2', dim='256')
-	
-	if '<ComponentName> output.affine' in line:
-		components['output.affine'] = read_affine_component(chain_file)
+	state_dict['layer18.weight'] = torch.from_numpy(components['prefinal-l']['linear_params'])
 
 
-ftdnn = FTDNN()
+	state_dict['layer19.linear1.weight'] = torch.from_numpy(components['prefinal-chain.affine']['linear_params'])
+	state_dict['layer19.linear1.bias'] = torch.from_numpy(components['prefinal-chain.affine']['bias'])
+	state_dict['layer19.bn1.running_mean'] = torch.from_numpy(components['prefinal-chain.batchnorm1']['stats_mean'])
+	state_dict['layer19.bn1.running_var'] = torch.from_numpy(components['prefinal-chain.batchnorm1']['stats_var'])
+	state_dict['layer19.linear2.weight'] = torch.from_numpy(components['prefinal-chain.linear']['linear_params'])
+	state_dict['layer19.bn2.running_mean'] = torch.from_numpy(components['prefinal-chain.batchnorm2']['stats_mean'])
+	state_dict['layer19.bn2.running_var'] = torch.from_numpy(components['prefinal-chain.batchnorm2']['stats_var'])
+	state_dict['layer19.linear3.weight'] = torch.from_numpy(components['output.affine']['linear_params'])
+	state_dict['layer19.linear3.bias'] = torch.from_numpy(components['output.affine']['bias'])
 
-state_dict = {}
-
-state_dict['layer01.lda.weight'] = torch.from_numpy(components['lda']['linear_params'])
-state_dict['layer01.lda.bias'] = torch.from_numpy(components['lda']['bias'])
-state_dict['layer01.kernel.weight'] = torch.from_numpy(components['tdnn1.affine']['linear_params'])
-state_dict['layer01.kernel.bias'] = torch.from_numpy(components['tdnn1.affine']['bias'])
-state_dict['layer01.bn.running_mean'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_mean'])
-state_dict['layer01.bn.running_var'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_var'])
-
-
-
-for layer_number in range(2, 18):
-	state_dict['layer'+ str("{:02d}".format(layer_number)) +'.sorth.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.linear']['linear_params'])
-	state_dict['layer'+ str("{:02d}".format(layer_number)) +'.affine.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.affine']['linear_params'])
-	state_dict['layer'+ str("{:02d}".format(layer_number)) +'.affine.bias'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.affine']['bias'])
-	state_dict['layer'+ str("{:02d}".format(layer_number)) +'.sorth.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.linear']['linear_params'])
-	state_dict['layer'+ str("{:02d}".format(layer_number)) +'.bn.running_mean'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.batchnorm']['stats_mean'])
-	state_dict['layer'+ str("{:02d}".format(layer_number)) +'.bn.running_var'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.batchnorm']['stats_var'])
-
-state_dict['layer18.weight'] = torch.from_numpy(components['prefinal-l']['linear_params'])
+	print(state_dict['layer19.linear3.weight'])
 
 
-state_dict['layer19.linear1.weight'] = torch.from_numpy(components['prefinal-chain.affine']['linear_params'])
-state_dict['layer19.linear1.bias'] = torch.from_numpy(components['prefinal-chain.affine']['bias'])
-state_dict['layer19.bn1.running_mean'] = torch.from_numpy(components['prefinal-chain.batchnorm1']['stats_mean'])
-state_dict['layer19.bn1.running_var'] = torch.from_numpy(components['prefinal-chain.batchnorm1']['stats_var'])
-state_dict['layer19.linear2.weight'] = torch.from_numpy(components['prefinal-chain.linear']['linear_params'])
-state_dict['layer19.bn2.running_mean'] = torch.from_numpy(components['prefinal-chain.batchnorm2']['stats_mean'])
-state_dict['layer19.bn2.running_var'] = torch.from_numpy(components['prefinal-chain.batchnorm2']['stats_var'])
-state_dict['layer19.linear3.weight'] = torch.from_numpy(components['output.affine']['linear_params'])
-state_dict['layer19.linear3.bias'] = torch.from_numpy(components['output.affine']['bias'])
+	for name, param in ftdnn.named_parameters():
+		print (name, param.shape)
 
-print(state_dict['layer19.linear3.weight'])
+	chain_file.close() 
 
+	ftdnn.load_state_dict(state_dict)
 
-for name, param in ftdnn.named_parameters():
-	print (name, param.shape)
-
-chain_file.close() 
-
-ftdnn.load_state_dict(state_dict)
-
-torch.save(ftdnn.state_dict(), '../model.pt')
+	torch.save(ftdnn.state_dict(), args.output_path)
