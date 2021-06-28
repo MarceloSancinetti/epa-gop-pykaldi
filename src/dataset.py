@@ -104,9 +104,8 @@ class EpaDB(Dataset):
             path (dict): Dataset root path
 
         Returns:
-            tuple: ``(features, transcript, speaker_id, utterance_id, annotation)``
-                    annotation is List[(correct_phone, pronounced_phone, label, start_time, end_time]]
-        """
+            tuple: ``(features, transcript, speaker_id, utterance_id, labels, phone_times)``
+                    phone_times is List[(canonic_phone, start_time, end_time)]        """
 
         speaker_id = file_id.split("_")[0]
         utterance_id = file_id.split("_")[1]
@@ -181,8 +180,8 @@ class EpaDB(Dataset):
             n (int): The index of the sample to be loaded
 
         Returns:
-            tuple: ``(features, transcript, speaker_id, utterance_id, annotation)``
-                    annotation is List[(correct_phone, pronounced_phone, label, start_time, end_time]]        
+            tuple: ``(features, transcript, speaker_id, utterance_id, labels, phone_times)``
+                    phone_times is List[(canonic_phone, start_time, end_time)]        
         """
         fileid = self._filelist[n]
         return self._load_epa_item(fileid, self._root_path, self._labels_path)

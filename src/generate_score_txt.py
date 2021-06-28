@@ -27,7 +27,7 @@ def generate_score_txt(model, testloader, score_file_name, phone_dict):
         logids = unpack_logids_from_batch(batch)
         features = unpack_features_from_batch(batch)
         labels = unpack_labels_from_batch(batch)
-        annotations = unpack_annotations_from_batch(batch)
+        annotations = unpack_phone_times_from_batch(batch)
 
         outputs = (-1) * model(features)
 
@@ -37,12 +37,12 @@ def generate_score_txt(model, testloader, score_file_name, phone_dict):
             score_log_fh.write(logid + ' ')
             #Iterate over phones in the annotation for the current sample
             for phone_name, start_time, end_time in annotations[i]:
-                #Check if the phone was pronounced
+                #Check if the phone was uttered
                 if start_time != end_time:
                     #Log the score for the current frame in the annotation
                     try:
-                        log_phone_number_and_score(score_log_fh, labels[i], 
-                        frame_level_scores[i], start_time, end_time, 'mean')
+                        log_phone_number_and_score(score_log_fh, labels[i], frame_level_scores[i],
+                                                   start_time, end_time, 'mean')
                     except ValueError as e:
                         embed()
                 else:

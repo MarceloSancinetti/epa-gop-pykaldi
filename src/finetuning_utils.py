@@ -25,8 +25,8 @@ def unpack_features_from_batch(batch):
 def unpack_labels_from_batch(batch):
     return torch.stack([labels for _,_,_,_,labels,_ in batch])
 
-def unpack_annotations_from_batch(batch):
-    return [annotation for _,_,_,_,_, annotation in batch]
+def unpack_phone_times_from_batch(batch):
+    return [phone_times for _,_,_,_,_, phone_times in batch]
 
 def collate_fn_padd(batch):
     '''
