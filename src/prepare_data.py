@@ -1,5 +1,6 @@
 import glob
 import os
+import argparse
 from FeatureManager import FeatureManager
 
 
@@ -23,7 +24,7 @@ if __name__ == '__main__':
 
 
     #Create symbolic links to labels used in evaluation stage
-    for file in sorted(glob.glob(epa_root_path + '*/labels/*')):
+    for file in sorted(glob.glob(epadb_root_path + '*/labels/*')):
         fullpath = os.path.abspath(file)
         basename = os.path.basename(file)
         #Get spkr id
@@ -39,7 +40,7 @@ if __name__ == '__main__':
     #Handle symbolic links for reference transcriptions used in evaluation stage
     if not os.path.exists(args.labels_path + '/reference_transcriptions.txt'):
         current_path = os.getcwd()
-        cmd = 'ln -s ' + current_path + epadb_root_path + '/reference_transcriptions.txt ' + current_path + args.labels_path + '/reference_transcriptions.txt'
+        cmd = 'ln -s ' + current_path + "" + epadb_root_path + '/reference_transcriptions.txt ' + current_path + "/" + args.labels_path + '/reference_transcriptions.txt'
         print(cmd)
         os.system(cmd)
 

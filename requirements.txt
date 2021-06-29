@@ -11,3 +11,4 @@ matplotlib
 argparse
 torchvision
 kaldiio
+PyYAML

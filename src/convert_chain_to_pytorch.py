@@ -90,7 +90,7 @@ def read_relu_component(file, layer_number, is_tdnnf=True):
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
-	parser.add_argument('--chain-model', dest='chain_file',  help='Path to Kaldi chain model (FTDNN) in text form (final.txt)', default=None)
+	parser.add_argument('--chain-model-path', dest='chain_file',  help='Path to Kaldi chain model (FTDNN) in text form (final.txt)', default=None)
 	parser.add_argument('--output-path', dest='output_path', help='Path to save the torch model', default=None)
 
 	args = parser.parse_args()

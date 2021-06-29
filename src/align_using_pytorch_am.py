@@ -50,13 +50,13 @@ if __name__ == '__main__':
     mfccs_rspec    = "ark:" + features_path + "/mfccs.ark"
     ivectors_rspec = "ark:" + features_path + "/ivectors.ark"
 
-    loglikes_wspec = "ark:" + args.epadb_root_path
+    loglikes_wspec = "ark:" + args.loglikes_path
 
     aligner = MappedAligner.from_files(transition_model_path, tree_path, lang_graph_path, symbols_path,
                                      disam_path, acoustic_scale = 1.0)
     phones  = SymbolTable.read_text(phones_path)
     wb_info = WordBoundaryInfo.from_file(WordBoundaryInfoNewOpts(),
-                                         )
+                                         word_boundary_path)
 
 
     # Instantiate the PyTorch acoustic model (subclass of torch.nn.Module)

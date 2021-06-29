@@ -1,0 +1,27 @@
+---
+  utterance-list-path:     "experiments/sample_lists/epadb_full_path_list.txt"
+  epa-ref-labels-dir-path: "epa_ref_labels/"
+  alignments-path:         "align_output"
+  kaldi-labels-path:       "kaldi_labels/"
+  use-kaldi-labels:        true
+  wandb-run-name:          "6_folds_kaldi_labels"
+  folds:                   6
+  epochs:                  30
+  phones-list-path:        "phones/phones_kaldi.txt"
+  finetune-model-path:     "pytorch_models/model_finetuning.pt"
+  epadb-root-path:         "EpaDB/"
+  features-path:           "features/data/"
+  features-conf-path:      "features/conf/"
+  test-sample-list-dir:    "test_sample_lists/"
+  state-dict-dir:          "saved_state_dicts/"
+  gop-txt-dir:             "saved_gop_scores/"
+  acoustic-model-path:     "pytorch_models/acoustic_model.pt"
+  transition-model-path:   "exp/chain_cleaned/tdnn_1d_sp/final.mdl"
+  tree-path:               "exp/chain_cleaned/tdnn_1d_sp/tree"
+  disam-path:              "data/lang_test_tgsmall/phones/disambig.int"
+  word-boundary-path:      "data/lang_test_tgsmall/phones/word_boundary.int"
+  lang-graph-path:         "data/lang_test_tgsmall/L.fst"
+  words-path:              "data/lang_test_tgsmall/words.txt"
+  libri-phones-path:       "exp/chain_cleaned/tdnn_1d_sp/phones.txt"
+  loglikes-path:           "loglikes.ark"
+  libri-chain-mdl-path:    "exp/chain_cleaned/tdnn_1d_sp/final.txt"
