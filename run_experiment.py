@@ -8,24 +8,55 @@ def generate_arguments(args_dict):
 		res = res + "--" + arg_name + " " + str(value) + " "
 	return res
 
+def get_phone_count(phone_list_path):
+	return len(open(phone_list_path).readlines())
+
 def run_data_prep(config_dict):
-	args_dict = {"epa-root-path": config_dict["epadb-root-path"],
-				 "features-path": config_dict["features-path"],
-				 "conf-path":     config_dict["features-conf-path"],
-				 "labels-path":   config_dict["epa-ref-labels-dir-path"]}
+	phone_count = get_phone_count(config_dict["phones-list-path"])
+	args_dict = {"epa-root-path": 			config_dict["epadb-root-path"],
+				 "features-path": 			config_dict["features-path"],
+				 "conf-path":               config_dict["features-conf-path"],
+				 "labels-path":             config_dict["epa-ref-labels-dir-path"],
+				 "librispeech-models-path": config_dict["librispeech-models-path"],
+				 
+				 "libri-chain-mdl-path":    config_dict["librispeech-models-path"] + 
+				 							config_dict["libri-chain-mdl-path"],
+
+				 "libri-chain-txt-path":    config_dict["librispeech-models-path"] +
+				 							config_dict["libri-chain-txt-path"],
+				 							
+				 "acoustic-model-path":     config_dict["acoustic-model-path"],
+				 "finetune-model-path":     config_dict["finetune-model-path"],
+				 "phone-count":             phone_count}
 	arguments = generate_arguments(args_dict)
 	os.system("python src/prepare_data.py " + arguments)
+
 
 def run_align(config_dict):
 	args_dict = {"utterance-list": 		  config_dict["utterance-list-path"],
 				 "acoustic-model-path":   config_dict["acoustic-model-path"],
-				 "transition-model-path": config_dict["transition-model-path"],
-				 "tree-path": 			  config_dict["tree-path"],
-				 "disam-path": 			  config_dict["disam-path"],
-				 "word-boundary-path": 	  config_dict["word-boundary-path"],
-				 "lang-graph-path": 	  config_dict["lang-graph-path"],
-				 "words-path": 			  config_dict["words-path"],
-				 "phones-path": 		  config_dict["libri-phones-path"],
+
+				 "transition-model-path": config_dict["librispeech-models-path"] 
+				 						  + config_dict["transition-model-path"],
+				 
+				 "tree-path": 			  config_dict["librispeech-models-path"] 
+				 						  + config_dict["tree-path"],
+				 
+				 "disam-path": 			  config_dict["librispeech-models-path"] 
+				 						  + config_dict["disam-path"],
+				 
+				 "word-boundary-path": 	  config_dict["librispeech-models-path"] 
+				 						  + config_dict["word-boundary-path"],
+				 
+				 "lang-graph-path": 	  config_dict["librispeech-models-path"] 
+				 						  + config_dict["lang-graph-path"],
+
+				 "words-path": 			  config_dict["librispeech-models-path"] 
+				 						  + config_dict["words-path"],
+
+				 "phones-path": 		  config_dict["librispeech-models-path"] 
+				 						  + config_dict["libri-phones-path"],
+
 				 "features-path":         config_dict["features-path"],
 				 "conf-path":     		  config_dict["features-conf-path"],
 				 "loglikes-path": 		  config_dict["loglikes-path"],

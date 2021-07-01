@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
+import argparse
 
 def get_layer_type(is_tdnnf):
 	layer_type = 'tdnn'
