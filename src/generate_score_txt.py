@@ -76,7 +76,7 @@ def main():
     gop_txt_dir = args.gop_txt_dir
 
     testset = EpaDB(epa_root_path, sample_list, phone_list_path, labels_dir)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=2,
+    testloader = torch.utils.data.DataLoader(testset, batch_size=32,
                                           shuffle=False, num_workers=1, collate_fn=collate_fn_padd)
 
     phone_count = testset.phone_count()

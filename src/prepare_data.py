@@ -42,7 +42,14 @@ def prepare_pytorch_models(libri_chain_mdl_path, libri_chain_txt_path, acoustic_
         arguments = generate_arguments(args_dict)
         os.system("python src/convert_chain_to_pytorch_for_finetuning.py " + arguments)
 
+def create_epadb_full_sample_list(epadb_root_path, utterance_list_path):
+    if os.path.exists(utterance_list_path):
+        return
 
+    utt_list_fh = open(utterance_list_path, 'w+')
+    for file in sorted(glob.glob(epadb_root_path + '/*/waveforms/*.wav')):
+        basename = os.path.basename(file)
+        utt_list_fh.write(basename.split('.')[0] + '\n')
 
 def create_ref_labels_symlinks(epadb_root_path, labels_path):
     #Create symbolic links to epa reference labels
@@ -51,7 +58,7 @@ def create_ref_labels_symlinks(epadb_root_path, labels_path):
         basename = os.path.basename(file)
         #Get spkr id
         spkr = fullpath.split('/')[-3]
-        labels_dir_for_spkr = labels_path + spkr+ '/labels/' 
+        labels_dir_for_spkr = labels_path + spkr + '/labels/' 
         #Create directory for speaker's labels
         if not os.path.exists(labels_dir_for_spkr):
             os.system('mkdir -p ' + labels_dir_for_spkr)
@@ -60,12 +67,24 @@ def create_ref_labels_symlinks(epadb_root_path, labels_path):
             os.system('ln -s ' + fullpath + ' ' + labels_dir_for_spkr + '/')
 
     #Handle symbolic links for EpaDB reference transcriptions
-    if not os.path.exists(labels_path + '/reference_transcriptions.txt'):
+    if not os.path.exists(labels_path + 'reference_transcriptions.txt'):
         current_path = os.getcwd()
-        cmd = 'ln -s ' + current_path + "" + epadb_root_path + '/reference_transcriptions.txt ' + current_path + "/" + args.labels_path + '/reference_transcriptions.txt'
-        print(cmd)
+        cmd = 'ln -s ' + current_path + "/" + epadb_root_path + '/reference_transcriptions.txt ' + current_path + "/" + labels_path + '/reference_transcriptions.txt'
         os.system(cmd)
 
+def make_experiment_directory(experiment_dir_path):
+    #This will create the experiment directory and the test sample list, 
+    #state dict, and gop scores directories inside of it
+    test_sample_lists_dir = experiment_dir_path + "/test_sample_lists/"
+    state_dicts_dir       = experiment_dir_path + "/state_dicts/"
+    gop_scores_dir        = experiment_dir_path + "/gop_scores/"
+    
+    if not os.path.exists(test_sample_lists_dir):
+        os.makedirs(test_sample_lists_dir)
+    if not os.path.exists(state_dicts_dir):
+        os.makedirs(state_dicts_dir)
+    if not os.path.exists(gop_scores_dir):
+        os.makedirs(gop_scores_dir)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -78,8 +97,9 @@ if __name__ == '__main__':
     parser.add_argument('--libri-chain-txt-path', dest='libri_chain_txt_path', help='Path where .txt version of final.mdl will be created', default=None)
     parser.add_argument('--acoustic-model-path', dest='acoustic_model_path', help='Path where Pytorch acoustic model will be created', default=None)
     parser.add_argument('--finetune-model-path', dest='finetune_model_path', help='Path where the model to finetune will be created', default=None)
+    parser.add_argument('--utterance-list-path', dest='utterance_list_path', help='Path where utterance list will be created', default=None)
     parser.add_argument('--phone-count', dest='phone_count', help='Size of the phone set for the current system', default=None)
-
+    parser.add_argument('--experiment-dir-path', dest='experiment_dir_path', help='Path where the directory for the current expriment\'s files will be created', default=None)
     args = parser.parse_args()
 
     features_path = args.features_path
@@ -99,6 +119,11 @@ if __name__ == '__main__':
 
     #Create symlinks
     create_ref_labels_symlinks(epadb_root_path, args.labels_path)
+
+    #Create full EpaDB sample list
+    create_epadb_full_sample_list(epadb_root_path, args.utterance_list_path)
+
+    make_experiment_directory(args.experiment_dir_path)
 
 
 

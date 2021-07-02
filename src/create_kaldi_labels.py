@@ -130,7 +130,7 @@ if __name__ == '__main__':
     utterance_list_path           = args.utterance_list_path
     labels_dir_path               = args.labels_dir_path
 
-    kaldi_alignments = get_kaldi_alignments(align_path)
+    kaldi_alignments = get_kaldi_alignments(args.align_path)
     utterance_list = generate_utterance_list_from_path(utterance_list_path) 
     trans_dict = get_reference_for_system_alignments(reference_transcriptions_path, labels_dir_path, kaldi_alignments, utterance_list)
 
