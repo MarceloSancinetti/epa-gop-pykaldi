@@ -226,7 +226,7 @@ if __name__ == '__main__':
     parser.add_argument('--output-dir', dest='output_dir', help='Output dir', default=None)
     parser.add_argument('--gop-file', dest='gop_path', help='File with gop results', default=None)
     parser.add_argument('--phones-pure-file', dest='phones_pure_path', help='file that matches phone ints to phone symbols', default=None)
-    parser.add_argument('--reference-file', dest='reference_path', help='', default=None)
+    parser.add_argument('--labels', dest='labels_dir_path', help='', default=None)
 
     args = parser.parse_args()
 
@@ -256,7 +256,7 @@ if __name__ == '__main__':
 
         spk, sent = utterance.split("_")
 
-        file = "%s/%s/%s/%s.txt"%(args.reference_path, spk, "labels", utterance) #TextGrid file for current utterance
+        file = "%s/%s/%s/%s.txt"%(args.labels_dir_path, spk, "labels", utterance) #TextGrid file for current utterance
         print("----------------------------------------------------------------------------------------")
         print("Speaker %s, sentence %s: %s (File: %s)"%(spk, sent, " ".join(sent_dict_complete[sent]), file))
         

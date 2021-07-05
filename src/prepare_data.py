@@ -78,6 +78,7 @@ def make_experiment_directory(experiment_dir_path):
     test_sample_lists_dir = experiment_dir_path + "/test_sample_lists/"
     state_dicts_dir       = experiment_dir_path + "/state_dicts/"
     gop_scores_dir        = experiment_dir_path + "/gop_scores/"
+    eval_dir              = experiment_dir_path + "/eval/"
     
     if not os.path.exists(test_sample_lists_dir):
         os.makedirs(test_sample_lists_dir)
@@ -85,6 +86,9 @@ def make_experiment_directory(experiment_dir_path):
         os.makedirs(state_dicts_dir)
     if not os.path.exists(gop_scores_dir):
         os.makedirs(gop_scores_dir)
+    if not os.path.exists(eval_dir):
+        os.makedirs(eval_dir)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

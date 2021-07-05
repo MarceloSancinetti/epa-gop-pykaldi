@@ -35,6 +35,8 @@ def extend_config_dict(config_yaml, config_dict):
 	config_dict["test-sample-list-dir"] = config_dict["experiment-dir-path"] + "test_sample_lists/"
 	config_dict["state-dict-dir"] 		= config_dict["experiment-dir-path"] + "state_dicts/"
 	config_dict["gop-scores-dir"] 		= config_dict["experiment-dir-path"] + "gop_scores/"
+	config_dict["full-gop-score-path"] 	= config_dict["gop-scores-dir"] 	 + "gop-all-folds.txt"
+	config_dict["eval-dir"] 			= config_dict["experiment-dir-path"] + "eval/"
 	config_dict["alignments-path"]      = config_dict["experiment-dir-path"] + "align_output"
 	config_dict["loglikes-path"]        = config_dict["experiment-dir-path"] + "logikes.ark"
 
@@ -93,14 +95,9 @@ def run_align(config_dict):
 				 						  + config_dict["libri-phones-path"],
 
 				 "features-path":         config_dict["features-path"],
-				 "conf-path":     		  config_dict["features-conf-path"],
-				 
-				 "loglikes-path": 		  config_dict["experiment-dir-path"]
-				 						  + config_dict["loglikes-path"],
-
-				 "align-path": 			  config_dict["experiment-dir-path"]
-				 						  + config_dict["alignments-path"],
-				 
+				 "conf-path":     		  config_dict["features-conf-path"],	 
+				 "loglikes-path": 		  config_dict["loglikes-path"],
+				 "align-path": 			  config_dict["alignments-path"],
 				 "epadb-root-path": 	  config_dict["epadb-root-path"]
 				 }
 
@@ -131,7 +128,8 @@ def run_train(config_dict):
 	run_script("src/train.py", args_dict)
 
 def run_generate_scores(config_dict):
-	for fold in range(config_dict["folds"])
+	cat_file_names = ""
+	for fold in range(config_dict["folds"]):
 		args_dict = {"state-dict-dir": config_dict["state-dict-dir"],
 					 "model-name": 	   get_model_name(config_dict, fold),
 					 "epa-root": 	   config_dict["epadb-root-path"],
@@ -141,9 +139,20 @@ def run_generate_scores(config_dict):
 					 "gop-txt-dir":    config_dict["gop-scores-dir"]
 					}
 		run_script("src/generate_score_txt.py", args_dict)
+		cat_file_names += args_dict['gop-txt-dir'] + '/' +'gop-'+args_dict['model-name']+'.txt ' #Codigo repetido con generate_score_txt
+	#Concatenate gop scores for all folds
+	os.system("cat " + cat_file_names + " > " + config_dict["full-gop-score-path"])
 
 def run_evaluate(config_dict):
-	pass
+	args_dict = {"transcription-file": config_dict["transcription-file"],
+				 "utterance-list": 	   config_dict["utterance-list-path"],
+				 "output-dir": 		   config_dict["eval-dir"],
+				 "gop-file": 		   config_dict["full-gop-score-path"],
+				 "phones-pure-file":   config_dict["kaldi-phones-pure-path"],
+				 "labels": 	   		   config_dict["labels-dir"]
+				}
+	run_script("src/evaluate/generate_data_for_eval.py", args_dict)
+
 
 def run_experiment(config_yaml, stage):
 	config_fh = open(config_yaml, "r")
@@ -163,8 +172,8 @@ def run_experiment(config_yaml, stage):
 		if config_dict['use-kaldi-labels']:
 			print("Creating Kaldi labels")
 			run_create_kaldi_labels(config_dict)
-		print("Running training")
 		exit()
+		print("Running training")
 		run_train(config_dict)
 	
 	if stage in ["scores", "all"]:

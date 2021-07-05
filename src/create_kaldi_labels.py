@@ -9,14 +9,15 @@ import joblib
 import shutil
 import argparse
 import glob
+from reference_utils import *
 
 
 #This function discards positions from manual transcription and labels where the automatic transcription reference is
 #silent, i.e there is no automatic transcription for said position so that the lengths of all sequences match
-def match_trans_lengths(trans_dict):
+def match_trans_lengths(trans_dict, start_times, end_times):
     trans_auto               = trans_dict['trans_auto']
     trans_manual             = trans_dict['trans_manual']
-    trans_best_ref_auto_zero = trans_dict['trans_best_ref_auto_zero']
+    best_ref_auto_zero = trans_dict['best_ref_auto_zero']
     labels                   = trans_dict['labels']
 
     if '0' in best_ref_auto_zero:
@@ -24,9 +25,9 @@ def match_trans_lengths(trans_dict):
 
     #Ojo con esto, no deberia hacer falta
     if len(trans_auto) != len(trans_manual):
-        embed()
-        trans_manual, trans_auto, labels, 
-        start_times, end_times = remove_deletion_lines(trans_manual, trans_auto, labels, 
+        print("Tamo aca")
+        #embed()
+        trans_manual, trans_auto, labels, start_times, end_times = remove_deletion_lines(trans_manual, trans_auto, labels, 
                                                        remove_times=True, start_times=start_times, end_times=end_times)
 
     return trans_auto, trans_manual, labels, start_times, end_times
@@ -91,7 +92,9 @@ def remove_deletion_lines_with_times(trans1, trans2, labels, start_times, end_ti
                 clean_start_times.append(start_times[i])
                 clean_end_times.append(end_times[i])
             except IndexError as e:
-                embed()
+                pu_fh = open("problematic_utterances", "a+")
+                pu_fh.write(utterance + '\n')
+                #embed()
     return clean_trans1, clean_trans2, clean_labels, clean_start_times, clean_end_times
 
 def remove_deletion_lines(trans1, trans2, labels, remove_times=False, start_times=None, end_times=None):
@@ -135,12 +138,16 @@ if __name__ == '__main__':
     trans_dict = get_reference_for_system_alignments(reference_transcriptions_path, labels_dir_path, kaldi_alignments, utterance_list)
 
     for utterance in utterance_list:
+        spk, sent = utterance.split("_")
+
         start_times, end_times = get_times(kaldi_alignments, utterance)
-        target_column, trans_manual, labels, start_times, end_times = match_trans_lengths(trans_dict[utterance])       
+        target_column, trans_manual, labels, start_times, end_times = match_trans_lengths(trans_dict[utterance], start_times, end_times)       
 
         outdir  = "%s/labels_with_kaldi_phones/%s/labels" % (args.output_dir_path, spk)
         outfile = "%s/%s.txt" % (outdir, utterance)
-        mkdirs(outdir)
+        
+        if not os.path.exists(outdir):
+            os.makedirs(outdir)
         try:
             np.savetxt(outfile, np.c_[np.arange(len(target_column)), target_column, trans_manual, labels, start_times, end_times], fmt=utterance+"_%s %s %s %s %s %s")
         except ValueError as e:
