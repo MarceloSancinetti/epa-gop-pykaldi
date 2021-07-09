@@ -4,6 +4,7 @@ from typing import Tuple, Union
 from pathlib import Path
 
 import torchaudio
+import torch
 from torch import Tensor
 from torch.utils.data import Dataset
 from torchaudio.datasets.utils import (
@@ -19,6 +20,8 @@ from FeatureManager import FeatureManager
 from IPython import embed
 
 import pickle5
+
+import numpy as np
 
 
 def collapse_target_phone(target_phone):
@@ -78,7 +81,7 @@ class EpaDB(Dataset):
             if speaker_id in logids_by_speaker:
                 logids_by_speaker[speaker_id].append(logid)
             else:
-                logids_by_speaker[speaker_id] = []
+                logids_by_speaker[speaker_id] = [logid]
         self._filelist = file_id_list
         self._logids_by_speaker = logids_by_speaker
 
@@ -113,7 +116,7 @@ class EpaDB(Dataset):
         features, transcript = self._feature_manager.get_features_for_logid(file_id)
 
 
-        annotation_path = os.path.join(labels_path, speaker_id, file_id)
+        annotation_path = os.path.join(labels_path, speaker_id, "labels", file_id)
         annotation = []
         phone_count = self.phone_count()
         labels = np.zeros([features.shape[0], phone_count])
@@ -206,7 +209,7 @@ class EpaDB(Dataset):
         spkr_ids = self.get_speaker_list()
         spkr_ids = [spkr_ids[spkr_ix] for spkr_ix in spkr_indexes]
         logids_for_spkrs = []
-        [logids_for_spkrs.extend(self.get_sample_logids_for_spkr(spkr_id)) for spkr_id in spkr_ids] 
+        [logids_for_spkrs.extend(self.get_sample_logids_for_spkr(spkr_id)) for spkr_id in spkr_ids]
         sample_indexes = [self._filelist.index(logid) for logid in logids_for_spkrs]
         return sample_indexes
 

@@ -11,6 +11,10 @@ import argparse
 import glob
 from reference_utils import *
 
+def log_problematic_utterance(utterance):
+    pu_fh = open("problematic_utterances", "a+")
+    pu_fh.write(utterance + '\n')
+
 
 #This function discards positions from manual transcription and labels where the automatic transcription reference is
 #silent, i.e there is no automatic transcription for said position so that the lengths of all sequences match
@@ -25,8 +29,7 @@ def match_trans_lengths(trans_dict, start_times, end_times):
 
     #Ojo con esto, no deberia hacer falta
     if len(trans_auto) != len(trans_manual):
-        print("Tamo aca")
-        #embed()
+        log_problematic_utterance(utterance)
         trans_manual, trans_auto, labels, start_times, end_times = remove_deletion_lines(trans_manual, trans_auto, labels, 
                                                        remove_times=True, start_times=start_times, end_times=end_times)
 
@@ -92,9 +95,8 @@ def remove_deletion_lines_with_times(trans1, trans2, labels, start_times, end_ti
                 clean_start_times.append(start_times[i])
                 clean_end_times.append(end_times[i])
             except IndexError as e:
-                pu_fh = open("problematic_utterances", "a+")
-                pu_fh.write(utterance + '\n')
-                #embed()
+                log_problematic_utterance(utterance)
+                embed()
     return clean_trans1, clean_trans2, clean_labels, clean_start_times, clean_end_times
 
 def remove_deletion_lines(trans1, trans2, labels, remove_times=False, start_times=None, end_times=None):
@@ -143,7 +145,8 @@ if __name__ == '__main__':
         start_times, end_times = get_times(kaldi_alignments, utterance)
         target_column, trans_manual, labels, start_times, end_times = match_trans_lengths(trans_dict[utterance], start_times, end_times)       
 
-        outdir  = "%s/labels_with_kaldi_phones/%s/labels" % (args.output_dir_path, spk)
+        #outdir  = "%s/labels_with_kaldi_phones/%s/labels" % (args.output_dir_path, spk)
+        outdir  = "%s/%s/labels" % (args.output_dir_path, spk)
         outfile = "%s/%s.txt" % (outdir, utterance)
         
         if not os.path.exists(outdir):

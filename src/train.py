@@ -35,7 +35,9 @@ def criterion(batch_outputs, batch_labels):
     loss = loss_fn(batch_outputs, batch_labels)
     return loss
 
-def train(model, trainloader, testloader, fold, state_dict_dir, run_name='test'):
+def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name='test'):
+
+    step = 0
 
     #Freeze all layers except the last
     for name, param in model.named_parameters():
@@ -44,7 +46,7 @@ def train(model, trainloader, testloader, fold, state_dict_dir, run_name='test')
 
     optimizer = optim.Adam(model.parameters())
 
-    for epoch in range(35):  # loop over the dataset multiple times
+    for epoch in range(epochs):  # loop over the dataset multiple times
         PATH = state_dict_dir + run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) + '.pth'
         #If the checkpoint for the current epoch is already present, checkpoint is loaded and training is skipped
         if os.path.isfile(PATH):
@@ -77,13 +79,15 @@ def train(model, trainloader, testloader, fold, state_dict_dir, run_name='test')
             if i % 20 == 19:    # log every 20 mini-batches
                 print('Fold ' + str(fold), ' Epoch ' + str(epoch) + ' Batch ' + str(i))
                 print('running_loss ' + str(running_loss/20))
-                wandb.log({'train_loss_fold_' + str(fold): running_loss/20})
-                wandb.log({'step': i})
+                wandb.log({'train_loss_fold_' + str(fold): running_loss/20,
+                           'step' : step})
+                step += 1
                 running_loss = 0.0
                 
         test_loss = test(model, testloader)
-        wandb.log({'test_loss_fold_' + str(fold) : test_loss})
-        wandb.log({'step': i})
+        wandb.log({'test_loss_fold_' + str(fold) : test_loss,
+                   'step' : step})
+        step += 1
         
         torch.save({
             'model_state_dict': model.state_dict(),
@@ -113,6 +117,7 @@ def main():
     parser.add_argument('--run-name', dest='run_name', help='Run name', default=None)
     parser.add_argument('--utterance-list', dest='utterance_list', help='File with utt list', default=None)
     parser.add_argument('--folds', dest='fold_amount', help='Amount of folds to use in training', default=None)
+    parser.add_argument('--epochs', dest='epoch_amount', help='Amount of epochs to use in training', default=None)
     parser.add_argument('--phones-file', dest='phones_file', help='File with list of phones', default=None)
     parser.add_argument('--labels-dir', dest='labels_dir', help='Directory with labels used in training', default=None)
     parser.add_argument('--model-path', dest='model_path', help='Path to .pth/pt file with model to finetune', default=None)
@@ -124,6 +129,8 @@ def main():
 
     args = parser.parse_args()
     run_name = args.run_name
+    folds    = int(args.fold_amount)
+    epochs   = int(args.epoch_amount)
 
     wandb.init(project="gop-finetuning")
     wandb.run.name = run_name
@@ -134,17 +141,19 @@ def main():
     seed = 42
     torch.manual_seed(seed)
 
-    kfold = KFold(n_splits=5, shuffle=True, random_state = seed)
+    kfold = KFold(n_splits=folds, shuffle=True, random_state = seed)
 
     spkr_list = dataset.get_speaker_list()
 
+
     for fold, (train_spkr_indexes, test_spkr_indexes) in enumerate(kfold.split(spkr_list)):
+
 
         train_sample_indexes = dataset.get_sample_indexes_from_spkr_indexes(train_spkr_indexes)
         test_sample_indexes  = dataset.get_sample_indexes_from_spkr_indexes(test_spkr_indexes)
 
         train_subsampler = torch.utils.data.SubsetRandomSampler(train_sample_indexes)
-        test_subsampler = torch.utils.data.SubsetRandomSampler(test_sample_indexes)
+        test_subsampler  = torch.utils.data.SubsetRandomSampler(test_sample_indexes)
 
         trainloader = torch.utils.data.DataLoader(dataset, batch_size=4,
                                      num_workers=1, sampler=train_subsampler, collate_fn=collate_fn_padd)
@@ -159,7 +168,7 @@ def main():
         model.load_state_dict(torch.load(args.model_path))
 
         wandb.watch(model, log_freq=100)
-        model = train(model, trainloader, testloader, fold, state_dict_dir, run_name=run_name)
+        model = train(model, trainloader, testloader, fold, epochs, args.state_dict_dir, run_name=run_name)
 
         #Generate test sample list for current fold
         generate_test_sample_list(testloader, epa_root_path, args.test_sample_list_dir, 'test_sample_list_fold_' + str(fold))

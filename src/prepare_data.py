@@ -49,7 +49,7 @@ def create_epadb_full_sample_list(epadb_root_path, utterance_list_path):
     utt_list_fh = open(utterance_list_path, 'w+')
     for file in sorted(glob.glob(epadb_root_path + '/*/waveforms/*.wav')):
         basename = os.path.basename(file)
-        utt_list_fh.write(basename.split('.')[0] + '\n')
+        utt_list_fh.write(basename.split('.')[0] + ' ' + file + '\n')
 
 def create_ref_labels_symlinks(epadb_root_path, labels_path):
     #Create symbolic links to epa reference labels

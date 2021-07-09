@@ -65,6 +65,8 @@ def main():
     parser.add_argument('--phone-list', dest='phone_list_path', help='Path to phone list', default=None)
     parser.add_argument('--labels-dir', dest='labels_dir', help='Directory where labels are found', default=None)     
     parser.add_argument('--gop-txt-dir', dest='gop_txt_dir', help='Directory to save generated scores', default=None)
+    parser.add_argument('--features-path', dest='features_path', help='Path to features directory', default=None)
+    parser.add_argument('--conf-path', dest='conf_path', help='Path to config directory used in feature extraction', default=None)
     args = parser.parse_args()
 
     state_dict_dir = args.state_dict_dir
@@ -74,10 +76,12 @@ def main():
     phone_list_path = args.phone_list_path
     labels_dir = args.labels_dir
     gop_txt_dir = args.gop_txt_dir
+    features_path = args.features_path
+    conf_path = args.conf_path
 
-    testset = EpaDB(epa_root_path, sample_list, phone_list_path, labels_dir)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=32,
-                                          shuffle=False, num_workers=1, collate_fn=collate_fn_padd)
+    testset = EpaDB(epa_root_path, sample_list, phone_list_path, labels_dir, features_path, conf_path)
+    testloader = torch.utils.data.DataLoader(testset, batch_size=2,
+                                          shuffle=False, num_workers=2, collate_fn=collate_fn_padd)
 
     phone_count = testset.phone_count()
 

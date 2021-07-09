@@ -32,13 +32,14 @@ def get_test_sample_list_path_for_fold(test_sample_list_dir, fold):
 def extend_config_dict(config_yaml, config_dict):
 	config_dict["experiment-dir-path"] 	= get_experiment_directory(config_yaml)
 	config_dict["run-name"] 			= get_run_name(config_yaml)
-	config_dict["test-sample-list-dir"] = config_dict["experiment-dir-path"] + "test_sample_lists/"
-	config_dict["state-dict-dir"] 		= config_dict["experiment-dir-path"] + "state_dicts/"
-	config_dict["gop-scores-dir"] 		= config_dict["experiment-dir-path"] + "gop_scores/"
-	config_dict["full-gop-score-path"] 	= config_dict["gop-scores-dir"] 	 + "gop-all-folds.txt"
-	config_dict["eval-dir"] 			= config_dict["experiment-dir-path"] + "eval/"
-	config_dict["alignments-path"]      = config_dict["experiment-dir-path"] + "align_output"
-	config_dict["loglikes-path"]        = config_dict["experiment-dir-path"] + "logikes.ark"
+	config_dict["test-sample-list-dir"] = config_dict["experiment-dir-path"] 	 + "test_sample_lists/"
+	config_dict["state-dict-dir"] 		= config_dict["experiment-dir-path"] 	 + "state_dicts/"
+	config_dict["gop-scores-dir"] 		= config_dict["experiment-dir-path"] 	 + "gop_scores/"
+	config_dict["full-gop-score-path"] 	= config_dict["gop-scores-dir"] 	 	 + "gop-all-folds.txt"
+	config_dict["eval-dir"] 			= config_dict["experiment-dir-path"] 	 + "eval/"
+	config_dict["alignments-path"]      = config_dict["experiment-dir-path"] 	 + "align_output"
+	config_dict["loglikes-path"]        = config_dict["experiment-dir-path"] 	 + "loglikes.ark"
+	config_dict["transcription-file"]   = config_dict["epa-ref-labels-dir-path"] + "reference_transcriptions.txt"
 
 	#Choose labels dir
 	if config_dict["use-kaldi-labels"]:
@@ -116,6 +117,7 @@ def run_train(config_dict):
 	args_dict = {"run-name": 			 config_dict["run-name"],
 				 "utterance-list": 		 config_dict["utterance-list-path"],
 				 "folds": 				 config_dict["folds"],
+ 				 "epochs": 				 config_dict["epochs"],
 				 "phones-file": 		 config_dict["phones-list-path"],
 				 "labels-dir": 			 config_dict["labels-dir"],
 				 "model-path": 			 config_dict["finetune-model-path"],
@@ -136,7 +138,9 @@ def run_generate_scores(config_dict):
 					 "sample-list":    get_test_sample_list_path_for_fold(config_dict["test-sample-list-dir"], fold),
 					 "phone-list":     config_dict["phones-list-path"],
 					 "labels-dir":     config_dict["labels-dir"],
-					 "gop-txt-dir":    config_dict["gop-scores-dir"]
+					 "gop-txt-dir":    config_dict["gop-scores-dir"],
+					 "features-path":  config_dict["features-path"],
+					 "conf-path":       config_dict["features-conf-path"]
 					}
 		run_script("src/generate_score_txt.py", args_dict)
 		cat_file_names += args_dict['gop-txt-dir'] + '/' +'gop-'+args_dict['model-name']+'.txt ' #Codigo repetido con generate_score_txt
@@ -172,7 +176,6 @@ def run_experiment(config_yaml, stage):
 		if config_dict['use-kaldi-labels']:
 			print("Creating Kaldi labels")
 			run_create_kaldi_labels(config_dict)
-		exit()
 		print("Running training")
 		run_train(config_dict)
 	

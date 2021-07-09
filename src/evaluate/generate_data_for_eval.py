@@ -17,10 +17,12 @@ def phonelist2str(phones):
 # Function that matches phone ints to phone symbols and loads them to a dictionary
 
 def phones2dic(path):
+    print(path)
     phones_dic = {}
     with open(path, "r") as fileHandler:
         line = fileHandler.readline()
         while line:
+            print(line)
             l=line.split()
             phones_dic[int(l[1])] = l[0]
             line = fileHandler.readline()
@@ -241,7 +243,7 @@ if __name__ == '__main__':
     #trans_dict, trans_dict_clean, sent_dict = generate_dict_from_transcripctions('transcriptionsSAE.txt')
 
     phone_pure_dict = phones2dic(args.phones_pure_path)
-    gop_alignments = get_gop_alignments(args.gop_path, args.phones_pure_path)
+    gop_alignments = get_gop_alignments(args.gop_path, phone_pure_dict)
 
     utterance_list = []
     utt_list_fh = open(args.utterance_list, 'r')
