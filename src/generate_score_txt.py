@@ -47,7 +47,7 @@ def generate_score_txt(model, testloader, score_file_name, phone_dict):
                         embed()
                 else:
                     try:
-                        phone_number = phone_dict[phone_name]
+                        phone_number = phone_dict[phone_name] + 3 #This +3 is here to take into account eps, sil, spn 
                     except KeyError as e:
                         embed()
                     score_log_fh.write( '[ ' + str(phone_number) + ' -1000'  + ' ] ')

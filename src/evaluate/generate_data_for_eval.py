@@ -271,6 +271,7 @@ if __name__ == '__main__':
             gop_scores = gop_alignments.loc[utterance].gops
             annot_kaldi = []
             for phone_idx in phone_idxs:
+                print(phone_idx)
                 phone = phone_pure_dict[phone_idx]
                 if phone not in ['sil', '[key]', 'sp', '', 'SIL', '[KEY]', 'SP']:
                     if phone[-1] not in ['1', '0', '2']:

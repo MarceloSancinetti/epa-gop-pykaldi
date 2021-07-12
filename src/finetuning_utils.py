@@ -71,7 +71,7 @@ def get_phone_number_at_frame(labels, frame):
     res = labels[frame].nonzero().item()
     #except ValueError as e:
     #	embed()
-    return res
+    return res + 3 #This +3 is here because librispeech phones-pure starts with eps, sil, spn and these should be skipped 
 
 #Collapses multiple frame level scores using sum or mean  
 def get_phone_score_from_frame_scores(frame_level_scores, start_time, end_time, method):
