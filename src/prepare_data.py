@@ -22,7 +22,7 @@ def download_librispeech_models(librispeech_models_path):
         os.system("rm -f 0013_librispeech_v1_lm.tar.gz")
         os.system("rm -f 0013_librispeech_v1_extractor.tar.gz")
 
-def prepare_pytorch_models(libri_chain_mdl_path, libri_chain_txt_path, acoustic_model_path, finetune_model_path, phone_count):
+def prepare_pytorch_models(libri_chain_mdl_path, libri_chain_txt_path, acoustic_model_path,  setup, finetune_model_path = None, phone_count = None):
     #Convert librispeech acoustic model .mdl to .txt
     if not os.path.exists(libri_chain_txt_path):
         os.system("nnet3-copy --binary=false " + libri_chain_mdl_path + " " + libri_chain_txt_path)
@@ -35,7 +35,7 @@ def prepare_pytorch_models(libri_chain_mdl_path, libri_chain_txt_path, acoustic_
         os.system("python src/convert_chain_to_pytorch.py " + arguments)
 
     #Generate model to finetune in training stage
-    if not os.path.exists(finetune_model_path):
+    if  setup == "exp" and not os.path.exists(finetune_model_path):
         args_dict = {"chain-model-path": libri_chain_txt_path,
                      "output-path":      finetune_model_path,
                      "phone-count":      phone_count}
@@ -72,7 +72,7 @@ def create_ref_labels_symlinks(epadb_root_path, labels_path):
         cmd = 'ln -s ' + current_path + "/" + epadb_root_path + '/reference_transcriptions.txt ' + current_path + "/" + labels_path + '/reference_transcriptions.txt'
         os.system(cmd)
 
-def make_experiment_directory(experiment_dir_path):
+def make_experiment_directory(experiment_dir_path, setup):
     #This will create the experiment directory and the test sample list, 
     #state dict, and gop scores directories inside of it
     test_sample_lists_dir = experiment_dir_path + "/test_sample_lists/"
@@ -80,9 +80,9 @@ def make_experiment_directory(experiment_dir_path):
     gop_scores_dir        = experiment_dir_path + "/gop_scores/"
     eval_dir              = experiment_dir_path + "/eval/"
     
-    if not os.path.exists(test_sample_lists_dir):
+    if not os.path.exists(test_sample_lists_dir) and setup == "exp":
         os.makedirs(test_sample_lists_dir)
-    if not os.path.exists(state_dicts_dir):
+    if not os.path.exists(state_dicts_dir) and setup == "exp":
         os.makedirs(state_dicts_dir)
     if not os.path.exists(gop_scores_dir):
         os.makedirs(gop_scores_dir)
@@ -104,18 +104,24 @@ if __name__ == '__main__':
     parser.add_argument('--utterance-list-path', dest='utterance_list_path', help='Path where utterance list will be created', default=None)
     parser.add_argument('--phone-count', dest='phone_count', help='Size of the phone set for the current system', default=None)
     parser.add_argument('--experiment-dir-path', dest='experiment_dir_path', help='Path where the directory for the current expriment\'s files will be created', default=None)
+    parser.add_argument('--setup', dest='setup', help='The setup you want to run (either exp or gop)', default=None)
     args = parser.parse_args()
 
-    features_path = args.features_path
-    conf_path = args.conf_path
+    features_path   = args.features_path
+    conf_path       = args.conf_path
     epadb_root_path = args.epa_root_path
+    setup           = args.setup
+
+    if setup != "exp" and setup != "gop":
+        raise Exception("Error: setup argument must be either gop or exp")
+        exit()
 
     #Download librispeech models and extract them into librispeech-models-path
     download_librispeech_models(args.librispeech_models_path)
 
     #Prepare pytorch models
     prepare_pytorch_models(args.libri_chain_mdl_path, args.libri_chain_txt_path, args.acoustic_model_path,
-                           args.finetune_model_path, args.phone_count)
+                           setup, args.finetune_model_path, args.phone_count)
 
     #Extract features
     feature_manager = FeatureManager(epadb_root_path, features_path, conf_path)
@@ -127,7 +133,7 @@ if __name__ == '__main__':
     #Create full EpaDB sample list
     create_epadb_full_sample_list(epadb_root_path, args.utterance_list_path)
 
-    make_experiment_directory(args.experiment_dir_path)
+    make_experiment_directory(args.experiment_dir_path, setup)
 
 
 

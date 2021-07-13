@@ -7,7 +7,6 @@
   folds:                   2
   epochs:                  1
   phones-list-path:        "phones/kaldi_phones_list.txt"
-  kaldi-phones-pure-path:  "phones/kaldi/phones-pure.txt"
   finetune-model-path:     "pytorch_models/model_finetuning_kaldi.pt"
   epadb-root-path:         "EpaDB/"
   features-path:           "features/data/"
@@ -21,6 +20,5 @@
   lang-graph-path:         "data/lang_test_tgsmall/L.fst"
   words-path:              "data/lang_test_tgsmall/words.txt"
   libri-phones-path:       "exp/chain_cleaned/tdnn_1d_sp/phones.txt"
-  loglikes-path:           "loglikes.ark"
   libri-chain-mdl-path:    "exp/chain_cleaned/tdnn_1d_sp/final.mdl"
   libri-chain-txt-path:    "exp/chain_cleaned/tdnn_1d_sp/final.txt"

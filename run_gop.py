@@ -21,25 +21,17 @@ def get_run_name(config_yaml):
 def get_experiment_directory(config_yaml):
 	return "experiments/" + get_run_name(config_yaml) + '/'
 
-def get_model_name(config_dict, fold):
-	last_epoch = config_dict["epochs"] - 1
-	run_name   = config_dict["run-name"]
-	return run_name + '-fold-' + str(fold) + '-epoch-' + str(last_epoch) #Aca hay codigo repetido entre el PATH de train y esto
-
 def get_test_sample_list_path_for_fold(test_sample_list_dir, fold):
 	return test_sample_list_dir + "/test_sample_list_fold_" + str(fold) #Aca tmb codigo repetido
 
 def extend_config_dict(config_yaml, config_dict):
 	config_dict["experiment-dir-path"] 	= get_experiment_directory(config_yaml)
-	config_dict["run-name"] 			= get_run_name(config_yaml)
-	config_dict["test-sample-list-dir"] = config_dict["experiment-dir-path"] 	 + "test_sample_lists/"
-	config_dict["state-dict-dir"] 		= config_dict["experiment-dir-path"] 	 + "state_dicts/"
-	config_dict["gop-scores-dir"] 		= config_dict["experiment-dir-path"] 	 + "gop_scores/"
-	config_dict["full-gop-score-path"] 	= config_dict["gop-scores-dir"] 	 	 + "gop-all-folds.txt"
+	#config_dict["gop-dir"] 			= config_dict["experiment-dir-path"] 	 	 + "gop_scores/"
 	config_dict["eval-dir"] 			= config_dict["experiment-dir-path"] 	 + "eval/"
 	config_dict["alignments-path"]      = config_dict["experiment-dir-path"] 	 + "align_output"
 	config_dict["loglikes-path"]        = config_dict["experiment-dir-path"] 	 + "loglikes.ark"
 	config_dict["transcription-file"]   = config_dict["epa-ref-labels-dir-path"] + "reference_transcriptions.txt"
+	config_dict["gop-score-path"]       = config_dict["experiment-dir-path"] 	 + "gop.txt"
 
 	#Choose labels dir
 	if config_dict["use-kaldi-labels"]:
@@ -50,7 +42,6 @@ def extend_config_dict(config_yaml, config_dict):
 	return config_dict
 
 def run_data_prep(config_dict):
-	phone_count = get_phone_count(config_dict["phones-list-path"])
 	args_dict = {"epa-root-path": 			config_dict["epadb-root-path"],
 				 "features-path": 			config_dict["features-path"],
 				 "conf-path":               config_dict["features-conf-path"],
@@ -64,11 +55,9 @@ def run_data_prep(config_dict):
 				 							config_dict["libri-chain-txt-path"],
 				 							
 				 "acoustic-model-path":     config_dict["acoustic-model-path"],
-				 "finetune-model-path":     config_dict["finetune-model-path"],
 				 "utterance-list-path":     config_dict["utterance-list-path"],
-				 "phone-count":             phone_count,
 				 "experiment-dir-path":     config_dict["experiment-dir-path"],
-				 "setup":                   "exp"}
+				 "setup":                   "gop"}
 	run_script("src/prepare_data.py", args_dict)
 
 def run_align(config_dict):
@@ -114,46 +103,29 @@ def run_create_kaldi_labels(config_dict):
 				}
 	run_script("src/create_kaldi_labels.py", args_dict)
 
-def run_train(config_dict):
-	args_dict = {"run-name": 			 config_dict["run-name"],
-				 "utterance-list": 		 config_dict["utterance-list-path"],
-				 "folds": 				 config_dict["folds"],
- 				 "epochs": 				 config_dict["epochs"],
-				 "phones-file": 		 config_dict["phones-list-path"],
-				 "labels-dir": 			 config_dict["labels-dir"],
-				 "model-path": 			 config_dict["finetune-model-path"],
-				 "epa-root-path": 		 config_dict["epadb-root-path"],
-				 "features-path": 		 config_dict["features-path"],
-				 "conf-path": 			 config_dict["features-conf-path"],
-				 "test-sample-list-dir": config_dict["test-sample-list-dir"],
-				 "state-dict-dir": 		 config_dict["state-dict-dir"]
-				}
-	run_script("src/train.py", args_dict)
+def run_gop(config_dict):
+	args_dict = {'libri-phones-path': 			  config_dict["librispeech-models-path"] 
+												  + config_dict['libri-phones-path'],
 
-def run_generate_scores(config_dict):
-	cat_file_names = ""
-	for fold in range(config_dict["folds"]):
-		args_dict = {"state-dict-dir": config_dict["state-dict-dir"],
-					 "model-name": 	   get_model_name(config_dict, fold),
-					 "epa-root": 	   config_dict["epadb-root-path"],
-					 "sample-list":    get_test_sample_list_path_for_fold(config_dict["test-sample-list-dir"], fold),
-					 "phone-list":     config_dict["phones-list-path"],
-					 "labels-dir":     config_dict["labels-dir"],
-					 "gop-txt-dir":    config_dict["gop-scores-dir"],
-					 "features-path":  config_dict["features-path"],
-					 "conf-path":       config_dict["features-conf-path"]
-					}
-		run_script("src/generate_score_txt.py", args_dict)
-		cat_file_names += args_dict['gop-txt-dir'] + '/' +'gop-'+args_dict['model-name']+'.txt ' #Codigo repetido con generate_score_txt
-	#Concatenate gop scores for all folds
-	os.system("cat " + cat_file_names + " > " + config_dict["full-gop-score-path"])
+				 'libri-phones-to-pure-int-path': config_dict['libri-phones-to-pure-int-path'],
+
+				 'libri-phones-pure-path': 		  config_dict['libri-phones-pure-path'],
+
+				 'transition-model-path': 		  config_dict["librispeech-models-path"] 
+												  + config_dict['transition-model-path'],
+
+				 'gop-dir': 					  config_dict['experiment-dir-path'],
+				 'loglikes-path': 				  config_dict['loglikes-path'],
+				 'alignments-dir-path':			  config_dict['experiment-dir-path']
+				}
+	run_script("src/gop/calculate_gop.py", args_dict)
 
 def run_evaluate(config_dict):
 	args_dict = {"transcription-file": config_dict["transcription-file"],
 				 "utterance-list": 	   config_dict["utterance-list-path"],
 				 "output-dir": 		   config_dict["eval-dir"],
-				 "gop-file": 		   config_dict["full-gop-score-path"],
-				 "phones-pure-file":   config_dict["kaldi-phones-pure-path"],
+				 "gop-file": 		   config_dict["gop-score-path"],
+				 "phones-pure-file":   config_dict["libri-phones-pure-path"],
 				 "labels": 	   		   config_dict["labels-dir"]
 				}
 	run_script("src/evaluate/generate_data_for_eval.py", args_dict)
@@ -173,17 +145,12 @@ def run_all(config_yaml, stage):
 		print("Running aligner")
 		run_align(config_dict)
 	
-	if stage in ["train", "all"]:
+	if stage in ["gop", "all"]:
 		if config_dict['use-kaldi-labels']:
 			print("Creating Kaldi labels")
 			run_create_kaldi_labels(config_dict)
-		print("Running training")
-		run_train(config_dict)
-	
-	if stage in ["scores", "all"]:
-		print("Generating GOP scores")
-		run_generate_scores(config_dict)
-
+		run_gop(config_dict)
+			
 	if stage in ["evaluate", "all"]:
 		print("Evaluating results")
 		run_evaluate(config_dict)
