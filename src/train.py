@@ -6,7 +6,7 @@ import argparse
 import torchaudio
 import torch
 import torch.optim as optim
-
+import torch.multiprocessing as mp
 
 from finetuning_utils import *
 from utils import *
@@ -35,7 +35,8 @@ def criterion(batch_outputs, batch_labels):
     loss = loss_fn(batch_outputs, batch_labels)
     return loss
 
-def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name='test'):
+def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name):
+    print("Started training fold " + str(fold))
 
     step = 0
 
@@ -47,6 +48,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
     optimizer = optim.Adam(model.parameters())
 
     for epoch in range(epochs):  # loop over the dataset multiple times
+
         PATH = state_dict_dir + run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) + '.pth'
         #If the checkpoint for the current epoch is already present, checkpoint is loaded and training is skipped
         if os.path.isfile(PATH):
@@ -126,6 +128,7 @@ def main():
     parser.add_argument('--conf-path', dest='conf_path', help='Path to config directory used in feature extraction', default=None)
     parser.add_argument('--test-sample-list-dir', dest='test_sample_list_dir', help='Path to output directory to save test sample lists', default=None)
     parser.add_argument('--state-dict-dir', dest='state_dict_dir', help='Path to output directory to save state dicts', default=None)
+    parser.add_argument('--use-multi-process', dest='use_multi_process', help='Whether to use multiple processes or not', default=None)
 
     args = parser.parse_args()
     run_name = args.run_name
@@ -167,10 +170,21 @@ def main():
         model = FTDNN(out_dim=phone_count)
         model.load_state_dict(torch.load(args.model_path))
 
+        #Train the model
         wandb.watch(model, log_freq=100)
-        model = train(model, trainloader, testloader, fold, epochs, args.state_dict_dir, run_name=run_name)
+        if args.use_multi_process == "true":
+            processes = []
+            p = mp.Process(target=train, args=(model, trainloader, testloader, fold, 
+                           epochs, args.state_dict_dir, run_name))
+            p.start()
+            processes.append(p)
+        else:
+            train(model, trainloader, testloader, fold, epochs, args.state_dict_dir, run_name)
 
         #Generate test sample list for current fold
         generate_test_sample_list(testloader, epa_root_path, args.test_sample_list_dir, 'test_sample_list_fold_' + str(fold))
 
+    if args.use_multi_process == "true":
+        for p in processes:
+            p.join()
 main()

@@ -126,7 +126,8 @@ def run_train(config_dict):
 				 "features-path": 		 config_dict["features-path"],
 				 "conf-path": 			 config_dict["features-conf-path"],
 				 "test-sample-list-dir": config_dict["test-sample-list-dir"],
-				 "state-dict-dir": 		 config_dict["state-dict-dir"]
+				 "state-dict-dir": 		 config_dict["state-dict-dir"],
+				 "use-multi-process":    config_dict["use-multi-process"]
 				}
 	run_script("src/train.py", args_dict)
 

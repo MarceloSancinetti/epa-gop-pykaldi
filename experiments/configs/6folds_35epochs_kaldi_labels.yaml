@@ -4,8 +4,9 @@
   alignments-path:         "align_output"
   kaldi-labels-path:       "kaldi_labels/"
   use-kaldi-labels:        true
-  folds:                   2
-  epochs:                  1
+  folds:                   6
+  epochs:                  35
+  use-multi-process:       "true"
   phones-list-path:        "phones/kaldi_phones_list.txt"
   finetune-model-path:     "pytorch_models/model_finetuning_kaldi.pt"
   epadb-root-path:         "EpaDB/"
