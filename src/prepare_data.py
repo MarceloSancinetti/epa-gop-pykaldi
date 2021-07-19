@@ -30,7 +30,7 @@ def prepare_pytorch_models(pytorch_models_path, libri_chain_mdl_path, libri_chai
     #Create directory for pytorch models
     if not os.path.exists(pytorch_models_path):
         os.makedirs(pytorch_models_path)
-        
+
     #Convert final.txt to pytorch acoustic model used in alginments stage
     if not os.path.exists(acoustic_model_path):
         args_dict = {"chain-model-path": libri_chain_txt_path,
@@ -125,7 +125,7 @@ if __name__ == '__main__':
     download_librispeech_models(args.librispeech_models_path)
 
     #Prepare pytorch models
-    prepare_pytorch_models(args.pytorch_models_paths, args.libri_chain_mdl_path, args.libri_chain_txt_path, 
+    prepare_pytorch_models(args.pytorch_models_path, args.libri_chain_mdl_path, args.libri_chain_txt_path, 
                            args.acoustic_model_path, setup, args.finetune_model_path, args.phone_count)
 
     #Extract features
