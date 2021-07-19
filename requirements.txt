@@ -13,3 +13,4 @@ torchvision
 torchaudio
 kaldiio
 PyYAML
++git+https://github.com/Legisign/Praat-textgrids

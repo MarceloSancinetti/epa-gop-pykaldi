@@ -121,6 +121,7 @@ if __name__ == '__main__':
         raise Exception("Error: setup argument must be either gop or exp")
         exit()
 
+
     #Download librispeech models and extract them into librispeech-models-path
     download_librispeech_models(args.librispeech_models_path)
 
@@ -131,14 +132,16 @@ if __name__ == '__main__':
     #Extract features
     feature_manager = FeatureManager(epadb_root_path, features_path, conf_path)
     feature_manager.extract_features_using_kaldi()
-
+    
+    
     #Create symlinks
     create_ref_labels_symlinks(epadb_root_path, args.labels_path)
 
+    make_experiment_directory(args.experiment_dir_path, setup)
+    
     #Create full EpaDB sample list
     create_epadb_full_sample_list(epadb_root_path, args.utterance_list_path)
 
-    make_experiment_directory(args.experiment_dir_path, setup)
 
 
 
