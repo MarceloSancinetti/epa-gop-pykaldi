@@ -10,5 +10,6 @@ sklearn
 matplotlib
 argparse
 torchvision
+torchaudio
 kaldiio
 PyYAML
