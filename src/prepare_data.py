@@ -22,11 +22,15 @@ def download_librispeech_models(librispeech_models_path):
         os.system("rm -f 0013_librispeech_v1_lm.tar.gz")
         os.system("rm -f 0013_librispeech_v1_extractor.tar.gz")
 
-def prepare_pytorch_models(libri_chain_mdl_path, libri_chain_txt_path, acoustic_model_path,  setup, finetune_model_path = None, phone_count = None):
+def prepare_pytorch_models(pytorch_models_path, libri_chain_mdl_path, libri_chain_txt_path, acoustic_model_path,  setup, finetune_model_path = None, phone_count = None):
     #Convert librispeech acoustic model .mdl to .txt
     if not os.path.exists(libri_chain_txt_path):
         os.system("nnet3-copy --binary=false " + libri_chain_mdl_path + " " + libri_chain_txt_path)
 
+    #Create directory for pytorch models
+    if not os.path.exists(pytorch_models_path):
+        os.makedirs(pytorch_models_path)
+        
     #Convert final.txt to pytorch acoustic model used in alginments stage
     if not os.path.exists(acoustic_model_path):
         args_dict = {"chain-model-path": libri_chain_txt_path,
@@ -97,6 +101,7 @@ if __name__ == '__main__':
     parser.add_argument('--conf-path', dest='conf_path', help='Path to config directory used in feature extraction', default=None)
     parser.add_argument('--labels-path', dest='labels_path', help='Path to create symlinks to EpaDB ref labels', default=None)
     parser.add_argument('--librispeech-models-path', dest='librispeech_models_path', help='Path to directory where Librispeech models will be found', default=None)
+    parser.add_argument('--pytorch-models-path', dest='pytorch_models_path', help='Path to directory where Pytorch models will be found', default=None)
     parser.add_argument('--libri-chain-mdl-path', dest='libri_chain_mdl_path', help='Path to Librispeech chain acoustic model .mdl', default=None)
     parser.add_argument('--libri-chain-txt-path', dest='libri_chain_txt_path', help='Path where .txt version of final.mdl will be created', default=None)
     parser.add_argument('--acoustic-model-path', dest='acoustic_model_path', help='Path where Pytorch acoustic model will be created', default=None)
@@ -120,8 +125,8 @@ if __name__ == '__main__':
     download_librispeech_models(args.librispeech_models_path)
 
     #Prepare pytorch models
-    prepare_pytorch_models(args.libri_chain_mdl_path, args.libri_chain_txt_path, args.acoustic_model_path,
-                           setup, args.finetune_model_path, args.phone_count)
+    prepare_pytorch_models(args.pytorch_models_paths, args.libri_chain_mdl_path, args.libri_chain_txt_path, 
+                           args.acoustic_model_path, setup, args.finetune_model_path, args.phone_count)
 
     #Extract features
     feature_manager = FeatureManager(epadb_root_path, features_path, conf_path)

@@ -14,6 +14,7 @@
   features-path:           "features/data/"
   features-conf-path:      "features/conf/"
   acoustic-model-path:     "pytorch_models/acoustic_model.pt"
+  pytorch-models-path:     "pytorch_models/"
   librispeech-models-path: "librispeech_models/"
   transition-model-path:   "exp/chain_cleaned/tdnn_1d_sp/final.mdl"
   tree-path:               "exp/chain_cleaned/tdnn_1d_sp/tree"
