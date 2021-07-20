@@ -1,0 +1,12 @@
+spkr109_1 EpaDB/spkr109/waveforms/spkr109_1.wav
+spkr109_12 EpaDB/spkr109/waveforms/spkr109_12.wav
+spkr109_13 EpaDB/spkr109/waveforms/spkr109_13.wav
+spkr33_43 EpaDB/spkr33/waveforms/spkr33_43.wav
+spkr33_44 EpaDB/spkr33/waveforms/spkr33_44.wav
+spkr33_45 EpaDB/spkr33/waveforms/spkr33_45.wav
+spkr34_69 EpaDB/spkr34/waveforms/spkr34_69.wav
+spkr34_7 EpaDB/spkr34/waveforms/spkr34_7.wav
+spkr34_70 EpaDB/spkr34/waveforms/spkr34_70.wav
+spkr89_46 EpaDB/spkr89/waveforms/spkr89_46.wav
+spkr89_5 EpaDB/spkr89/waveforms/spkr89_5.wav
+spkr89_50 EpaDB/spkr89/waveforms/spkr89_50.wav
