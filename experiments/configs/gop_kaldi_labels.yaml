@@ -9,6 +9,7 @@
   features-conf-path:            "features/conf/"
   acoustic-model-path:           "pytorch_models/acoustic_model.pt"
   librispeech-models-path:       "librispeech_models/"
+  pytorch-models-path:           "pytorch_models/"
   libri-phones-path:             "exp/chain_cleaned/tdnn_1d_sp/phones.txt"
   libri-phones-to-pure-int-path: "phones/kaldi/phone-to-pure-phone.int"
   libri-phones-pure-path:        "phones/kaldi/phones-pure.txt"
