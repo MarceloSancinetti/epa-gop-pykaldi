@@ -10,7 +10,7 @@ import pickle
 import argparse
 import os
 from FeatureManager import FeatureManager
-
+from IPython import embed
 
 
 if __name__ == '__main__':

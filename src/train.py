@@ -48,7 +48,6 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
     optimizer = optim.Adam(model.parameters())
 
     for epoch in range(epochs):  # loop over the dataset multiple times
-
         PATH = state_dict_dir + run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) + '.pth'
         #If the checkpoint for the current epoch is already present, checkpoint is loaded and training is skipped
         if os.path.isfile(PATH):

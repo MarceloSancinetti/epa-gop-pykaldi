@@ -5,7 +5,6 @@ import numpy as np
 import torch
 
 
-
 class FeatureManager:
 	def __init__(self, epadb_root_path, features_path, conf_path):
 		self.epadb_root_path = epadb_root_path

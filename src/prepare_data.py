@@ -47,8 +47,14 @@ def prepare_pytorch_models(pytorch_models_path, libri_chain_mdl_path, libri_chai
         os.system("python src/convert_chain_to_pytorch_for_finetuning.py " + arguments)
 
 def create_epadb_full_sample_list(epadb_root_path, utterance_list_path):
+    #Skip if utterance list already exists
     if os.path.exists(utterance_list_path):
         return
+    
+    #Create sample_lists directory if necessary
+    utterance_list_dir_path = os.path.dirname(utterance_list_path) 
+    if not os.path.exists(utterance_list_dir_path):
+       os.makedirs(utterance_list_dir_path)
 
     utt_list_fh = open(utterance_list_path, 'w+')
     for file in sorted(glob.glob(epadb_root_path + '/*/waveforms/*.wav')):
