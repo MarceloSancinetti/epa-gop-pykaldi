@@ -46,6 +46,7 @@ def run_data_prep(config_dict):
 				 "features-path": 			config_dict["features-path"],
 				 "conf-path":               config_dict["features-conf-path"],
 				 "labels-path":             config_dict["epa-ref-labels-dir-path"],
+				 "pytorch-models-path":     config_dict["pytorch-models-path"],
 				 "librispeech-models-path": config_dict["librispeech-models-path"],
 				 
 				 "libri-chain-mdl-path":    config_dict["librispeech-models-path"] + 
