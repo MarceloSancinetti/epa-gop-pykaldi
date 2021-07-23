@@ -61,6 +61,8 @@ def generate_score_txt(model, testloader, score_file_name, phone_dict, alignment
             score_log_fh.write(logid + ' ')
             #Iterate over phones in the annotation for the current sample
             for phone_name, start_time, end_time in alignments[logid]:
+                if phone_name == 'SIL':
+                    continue
                 #Check if the phone was uttered
                 if start_time != end_time:
                     #Log the score for the current frame in the annotation
