@@ -5,6 +5,7 @@ import joblib
 from pathlib import Path
 import os
 from scipy.special import logsumexp
+from IPython import embed
 
 def get_pdfs_for_pure_phone(df_phones_pure, phone):
     pdfs = list(df_phones_pure.loc[(df_phones_pure['phone_pure'] == str(phone+1) )].forward_pdf)
@@ -34,7 +35,7 @@ def matrix_gop_robust(df_phones_pure, number_senones, batch_size):
 
 
 
-def gop_robust_with_matrix(df_scores, df_phones_pure, number_senones, batch_size, output_gop_r):
+def gop_robust_with_matrix(df_scores, df_phones_pure, number_senones, batch_size):
     
     mask_score = matrix_gop_robust(df_phones_pure, number_senones, batch_size)
 
@@ -47,6 +48,8 @@ def gop_robust_with_matrix(df_scores, df_phones_pure, number_senones, batch_size
     scores_phone_pure = np.matmul(scores,mask_score)
     
     logids = df_scores.index
+
+    output_gop_dict = {}
 
     for j in range(0, len(df_scores)):
         phones = df_scores.phones[j]
@@ -62,7 +65,7 @@ def gop_robust_with_matrix(df_scores, df_phones_pure, number_senones, batch_size
             transitions_by_phone = transitions[i]
             tf = ti + len(transitions_by_phone) - 1     
             
-            lpp = (sum(np.log(scores_phone_pure[j])[ti:tf+1]))/(tf-ti+1)
+            lpp = (sum(np.log(scores_phone_pure[j][ti:tf+1])))/(tf-ti+1)
                         
             phone_pure = df_phones_pure.loc[(df_phones_pure['phone_name'] == str(phones[i]) )].phone_pure.unique()[0]
             gop_r = lpp[int(phone_pure)-1]
@@ -73,6 +76,6 @@ def gop_robust_with_matrix(df_scores, df_phones_pure, number_senones, batch_size
             ti = tf + 1
         
 
-        output_gop_r.append({'gop': gops_r,'phones_pure': phones_pure, 'logid': logid})
+        output_gop_dict[logid] = {'gop': gops_r,'phones_pure': phones_pure}
 
-    return output_gop_r
+    return output_gop_dict

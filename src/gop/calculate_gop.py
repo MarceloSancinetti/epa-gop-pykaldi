@@ -28,21 +28,30 @@ def prepare_dataframes(libri_phones_path, libri_phones_to_pure_int_path,
 
     return df_phones_pure, df_alignments
 
+def pad_loglikes(loglikes):
+    max_frames = max([x.shape[0] for x in loglikes])
+    padded_loglikes = [np.pad(x, ((0, max_frames - len(x)), (0,0)), 'constant', 
+                       constant_values=(0, 0) ) for x in loglikes]
+    return padded_loglikes
+
 
 
 def compute_gop(gop_dir, df_phones_pure, df_alignments, loglikes_path):
 
     gop = {}
+    loglikes_all_spkrs = []
     with ReadHelper('ark:' + loglikes_path) as reader:
         for key, loglikes in tqdm.tqdm(reader):
-            
             loglikes = softmax(np.array(loglikes), axis=1) #Apply softmax before computing
-            df_scores = pd.DataFrame(df_alignments.loc[:,key]).transpose()
-            df_scores['p'] = [loglikes]
-            gop[key] = gop_robust_with_matrix(df_scores, df_phones_pure, 6024, 1, [])
-
+            loglikes_all_spkrs.append(loglikes)
+    
+    df_scores = df_alignments.transpose()
+    df_scores['p'] = np.array(loglikes_all_spkrs, dtype=object)
+    padded_loglikes = pad_loglikes(df_scores['p'])
+    df_scores['p'] = padded_loglikes
+    gop_dict = gop_robust_with_matrix(df_scores, df_phones_pure, 6024, 12)
     with open(gop_dir + '/gop.pickle', 'wb') as handle:
-        pickle.dump(gop, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(gop_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 def save_gop_as_text(gop_dir):
@@ -52,9 +61,8 @@ def save_gop_as_text(gop_dir):
     gop_output_file = open(gop_dir + '/gop.txt', 'w+')
 
     for logid, score in gop_dict.items():
-        score = score[0]
         phones = score['phones_pure']
-        gop = score['gop']
+        gop    = score['gop']
         
         if len(phones) != len(gop):
             raise Exception("Phones and gop list lengths do not match.")
