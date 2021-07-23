@@ -21,10 +21,10 @@ def removeSymbols(str, symbols):
         str = str.replace(symbol,'')
     return str
 
-def get_alignments(alignments_dir_path):
+def get_alignments(alignments_path):
     alignments_dict = {}
 
-    for l in open(alignments_dir_path + "align_output", 'r').readlines():
+    for l in open(alignments_path, 'r').readlines():
         l=l.split()
         #Get phones alignments
         if len(l) > 3 and l[1] == 'phones':
@@ -41,10 +41,10 @@ def get_alignments(alignments_dir_path):
     return alignments_dict
 
 
-def generate_score_txt(model, testloader, score_file_name, phone_dict, alignments_dir_path):
+def generate_score_txt(model, testloader, score_file_name, phone_dict, alignments_path):
 
     print('Writing scores to .txt')
-    alignments = get_alignments(alignments_dir_path)
+    alignments = get_alignments(alignments_path)
     for i, batch in enumerate(testloader, 0):
         score_log_fh = open(score_file_name, "a+")
         print('Batch ' + str(i+1) + '/' + str(len(testloader)))
@@ -91,20 +91,22 @@ def main():
     parser.add_argument('--gop-txt-dir', dest='gop_txt_dir', help='Directory to save generated scores', default=None)
     parser.add_argument('--features-path', dest='features_path', help='Path to features directory', default=None)
     parser.add_argument('--conf-path', dest='conf_path', help='Path to config directory used in feature extraction', default=None)
+    parser.add_argument('--alignments-path', dest='alignments_path', help='Path to aligner output', default=None)
     args = parser.parse_args()
 
-    state_dict_dir = args.state_dict_dir
-    model_name = args.model_name
-    epa_root_path = args.epa_root_path
-    sample_list = args.sample_list_path
-    phone_list_path = args.phone_list_path
-    labels_dir = args.labels_dir
-    gop_txt_dir = args.gop_txt_dir
-    features_path = args.features_path
-    conf_path = args.conf_path
+    state_dict_dir      = args.state_dict_dir
+    model_name          = args.model_name
+    epa_root_path       = args.epa_root_path
+    sample_list         = args.sample_list_path
+    phone_list_path     = args.phone_list_path
+    labels_dir          = args.labels_dir
+    gop_txt_dir         = args.gop_txt_dir
+    features_path       = args.features_path
+    conf_path           = args.conf_path
+    alignments_path     = args.alignments_path
 
     testset = EpaDB(epa_root_path, sample_list, phone_list_path, labels_dir, features_path, conf_path)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=2,
+    testloader = torch.utils.data.DataLoader(testset, batch_size=16,
                                           shuffle=False, num_workers=2, collate_fn=collate_fn_padd)
 
     phone_count = testset.phone_count()
@@ -116,7 +118,7 @@ def main():
 
     phone_dict = testset._pure_phone_dict
 
-    generate_score_txt(model, testloader, gop_txt_dir+ '/' +'gop-'+model_name+'.txt', phone_dict)
+    generate_score_txt(model, testloader, gop_txt_dir+ '/' +'gop-'+model_name+'.txt', phone_dict, alignments_path)
 
 
 if __name__ == '__main__':

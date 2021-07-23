@@ -135,15 +135,16 @@ def run_train(config_dict):
 def run_generate_scores(config_dict):
 	cat_file_names = ""
 	for fold in range(config_dict["folds"]):
-		args_dict = {"state-dict-dir": config_dict["state-dict-dir"],
-					 "model-name": 	   get_model_name(config_dict, fold),
-					 "epa-root": 	   config_dict["epadb-root-path"],
-					 "sample-list":    get_test_sample_list_path_for_fold(config_dict["test-sample-list-dir"], fold),
-					 "phone-list":     config_dict["phones-list-path"],
-					 "labels-dir":     config_dict["labels-dir"],
-					 "gop-txt-dir":    config_dict["gop-scores-dir"],
-					 "features-path":  config_dict["features-path"],
-					 "conf-path":       config_dict["features-conf-path"]
+		args_dict = {"state-dict-dir":  config_dict["state-dict-dir"],
+					 "model-name": 	    get_model_name(config_dict, fold),
+					 "epa-root": 	    config_dict["epadb-root-path"],
+					 "sample-list":     get_test_sample_list_path_for_fold(config_dict["test-sample-list-dir"], fold),
+					 "phone-list":      config_dict["phones-list-path"],
+					 "labels-dir":      config_dict["labels-dir"],
+					 "gop-txt-dir":     config_dict["gop-scores-dir"],
+					 "features-path":   config_dict["features-path"],
+					 "conf-path":       config_dict["features-conf-path"],
+					 "alignments-path": config_dict["alignments-path"]
 					}
 		run_script("src/generate_score_txt.py", args_dict)
 		cat_file_names += args_dict['gop-txt-dir'] + '/' +'gop-'+args_dict['model-name']+'.txt ' #Codigo repetido con generate_score_txt
