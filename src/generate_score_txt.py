@@ -16,10 +16,35 @@ from IPython import embed
 
 import argparse
 
+def removeSymbols(str, symbols):
+    for symbol in symbols:
+        str = str.replace(symbol,'')
+    return str
 
-def generate_score_txt(model, testloader, score_file_name, phone_dict):
+def get_alignments(alignments_dir_path):
+    alignments_dict = {}
+
+    for l in open(alignments_dir_path + "align_output", 'r').readlines():
+        l=l.split()
+        #Get phones alignments
+        if len(l) > 3 and l[1] == 'phones':
+            logid = l[0]
+            alignment = []
+            alignments_dict[logid] = {}
+            for i in range(2, len(l),3):
+                current_phone =     removeSymbols(l[i],  ['[',']',',',')','(','\''])
+                start_time    = int(removeSymbols(l[i+1],['[',']',',',')','(','\'']))
+                duration      = int(removeSymbols(l[i+2],['[',']',',',')','(','\'']))
+                end_time      = start_time + duration
+                alignment.append((current_phone, start_time, end_time))
+            alignments_dict[logid] = alignment
+    return alignments_dict
+
+
+def generate_score_txt(model, testloader, score_file_name, phone_dict, alignments_dir_path):
 
     print('Writing scores to .txt')
+    alignments = get_alignments(alignments_dir_path)
     for i, batch in enumerate(testloader, 0):
         score_log_fh = open(score_file_name, "a+")
         print('Batch ' + str(i+1) + '/' + str(len(testloader)))
@@ -27,7 +52,6 @@ def generate_score_txt(model, testloader, score_file_name, phone_dict):
         logids = unpack_logids_from_batch(batch)
         features = unpack_features_from_batch(batch)
         labels = unpack_labels_from_batch(batch)
-        annotations = unpack_phone_times_from_batch(batch)
 
         outputs = (-1) * model(features)
 
@@ -36,7 +60,7 @@ def generate_score_txt(model, testloader, score_file_name, phone_dict):
         for i, logid in enumerate(logids):
             score_log_fh.write(logid + ' ')
             #Iterate over phones in the annotation for the current sample
-            for phone_name, start_time, end_time in annotations[i]:
+            for phone_name, start_time, end_time in alignments[logid]:
                 #Check if the phone was uttered
                 if start_time != end_time:
                     #Log the score for the current frame in the annotation
