@@ -36,7 +36,7 @@ def pad_loglikes(loglikes):
 
 
 
-def compute_gop(gop_dir, df_phones_pure, df_alignments, loglikes_path):
+def compute_gop(gop_dir, df_phones_pure, df_alignments, loglikes_path, utterance_list_path):
 
     gop = {}
     loglikes_all_spkrs = []
@@ -50,6 +50,9 @@ def compute_gop(gop_dir, df_phones_pure, df_alignments, loglikes_path):
     padded_loglikes = pad_loglikes(df_scores['p'])
     df_scores['p'] = padded_loglikes
     gop_dict = gop_robust_with_matrix(df_scores, df_phones_pure, 6024, 12)
+
+    validate_gop_samples_with_utterance_list(gop_dict, utterance_list_path)
+
     with open(gop_dir + '/gop.pickle', 'wb') as handle:
         pickle.dump(gop_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
@@ -57,6 +60,7 @@ def compute_gop(gop_dir, df_phones_pure, df_alignments, loglikes_path):
 def save_gop_as_text(gop_dir):
 
     gop_dict = pd.read_pickle(gop_dir + '/gop.pickle')
+
 
     gop_output_file = open(gop_dir + '/gop.txt', 'w+')
 
@@ -73,7 +77,17 @@ def save_gop_as_text(gop_dir):
         gop_output_file.write('\n')
 
 
+def validate_gop_samples_with_utterance_list(gop_dict, utterance_list_path):
+    utt_list_fh = open(utterance_list_path, "r")
+    utt_set = set()
+    
+    for line in utt_list_fh.readlines():
+        utt_set.add(line.split()[0])
 
+    utts_in_gop = set(gop_dict.keys())
+
+    if utts_in_gop != utt_set:
+        raise Exception("ERROR: Keys in gop dictionary do not match utterance list.")
 
 
 if __name__ == '__main__':
@@ -85,6 +99,7 @@ if __name__ == '__main__':
     parser.add_argument('--gop-dir', dest='gop_dir', help='Path GOP directory', default=None)
     parser.add_argument('--alignments-dir-path', dest='alignments_dir_path', help='Path to directory where align_output will be found', default=None)
     parser.add_argument('--loglikes-path', dest='loglikes_path', help='Path to loglikes.ark', default=None)     
+    parser.add_argument('--utterance-list-path', dest='utterance_list_path', help='Path EpaDB samples list', default=None)     
     args = parser.parse_args()
 
     libri_phones_path             = args.libri_phones_path
@@ -98,6 +113,6 @@ if __name__ == '__main__':
     df_phones_pure, df_alignments = prepare_dataframes(libri_phones_path, libri_phones_to_pure_int_path, libri_phones_pure_path,
                                                        libri_final_mdl_path, gop_dir, alignments_dir_path)
 
-    compute_gop(gop_dir, df_phones_pure, df_alignments, loglikes_path)
+    compute_gop(gop_dir, df_phones_pure, df_alignments, loglikes_path, args.utterance_list_path)
 
     save_gop_as_text(gop_dir)

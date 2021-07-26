@@ -107,6 +107,8 @@ def run_create_kaldi_labels(config_dict):
 def run_gop(config_dict):
 	args_dict = {'libri-phones-path': 			  config_dict["librispeech-models-path"] 
 												  + config_dict['libri-phones-path'],
+												  
+				 'utterance-list-path': 		  config_dict["utterance-list-path"],
 
 				 'libri-phones-to-pure-int-path': config_dict['libri-phones-to-pure-int-path'],
 
