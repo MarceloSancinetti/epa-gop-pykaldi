@@ -35,7 +35,7 @@ def matrix_gop_robust(df_phones_pure, number_senones, batch_size):
 
 
 
-def gop_robust_with_matrix(df_scores, df_phones_pure, number_senones, batch_size):
+def gop_robust_with_matrix(df_scores, df_phones_pure, number_senones, batch_size, output_gop_dict):
     
     mask_score = matrix_gop_robust(df_phones_pure, number_senones, batch_size)
 
@@ -48,8 +48,6 @@ def gop_robust_with_matrix(df_scores, df_phones_pure, number_senones, batch_size
     scores_phone_pure = np.matmul(scores,mask_score)
     
     logids = df_scores.index
-
-    output_gop_dict = {}
 
     for j in range(0, len(df_scores)):
         phones = df_scores.phones[j]

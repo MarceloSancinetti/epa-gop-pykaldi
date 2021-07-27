@@ -31,26 +31,30 @@ def prepare_dataframes(libri_phones_path, libri_phones_to_pure_int_path,
 def pad_loglikes(loglikes):
     max_frames = max([x.shape[0] for x in loglikes])
     padded_loglikes = [np.pad(x, ((0, max_frames - len(x)), (0,0)), 'constant', 
-                       constant_values=(0, 0) ) for x in loglikes]
+                       constant_values=(0, 0) ) for x in tqdm.tqdm(loglikes)]
     return padded_loglikes
 
 
 
-def compute_gop(gop_dir, df_phones_pure, df_alignments, loglikes_path, utterance_list_path):
+def compute_gop(gop_dir, df_phones_pure, df_alignments, loglikes_path, utterance_list_path, batch_size):
 
     gop = {}
+    gop_dict = {}
     loglikes_all_utts = []
     with ReadHelper('ark:' + loglikes_path) as reader:
         for key, loglikes in tqdm.tqdm(reader):
-            embed()
             loglikes = softmax(np.array(loglikes), axis=1) #Apply softmax before computing
             loglikes_all_utts.append(loglikes)
-    
+
     df_scores = df_alignments.transpose()
     df_scores['p'] = np.array(loglikes_all_utts, dtype=object)
     padded_loglikes = pad_loglikes(df_scores['p'])
     df_scores['p'] = padded_loglikes
-    gop_dict = gop_robust_with_matrix(df_scores, df_phones_pure, 6024, len(loglikes_all_utts))
+
+    for i in range(0, len(df_scores), batch_size):
+        df_scores_batch = df_scores.iloc[i:i+batch_size]
+        loglikes_batch  = loglikes_all_utts[i:i+batch_size]
+        gop_dict = gop_robust_with_matrix(df_scores_batch, df_phones_pure, 6024, len(df_scores_batch), gop_dict)
 
     validate_gop_samples_with_utterance_list(gop_dict, utterance_list_path)
 
@@ -114,6 +118,6 @@ if __name__ == '__main__':
     df_phones_pure, df_alignments = prepare_dataframes(libri_phones_path, libri_phones_to_pure_int_path, libri_phones_pure_path,
                                                        libri_final_mdl_path, gop_dir, alignments_dir_path)
 
-    compute_gop(gop_dir, df_phones_pure, df_alignments, loglikes_path, args.utterance_list_path)
+    compute_gop(gop_dir, df_phones_pure, df_alignments, loglikes_path, args.utterance_list_path, 128)
 
     save_gop_as_text(gop_dir)
