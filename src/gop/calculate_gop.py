@@ -39,17 +39,18 @@ def pad_loglikes(loglikes):
 def compute_gop(gop_dir, df_phones_pure, df_alignments, loglikes_path, utterance_list_path):
 
     gop = {}
-    loglikes_all_spkrs = []
+    loglikes_all_utts = []
     with ReadHelper('ark:' + loglikes_path) as reader:
         for key, loglikes in tqdm.tqdm(reader):
+            embed()
             loglikes = softmax(np.array(loglikes), axis=1) #Apply softmax before computing
-            loglikes_all_spkrs.append(loglikes)
+            loglikes_all_utts.append(loglikes)
     
     df_scores = df_alignments.transpose()
-    df_scores['p'] = np.array(loglikes_all_spkrs, dtype=object)
+    df_scores['p'] = np.array(loglikes_all_utts, dtype=object)
     padded_loglikes = pad_loglikes(df_scores['p'])
     df_scores['p'] = padded_loglikes
-    gop_dict = gop_robust_with_matrix(df_scores, df_phones_pure, 6024, 12)
+    gop_dict = gop_robust_with_matrix(df_scores, df_phones_pure, 6024, len(loglikes_all_utts))
 
     validate_gop_samples_with_utterance_list(gop_dict, utterance_list_path)
 

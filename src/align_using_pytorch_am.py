@@ -12,6 +12,17 @@ import os
 from FeatureManager import FeatureManager
 from IPython import embed
 
+def log_alignments(aligner, phones, alignment, align_outout_fh):
+    phone_alignment = aligner.to_phone_alignment(out["alignment"], phones)
+    transition_lists = []
+    for phone, start_time, duration in phone_alignment:
+        transitions_for_phone = alignment[start_time : (start_time + duration)]
+        transition_lists.append(transitions_for_phone)
+    align_out_file.write(logid + ' phones '      + str(phone_alignment)  + '\n')
+    align_out_file.write(logid + ' transitions ')
+    for transition_list in transition_lists:
+        align_out_file.write(str(transition_list) + ' ')
+    align_out_file.write('\n')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -80,7 +91,11 @@ if __name__ == '__main__':
             loglikes = Matrix(loglikes.detach().numpy()[0]) # Convert to PyKaldi matrix
             loglikes_writer[logid] = loglikes
             out = aligner.align(loglikes, text)
-            phone_alignment = aligner.to_phone_alignment(out["alignment"], phones)
-            align_out_file.write(logid + ' phones ' + str(phone_alignment)  + '\n')
-            align_out_file.write(logid + ' transitions ' + str(out['alignment']) + '\n') 
-            #word_alignment = aligner.to_word_alignment(out["best_path"], wb_info)
+            log_alignments(aligner, phones, out["alignment"], align_out_file)
+            #phone_alignment = aligner.to_phone_alignment(out["alignment"], phones)
+            #align_out_file.write(logid + ' phones ' + str(phone_alignment)  + '\n')
+            #align_out_file.write(logid + ' transitions ' + str(out['alignment']) + '\n') 
+
+
+
+
