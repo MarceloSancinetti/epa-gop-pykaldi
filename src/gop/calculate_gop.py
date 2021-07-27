@@ -31,7 +31,7 @@ def prepare_dataframes(libri_phones_path, libri_phones_to_pure_int_path,
 def pad_loglikes(loglikes):
     max_frames = max([x.shape[0] for x in loglikes])
     padded_loglikes = [np.pad(x, ((0, max_frames - len(x)), (0,0)), 'constant', 
-                       constant_values=(0, 0) ) for x in tqdm.tqdm(loglikes)]
+                       constant_values=(0, 0) ) for x in loglikes]
     return padded_loglikes
 
 
@@ -47,13 +47,12 @@ def compute_gop(gop_dir, df_phones_pure, df_alignments, loglikes_path, utterance
             loglikes_all_utts.append(loglikes)
 
     df_scores = df_alignments.transpose()
-    df_scores['p'] = np.array(loglikes_all_utts, dtype=object)
-    padded_loglikes = pad_loglikes(df_scores['p'])
-    df_scores['p'] = padded_loglikes
 
-    for i in range(0, len(df_scores), batch_size):
+    for i in tqdm.tqdm(range(0, len(df_scores), batch_size)):
         df_scores_batch = df_scores.iloc[i:i+batch_size]
         loglikes_batch  = loglikes_all_utts[i:i+batch_size]
+        padded_loglikes = pad_loglikes(loglikes_batch)
+        df_scores_batch['p'] = padded_loglikes
         gop_dict = gop_robust_with_matrix(df_scores_batch, df_phones_pure, 6024, len(df_scores_batch), gop_dict)
 
     validate_gop_samples_with_utterance_list(gop_dict, utterance_list_path)
