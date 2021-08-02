@@ -120,6 +120,7 @@ def run_train(config_dict):
 				 "utterance-list": 		 config_dict["utterance-list-path"],
 				 "folds": 				 config_dict["folds"],
  				 "epochs": 				 config_dict["epochs"],
+				 "layers": 		 		 config_dict["layers"],
 				 "phones-file": 		 config_dict["phones-list-path"],
 				 "labels-dir": 			 config_dict["labels-dir"],
 				 "model-path": 			 config_dict["finetune-model-path"],

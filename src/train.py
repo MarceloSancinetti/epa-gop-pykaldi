@@ -23,6 +23,10 @@ from IPython import embed
 from sklearn.model_selection import KFold
 
 
+def get_model_path_for_fold(model_path, fold, layer_amount):
+    #This is used to allow training to start from a previous experiment's
+    #state_dict with the same fold
+    return model_path.replace("@FOLD@", str(fold)) 
 
 
 def criterion(batch_outputs, batch_labels):
@@ -35,14 +39,18 @@ def criterion(batch_outputs, batch_labels):
     loss = loss_fn(batch_outputs, batch_labels)
     return loss
 
-def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name):
+def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name, layer_amount):
     print("Started training fold " + str(fold))
 
     step = 0
 
-    #Freeze all layers except the last
+    #Generate layer names for layers that should be trained
+    layers_to_train = ['layer' + str(19 - x) for x in range(layer_amount)]
+
+    #Freeze all layers except #layer_amount layers starting from the last
     for name, param in model.named_parameters():
-        if 'layer19' not in name:
+        freeze_layer = all([layer not in name for layer in layers_to_train])
+        if freeze_layer:
             param.requires_grad = False
 
     optimizer = optim.Adam(model.parameters())
@@ -119,6 +127,7 @@ def main():
     parser.add_argument('--utterance-list', dest='utterance_list', help='File with utt list', default=None)
     parser.add_argument('--folds', dest='fold_amount', help='Amount of folds to use in training', default=None)
     parser.add_argument('--epochs', dest='epoch_amount', help='Amount of epochs to use in training', default=None)
+    parser.add_argument('--layers', dest='layer_amount', help='Amount of layers to train starting from the last (if layers=1 train only the last layer)', default=None)
     parser.add_argument('--phones-file', dest='phones_file', help='File with list of phones', default=None)
     parser.add_argument('--labels-dir', dest='labels_dir', help='Directory with labels used in training', default=None)
     parser.add_argument('--model-path', dest='model_path', help='Path to .pth/pt file with model to finetune', default=None)
@@ -129,10 +138,11 @@ def main():
     parser.add_argument('--state-dict-dir', dest='state_dict_dir', help='Path to output directory to save state dicts', default=None)
     parser.add_argument('--use-multi-process', dest='use_multi_process', help='Whether to use multiple processes or not', default=None)
 
-    args = parser.parse_args()
-    run_name = args.run_name
-    folds    = int(args.fold_amount)
-    epochs   = int(args.epoch_amount)
+    args         = parser.parse_args()
+    run_name     = args.run_name
+    folds        = int(args.fold_amount)
+    epochs       = int(args.epoch_amount)
+    layer_amount = int(args.layer_amount)
 
     wandb.init(project="gop-finetuning")
     wandb.run.name = run_name
@@ -167,18 +177,18 @@ def main():
 
         #Get acoustic model to train
         model = FTDNN(out_dim=phone_count)
-        model.load_state_dict(torch.load(args.model_path))
+        model.load_state_dict(torch.load(get_model_path_for_fold(args.model_path, fold, layer_amount)))
 
         #Train the model
         wandb.watch(model, log_freq=100)
         if args.use_multi_process == "true":
             processes = []
             p = mp.Process(target=train, args=(model, trainloader, testloader, fold, 
-                           epochs, args.state_dict_dir, run_name))
+                           epochs, args.state_dict_dir, run_name, layer_amount))
             p.start()
             processes.append(p)
         else:
-            train(model, trainloader, testloader, fold, epochs, args.state_dict_dir, run_name)
+            train(model, trainloader, testloader, fold, epochs, args.state_dict_dir, run_name, layer_amount)
 
         #Generate test sample list for current fold
         generate_test_sample_list(testloader, epa_root_path, args.test_sample_list_dir, 'test_sample_list_fold_' + str(fold))
