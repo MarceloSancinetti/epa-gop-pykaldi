@@ -16,3 +16,5 @@ PyYAML
 pickle5
 wandb
 +git+https://github.com/Legisign/Praat-textgrids
+jupyter
+seaborn

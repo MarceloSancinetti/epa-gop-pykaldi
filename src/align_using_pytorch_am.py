@@ -7,6 +7,7 @@ from pytorch_models_old import *
 import torch
 import numpy as np
 import pickle
+import tqdm
 import argparse
 import os
 from FeatureManager import FeatureManager
@@ -82,7 +83,7 @@ if __name__ == '__main__':
     align_out_file = open(args.align_path,"w+")
     # Decode and write output lattices
     with DoubleMatrixWriter(loglikes_wspec) as loglikes_writer:
-        for line in open(sample_list_path,'r').readlines():
+        for line in tqdm.tqdm(open(sample_list_path,'r').readlines()):
             logid = line.split()[0]
             feats, text = feature_manager.get_features_for_logid(logid)
             text = text.upper()
