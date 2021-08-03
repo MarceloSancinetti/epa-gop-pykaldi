@@ -7,10 +7,10 @@
   folds:                   6
   epochs:                  35
   layers:                  2
-  use-multi-process:       "true"
+  use-multi-process:       "false"
   phones-list-path:        "phones/kaldi_phones_list.txt"
   kaldi-phones-pure-path:  "phones/kaldi/phones-pure.txt"
-  finetune-model-path:     "experiments/6folds_35epochs_kaldi_labels/state_dicts/6folds_35epochs_kaldi_labels-fold-@FOLD@-epoch-50.pth"
+  finetune-model-path:     "experiments/6folds_35epochs_kaldi_labels/state_dicts/6folds_35epochs_kaldi_labels-fold-@FOLD@-epoch-49.pth"
   epadb-root-path:         "EpaDB/"
   features-path:           "features/data/"
   features-conf-path:      "features/conf/"

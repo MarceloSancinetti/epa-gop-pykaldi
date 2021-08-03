@@ -176,8 +176,9 @@ def main():
         phone_count = dataset.phone_count()
 
         #Get acoustic model to train
-        model = FTDNN(out_dim=phone_count)
-        model.load_state_dict(torch.load(get_model_path_for_fold(args.model_path, fold, layer_amount)))
+        model = FTDNN(out_dim=phone_count) 
+        state_dict = torch.load(get_model_path_for_fold(args.model_path, fold, layer_amount))
+        model.load_state_dict(state_dict['model_state_dict'])
 
         #Train the model
         wandb.watch(model, log_freq=100)
