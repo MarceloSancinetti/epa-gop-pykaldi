@@ -5,7 +5,7 @@
   kaldi-labels-path:       "kaldi_labels/"
   use-kaldi-labels:        true
   folds:                   6
-  epochs:                  35
+  epochs:                  80
   layers:                  2
   use-multi-process:       "false"
   phones-list-path:        "phones/kaldi_phones_list.txt"
