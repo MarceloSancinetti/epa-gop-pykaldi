@@ -151,31 +151,31 @@ if __name__ == '__main__':
 
 	ftdnn = FTDNN(out_dim=phone_count)
 
-	state_dict = {}
+	model_state_dict = {}
 
-	state_dict['layer01.lda.weight'] = torch.from_numpy(components['lda']['linear_params'])
-	state_dict['layer01.lda.bias'] = torch.from_numpy(components['lda']['bias'])
-	state_dict['layer01.kernel.weight'] = torch.from_numpy(components['tdnn1.affine']['linear_params'])
-	state_dict['layer01.kernel.bias'] = torch.from_numpy(components['tdnn1.affine']['bias'])
-	state_dict['layer01.bn.running_mean'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_mean'])
-	state_dict['layer01.bn.running_var'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_var'])
+	model_state_dict['layer01.lda.weight'] = torch.from_numpy(components['lda']['linear_params'])
+	model_state_dict['layer01.lda.bias'] = torch.from_numpy(components['lda']['bias'])
+	model_state_dict['layer01.kernel.weight'] = torch.from_numpy(components['tdnn1.affine']['linear_params'])
+	model_state_dict['layer01.kernel.bias'] = torch.from_numpy(components['tdnn1.affine']['bias'])
+	model_state_dict['layer01.bn.running_mean'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_mean'])
+	model_state_dict['layer01.bn.running_var'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_var'])
 
 
 
 	for layer_number in range(2, 18):
-		state_dict['layer'+ str("{:02d}".format(layer_number)) +'.sorth.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.linear']['linear_params'])
-		state_dict['layer'+ str("{:02d}".format(layer_number)) +'.affine.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.affine']['linear_params'])
-		state_dict['layer'+ str("{:02d}".format(layer_number)) +'.affine.bias'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.affine']['bias'])
-		state_dict['layer'+ str("{:02d}".format(layer_number)) +'.sorth.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.linear']['linear_params'])
-		state_dict['layer'+ str("{:02d}".format(layer_number)) +'.bn.running_mean'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.batchnorm']['stats_mean'])
-		state_dict['layer'+ str("{:02d}".format(layer_number)) +'.bn.running_var'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.batchnorm']['stats_var'])
+		model_state_dict['layer'+ str("{:02d}".format(layer_number)) +'.sorth.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.linear']['linear_params'])
+		model_state_dict['layer'+ str("{:02d}".format(layer_number)) +'.affine.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.affine']['linear_params'])
+		model_state_dict['layer'+ str("{:02d}".format(layer_number)) +'.affine.bias'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.affine']['bias'])
+		model_state_dict['layer'+ str("{:02d}".format(layer_number)) +'.sorth.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.linear']['linear_params'])
+		model_state_dict['layer'+ str("{:02d}".format(layer_number)) +'.bn.running_mean'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.batchnorm']['stats_mean'])
+		model_state_dict['layer'+ str("{:02d}".format(layer_number)) +'.bn.running_var'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.batchnorm']['stats_var'])
 
-	state_dict['layer18.weight'] = torch.from_numpy(components['prefinal-l']['linear_params'])
+	model_state_dict['layer18.weight'] = torch.from_numpy(components['prefinal-l']['linear_params'])
 
 	
 	#Add layer to finetune 
-	state_dict['layer19.linear.weight'] = torch.randn([phone_count, 256])
-	state_dict['layer19.linear.bias'] = torch.randn([phone_count])
+	model_state_dict['layer19.linear.weight'] = torch.randn([phone_count, 256])
+	model_state_dict['layer19.linear.bias'] = torch.randn([phone_count])
 
 	torch.nn.init.xavier_uniform(ftdnn.layer19.linear.weight)
 
@@ -184,6 +184,9 @@ if __name__ == '__main__':
 
 	chain_file.close() 
 
-	ftdnn.load_state_dict(state_dict)
+	state_dict = {}
+	state_dict['model_state_dict'] = model_state_dict
 
-	torch.save(ftdnn.state_dict(), args.output_path)
+	ftdnn.load_state_dict(model_state_dict)
+
+	torch.save(state_dict, args.output_path)
