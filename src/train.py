@@ -28,6 +28,15 @@ def get_model_path_for_fold(model_path, fold, layer_amount):
     #state_dict with the same fold
     return model_path.replace("@FOLD@", str(fold)) 
 
+def freeze_layers_for_finetuning(model, layer_amount):
+    #Generate layer names for layers that should be trained
+    layers_to_train = ['layer' + str(19 - x) for x in range(layer_amount)]
+
+    #Freeze all layers except #layer_amount layers starting from the last
+    for name, module in model.named_modules():
+        freeze_layer = all([layer not in name for layer in layers_to_train])
+        if freeze_layer:
+            module.eval()
 
 def criterion(batch_outputs, batch_labels):
     '''
@@ -44,14 +53,9 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
 
     step = 0
 
-    #Generate layer names for layers that should be trained
-    layers_to_train = ['layer' + str(19 - x) for x in range(layer_amount)]
 
-    #Freeze all layers except #layer_amount layers starting from the last
-    for name, param in model.named_parameters():
-        freeze_layer = all([layer not in name for layer in layers_to_train])
-        if freeze_layer:
-            param.requires_grad = False
+
+    freeze_layers_for_finetuning(model, layer_amount)
 
     optimizer = optim.Adam(model.parameters())
 
@@ -197,4 +201,6 @@ def main():
     if args.use_multi_process == "true":
         for p in processes:
             p.join()
-main()
+
+if __name__ == '__main__':
+    main()
