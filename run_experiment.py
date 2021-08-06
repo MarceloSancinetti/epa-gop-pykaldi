@@ -156,6 +156,7 @@ def run_evaluate(config_dict):
 	args_dict = {"transcription-file": config_dict["transcription-file"],
 				 "utterance-list": 	   config_dict["utterance-list-path"],
 				 "output-dir": 		   config_dict["eval-dir"],
+				 "output-filename":    "data_for_eval.picke",
 				 "gop-file": 		   config_dict["full-gop-score-path"],
 				 "phones-pure-file":   config_dict["kaldi-phones-pure-path"],
 				 "labels": 	   		   config_dict["labels-dir"]

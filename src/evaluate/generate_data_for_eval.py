@@ -226,6 +226,7 @@ if __name__ == '__main__':
     parser.add_argument('--transcription-file', dest='transcriptions', help='File with reference phonetic transcriptions of each of the phrases', default=None)
     parser.add_argument('--utterance-list', dest='utterance_list', help='File with utt list', default=None)
     parser.add_argument('--output-dir', dest='output_dir', help='Output dir', default=None)
+    parser.add_argument('--output-filename', dest='output_filename', help='Name of the output file', default=None)
     parser.add_argument('--gop-file', dest='gop_path', help='File with gop results', default=None)
     parser.add_argument('--phones-pure-file', dest='phones_pure_path', help='file that matches phone ints to phone symbols', default=None)
     parser.add_argument('--labels', dest='labels_dir_path', help='', default=None)
@@ -336,6 +337,6 @@ if __name__ == '__main__':
 
     #Export file containing data for evaluation
 
-    joblib.dump(df_trans_match, args.output_dir + '/data_for_eval.pickle')
+    joblib.dump(df_trans_match, args.output_dir + args.output_filename)
 
 
