@@ -110,7 +110,7 @@ def run_all(config_yaml, step):
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--config', dest='config_yaml',  help='Path .yaml config file for experiment', default=None)
-	parser.add_argument('--step', dest='step',  help='How many epochs between each comparison', default=None)
+	parser.add_argument('--step', dest='step',  help='How many epochs between each comparison', type=int, default=None)
 
 	args = parser.parse_args()
 

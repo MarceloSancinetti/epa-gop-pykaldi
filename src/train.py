@@ -66,6 +66,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
             checkpoint = torch.load(PATH)
             model.load_state_dict(checkpoint['model_state_dict'])
             optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+            step = checkpoint['step']
             #embed()
             continue
 
@@ -84,6 +85,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
 
             loss = criterion(outputs, batch_labels)
             loss.backward()
+            nn.utils.clip_grad_norm_(model.parameters(), max_norm=2.0, norm_type=2)
             optimizer.step()
 
             #print statistics
@@ -105,6 +107,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
         torch.save({
             'model_state_dict': model.state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),
+            'step': step
             }, PATH)
 
 
