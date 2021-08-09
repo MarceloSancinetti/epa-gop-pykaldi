@@ -48,7 +48,7 @@ def criterion(batch_outputs, batch_labels):
     loss = loss_fn(batch_outputs, batch_labels)
     return loss
 
-def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name, layer_amount):
+def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name, layer_amount, lr):
     print("Started training fold " + str(fold))
 
     step = 0
@@ -57,7 +57,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
 
     freeze_layers_for_finetuning(model, layer_amount)
 
-    optimizer = optim.Adam(model.parameters())
+    optimizer = optim.Adam(model.parameters(), lr=lr)
 
     for epoch in range(epochs):  # loop over the dataset multiple times
         PATH = state_dict_dir + run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) + '.pth'
@@ -135,6 +135,7 @@ def main():
     parser.add_argument('--folds', dest='fold_amount', help='Amount of folds to use in training', default=None)
     parser.add_argument('--epochs', dest='epoch_amount', help='Amount of epochs to use in training', default=None)
     parser.add_argument('--layers', dest='layer_amount', help='Amount of layers to train starting from the last (if layers=1 train only the last layer)', default=None)
+    parser.add_argument('--learning-rate', dest='learning_rate', help='Learning rate to use during training', default=None)
     parser.add_argument('--phones-file', dest='phones_file', help='File with list of phones', default=None)
     parser.add_argument('--labels-dir', dest='labels_dir', help='Directory with labels used in training', default=None)
     parser.add_argument('--model-path', dest='model_path', help='Path to .pth/pt file with model to finetune', default=None)
@@ -196,7 +197,7 @@ def main():
             p.start()
             processes.append(p)
         else:
-            train(model, trainloader, testloader, fold, epochs, args.state_dict_dir, run_name, layer_amount)
+            train(model, trainloader, testloader, fold, epochs, args.state_dict_dir, run_name, layer_amount, args.learning_rate)
 
         #Generate test sample list for current fold
         generate_test_sample_list(testloader, epa_root_path, args.test_sample_list_dir, 'test_sample_list_fold_' + str(fold))
