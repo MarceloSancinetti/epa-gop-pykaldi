@@ -122,6 +122,7 @@ def run_train(config_dict):
  				 "epochs": 				 config_dict["epochs"],
 				 "layers": 		 		 config_dict["layers"],
 				 "learning-rate":        config_dict["learning-rate"],
+                                 "use-clipping":         config_dict["use-clipping"],
 				 "phones-file": 		 config_dict["phones-list-path"],
 				 "labels-dir": 			 config_dict["labels-dir"],
 				 "model-path": 			 config_dict["finetune-model-path"],

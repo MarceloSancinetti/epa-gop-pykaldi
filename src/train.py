@@ -48,11 +48,10 @@ def criterion(batch_outputs, batch_labels):
     loss = loss_fn(batch_outputs, batch_labels)
     return loss
 
-def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name, layer_amount, lr):
+def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name, layer_amount, lr, use_clipping):
     print("Started training fold " + str(fold))
 
     step = 0
-
 
 
     freeze_layers_for_finetuning(model, layer_amount)
@@ -84,8 +83,14 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
             outputs = model(inputs)
 
             loss = criterion(outputs, batch_labels)
+            
+            if epoch == 0 and i == 0:
+               wandb.log({'train_loss_fold_' + str(fold): loss,
+                          'step' : step})
+
             loss.backward()
-            nn.utils.clip_grad_norm_(model.parameters(), max_norm=2.0, norm_type=2)
+            if use_clipping=='true':
+                nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0, error_if_nonfinite=True, norm_type=2)
             optimizer.step()
 
             #print statistics
@@ -135,7 +140,8 @@ def main():
     parser.add_argument('--folds', dest='fold_amount', help='Amount of folds to use in training', default=None)
     parser.add_argument('--epochs', dest='epoch_amount', help='Amount of epochs to use in training', default=None)
     parser.add_argument('--layers', dest='layer_amount', help='Amount of layers to train starting from the last (if layers=1 train only the last layer)', default=None)
-    parser.add_argument('--learning-rate', dest='learning_rate', help='Learning rate to use during training', default=None)
+    parser.add_argument('--learning-rate', dest='learning_rate', help='Learning rate to use during training', type=float, default=None)
+    parser.add_argument('--use-clipping', dest='use_clipping', help='Whether to use gradien clipping or not', default=None)
     parser.add_argument('--phones-file', dest='phones_file', help='File with list of phones', default=None)
     parser.add_argument('--labels-dir', dest='labels_dir', help='Directory with labels used in training', default=None)
     parser.add_argument('--model-path', dest='model_path', help='Path to .pth/pt file with model to finetune', default=None)
@@ -193,11 +199,11 @@ def main():
         if args.use_multi_process == "true":
             processes = []
             p = mp.Process(target=train, args=(model, trainloader, testloader, fold, 
-                           epochs, args.state_dict_dir, run_name, layer_amount))
+                           epochs, args.state_dict_dir, run_name, layer_amount, args.learning_rage, args.use_clipping))
             p.start()
             processes.append(p)
         else:
-            train(model, trainloader, testloader, fold, epochs, args.state_dict_dir, run_name, layer_amount, args.learning_rate)
+            train(model, trainloader, testloader, fold, epochs, args.state_dict_dir, run_name, layer_amount, args.learning_rate, args.use_clipping)
 
         #Generate test sample list for current fold
         generate_test_sample_list(testloader, epa_root_path, args.test_sample_list_dir, 'test_sample_list_fold_' + str(fold))
