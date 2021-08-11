@@ -8,6 +8,7 @@
   epochs:                  80
   layers:                  2
   learning-rate:           0.0005
+  batch-size:              32
   use-multi-process:       "false"
   phones-list-path:        "phones/kaldi_phones_list.txt"
   kaldi-phones-pure-path:  "phones/kaldi/phones-pure.txt"

@@ -82,10 +82,12 @@ class OutputLayer(nn.Module):
         self.in_dim = in_dim
         self.out_dim = out_dim
 
+        self.bn = nn.BatchNorm1d(self.in_dim, affine=False)
         self.linear = nn.Linear(self.in_dim, self.out_dim, bias=True) 
         self.nl = nn.Sigmoid()
 
     def forward(self, x):
+        x = self.bn(x)
         x = self.linear(x)
         #x = self.nl(x)
         return x

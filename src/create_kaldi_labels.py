@@ -21,7 +21,7 @@ def log_problematic_utterance(utterance):
 def match_trans_lengths(trans_dict, start_times, end_times):
     trans_auto               = trans_dict['trans_auto']
     trans_manual             = trans_dict['trans_manual']
-    best_ref_auto_zero = trans_dict['best_ref_auto_zero']
+    best_ref_auto_zero       = trans_dict['best_ref_auto_zero']
     labels                   = trans_dict['labels']
 
     if '0' in best_ref_auto_zero:

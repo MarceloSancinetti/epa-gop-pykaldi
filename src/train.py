@@ -149,6 +149,7 @@ def main():
     parser.add_argument('--epochs', dest='epoch_amount', help='Amount of epochs to use in training', default=None)
     parser.add_argument('--layers', dest='layer_amount', help='Amount of layers to train starting from the last (if layers=1 train only the last layer)', default=None)
     parser.add_argument('--learning-rate', dest='learning_rate', help='Learning rate to use during training', type=float, default=None)
+    parser.add_argument('--batch-size', dest='batch_size', help='Batch size for training', type=int, default=None)
     parser.add_argument('--use-clipping', dest='use_clipping', help='Whether to use gradien clipping or not', default=None)
     parser.add_argument('--phones-file', dest='phones_file', help='File with list of phones', default=None)
     parser.add_argument('--labels-dir', dest='labels_dir', help='Directory with labels used in training', default=None)
@@ -189,7 +190,7 @@ def main():
         train_subsampler = torch.utils.data.SubsetRandomSampler(train_sample_indexes)
         test_subsampler  = torch.utils.data.SubsetRandomSampler(test_sample_indexes)
 
-        trainloader = torch.utils.data.DataLoader(dataset, batch_size=4,
+        trainloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size,
                                      num_workers=1, sampler=train_subsampler, collate_fn=collate_fn_padd)
 
         testloader = torch.utils.data.DataLoader(dataset, batch_size=32, 
