@@ -53,10 +53,12 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
 
     step = 0
 
+    if fold != 1:
+        return
 
     freeze_layers_for_finetuning(model, layer_amount)
 
-    optimizer = optim.Adam(model.parameters(), lr=lr)
+    optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=1e-5)
 
     for epoch in range(epochs):  # loop over the dataset multiple times
         PATH = state_dict_dir + run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) + '.pth'
@@ -73,6 +75,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
         for i, data in enumerate(trainloader, 0):            
             #print("Batch " + str(i))
             # get the inputs; data is a list of (features, transcript, speaker_id, utterance_id, labels)
+            logids = unpack_logids_from_batch(data)
             inputs = unpack_features_from_batch(data)
             batch_labels = unpack_labels_from_batch(data)
 
@@ -92,6 +95,11 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
             if use_clipping=='true':
                 nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0, error_if_nonfinite=True, norm_type=2)
             optimizer.step()
+
+            if loss > 1000000:
+                print(logids)
+#                embed()
+
 
             #print statistics
             running_loss += loss.item()
