@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from IPython import embed
 
 class FTDNNLayer(nn.Module):
 
@@ -87,7 +88,8 @@ class OutputLayer(nn.Module):
         self.nl = nn.Sigmoid()
 
     def forward(self, x):
-        x = self.bn(x)
+        x = x.transpose(1,2)
+        x = self.bn(x).transpose(1,2)
         x = self.linear(x)
         #x = self.nl(x)
         return x

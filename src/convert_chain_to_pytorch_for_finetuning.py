@@ -174,8 +174,10 @@ if __name__ == '__main__':
 
 	
 	#Add layer to finetune 
-	model_state_dict['layer19.linear.weight'] = torch.randn([phone_count, 256])
-	model_state_dict['layer19.linear.bias'] = torch.randn([phone_count])
+	model_state_dict['layer19.linear.weight']   = torch.randn([phone_count, 256])
+	model_state_dict['layer19.linear.bias']     = torch.randn([phone_count])
+	model_state_dict['layer19.bn.running_mean'] = torch.zeros(256)
+	model_state_dict['layer19.bn.running_var']  = torch.ones(256)
 
 	torch.nn.init.xavier_uniform(ftdnn.layer19.linear.weight)
 

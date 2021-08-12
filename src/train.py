@@ -53,9 +53,6 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
 
     step = 0
 
-    if fold != 1:
-        return
-
     freeze_layers_for_finetuning(model, layer_amount)
 
     optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=1e-5)
@@ -104,11 +101,12 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
             #print statistics
             running_loss += loss.item()
 
-            if i % 20 == 19:    # log every 20 mini-batches
+            if i % 5 == 4:    # log every 20 mini-batches
                 print('Fold ' + str(fold), ' Epoch ' + str(epoch) + ' Batch ' + str(i))
-                print('running_loss ' + str(running_loss/20))
-                wandb.log({'train_loss_fold_' + str(fold): running_loss/20,
-                           'step' : step})
+                print('running_loss ' + str(running_loss/5))
+                wandb.log({'train_loss_fold_' + str(fold): running_loss/5,
+                           'step' : step,
+                           'epoch': epoch})
                 step += 1
                 running_loss = 0.0
                 
