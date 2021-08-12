@@ -46,8 +46,11 @@ def loss_for_phone(outputs, labels, phone_count, phone):
         labels_for_phone = labels * phone_mask 
         outputs, labels = get_outputs_and_labels_for_loss(outputs, labels_for_phone)
         #Calculate loss
-        ocurrences = labels.shape[0]
-        return loss_fn(outputs, labels)/ocurrences
+        occurrences = labels.shape[0]
+        if occurrences == 0:
+            return 0
+        else:
+            return loss_fn(outputs, labels)/occurrences
 
 #Returns total batch loss, adding the loss computed for each class individually
 def criterion(batch_outputs, batch_pos_labels, batch_neg_labels, phone_count):
@@ -57,7 +60,7 @@ def criterion(batch_outputs, batch_pos_labels, batch_neg_labels, phone_count):
     loss = 0
     for phone in range(phone_count):
         loss += loss_for_phone(batch_outputs, batch_pos_labels, phone_count, phone)
-    
+
     for phone in range(phone_count):
         loss += loss_for_phone(batch_outputs, batch_neg_labels, phone_count, phone)
     return loss
@@ -102,7 +105,6 @@ def train(model, trainloader, testloader, phone_count, fold, epochs, state_dict_
             if epoch == 0 and i == 0:
                wandb.log({'train_loss_fold_' + str(fold): loss,
                           'step' : step})
-
 
             loss.backward()
             if use_clipping=='true':

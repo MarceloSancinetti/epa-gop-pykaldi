@@ -7,7 +7,7 @@
   folds:                   6
   epochs:                  20
   layers:                  1
-  learning-rate:           0.001
+  learning-rate:           0.0001
   batch-size:              32
   use-clipping:            "false"
   use-multi-process:       "false"
