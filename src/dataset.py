@@ -119,7 +119,8 @@ class EpaDB(Dataset):
         annotation_path = os.path.join(labels_path, speaker_id, "labels", file_id)
         annotation = []
         phone_count = self.phone_count()
-        labels = np.zeros([features.shape[0], phone_count])
+        pos_labels = np.zeros([features.shape[0], phone_count])
+        neg_labels = np.zeros([features.shape[0], phone_count])
         phone_times = []
 
         with open(annotation_path + ".txt") as f:
@@ -151,9 +152,12 @@ class EpaDB(Dataset):
                     #If the phone was mispronounced, put a -1 in the labels
                     #If the phone was pronounced correcly, put a 1 in the labels
                     #(If start_time == end_time we cant assign a label)
-                    if start_time != end_time :
-                        labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], self._label_dict[label])
-
+                    if start_time != end_time and label == '+':
+                        pos_labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], 1)
+                    
+                    if start_time != end_time and label == '-':
+                        neg_labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], -1)
+                
                 except ValueError as e:
                     print("Bad item:")
                     print("Speaker: " + speaker_id)
@@ -173,7 +177,16 @@ class EpaDB(Dataset):
                     embed()
                     print(e)
 
-        return (features, transcript, speaker_id, utterance_id, torch.from_numpy(labels), phone_times)
+        output_dict = {'features'    : features,
+                       'transcript'  : transcript,
+                       'speaker_id'  : speaker_id,
+                       'utterance_id': utterance_id,
+                       'pos_labels'  : torch.from_numpy(pos_labels),
+                       'neg_labels'  : torch.from_numpy(neg_labels), 
+                       'phone_times' : phone_times
+                      }
+
+        return output_dict
 
    
     def __getitem__(self, n: int) -> Tuple[Tensor, str, str, str, List[Tuple[str, str, str, int, int]]]:

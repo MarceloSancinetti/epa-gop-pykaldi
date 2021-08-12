@@ -17,27 +17,35 @@ from IPython import embed
 
 
 def unpack_logids_from_batch(batch):
-    return [spkr_id + '_' + utt_id for _,_, spkr_id, utt_id,_,_ in batch]
+    return [item['speaker_id'] + '_' + item['utterance_id'] for item in batch]
 
 def unpack_features_from_batch(batch):
-    return torch.stack([features for features, _,_,_,_,_ in batch])
+    return torch.stack([item['features'] for item in batch])
 
-def unpack_labels_from_batch(batch):
-    return torch.stack([labels for _,_,_,_,labels,_ in batch])
+def unpack_pos_labels_from_batch(batch):
+    return torch.stack([item['pos_labels'] for item in batch])
+
+def unpack_neg_labels_from_batch(batch):
+    return torch.stack([item['neg_labels'] for item in batch])
 
 def unpack_phone_times_from_batch(batch):
-    return [phone_times for _,_,_,_,_, phone_times in batch]
+    return [item['phone_times'] for item in batch]
 
 def collate_fn_padd(batch):
     '''
     Padds batch of variable length (both features and labels)
     '''
     ## padd
-    batch_features = [ features for features, _,_,_,_,_ in batch ]
-    batch_features = torch.nn.utils.rnn.pad_sequence(batch_features, batch_first=True)
-    batch_labels = [ labels for _,_,_,_, labels,_ in batch ]
-    batch_labels = torch.nn.utils.rnn.pad_sequence(batch_labels, batch_first=True)
-    batch = [(batch_features[i], batch[i][1], batch[i][2], batch[i][3], batch_labels[i], batch[i][5]) for i in range(len(batch))]
+    batch_features   = [item['features'] for item in batch]
+    batch_features   = torch.nn.utils.rnn.pad_sequence(batch_features, batch_first=True)
+    batch_pos_labels = [item['pos_labels'] for item in batch]
+    batch_pos_labels = torch.nn.utils.rnn.pad_sequence(batch_pos_labels, batch_first=True)
+    batch_neg_labels = [item['neg_labels'] for item in batch]
+    batch_neg_labels = torch.nn.utils.rnn.pad_sequence(batch_neg_labels, batch_first=True)
+    for i in range(len(batch)):
+        batch[i]['features']   = batch_features[i]
+        batch[i]['pos_labels'] = batch_pos_labels[i]
+        batch[i]['neg_labels'] = batch_neg_labels[i]
     return batch
 
 #The model outputs a score for each phone in each frame. This function extracts only the relevant scores,

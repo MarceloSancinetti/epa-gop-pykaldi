@@ -38,17 +38,31 @@ def freeze_layers_for_finetuning(model, layer_amount):
         if freeze_layer:
             module.eval()
 
-def criterion(batch_outputs, batch_labels):
+#This function calculates the loss for a specific phone in the phone set given the outputs and labels
+def loss_for_phone(outputs, labels, phone_count, phone):
+        loss_fn = torch.nn.BCEWithLogitsLoss()
+        phone_mask = torch.zeros(phone_count)
+        phone_mask[phone] = 1
+        labels_for_phone = labels * phone_mask 
+        outputs, labels = get_outputs_and_labels_for_loss(outputs, labels_for_phone)
+        #Calculate loss
+        ocurrences = labels.shape[0]
+        return loss_fn(outputs, labels)/ocurrences
+
+#Returns total batch loss, adding the loss computed for each class individually
+def criterion(batch_outputs, batch_pos_labels, batch_neg_labels, phone_count):
     '''
     Calculates loss
     '''
-    loss_fn = torch.nn.BCEWithLogitsLoss()
-    batch_outputs, batch_labels = get_outputs_and_labels_for_loss(batch_outputs, batch_labels)
-    #Calculate loss
-    loss = loss_fn(batch_outputs, batch_labels)
+    loss = 0
+    for phone in range(phone_count):
+        loss += loss_for_phone(batch_outputs, batch_pos_labels, phone_count, phone)
+    
+    for phone in range(phone_count):
+        loss += loss_for_phone(batch_outputs, batch_neg_labels, phone_count, phone)
     return loss
 
-def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name, layer_amount, lr, use_clipping):
+def train(model, trainloader, testloader, phone_count, fold, epochs, state_dict_dir, run_name, layer_amount, lr, use_clipping):
     print("Started training fold " + str(fold))
 
     step = 0
@@ -74,7 +88,8 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
             # get the inputs; data is a list of (features, transcript, speaker_id, utterance_id, labels)
             logids = unpack_logids_from_batch(data)
             inputs = unpack_features_from_batch(data)
-            batch_labels = unpack_labels_from_batch(data)
+            batch_pos_labels = unpack_pos_labels_from_batch(data)
+            batch_neg_labels = unpack_neg_labels_from_batch(data)
 
             # zero the parameter gradients
             optimizer.zero_grad()
@@ -82,11 +97,12 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
             # forward + backward + optimize
             outputs = model(inputs)
 
-            loss = criterion(outputs, batch_labels)
+            loss = criterion(outputs, batch_pos_labels, batch_neg_labels, phone_count)
             
             if epoch == 0 and i == 0:
                wandb.log({'train_loss_fold_' + str(fold): loss,
                           'step' : step})
+
 
             loss.backward()
             if use_clipping=='true':
@@ -110,7 +126,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
                 step += 1
                 running_loss = 0.0
                 
-        test_loss = test(model, testloader)
+        test_loss = test(model, testloader, phone_count)
         wandb.log({'test_loss_fold_' + str(fold) : test_loss,
                    'step' : step})
         step += 1
@@ -124,15 +140,17 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
 
     return model
 
-def test(model, testloader):
+def test(model, testloader, phone_count):
 
     dataiter = iter(testloader)
     batch = dataiter.next()
     features = unpack_features_from_batch(batch)
-    labels = unpack_labels_from_batch(batch)
+    pos_labels = unpack_pos_labels_from_batch(batch)
+    neg_labels = unpack_neg_labels_from_batch(batch)
+
 
     outputs = model(features)
-    loss = criterion(outputs, labels)
+    loss = criterion(outputs, pos_labels, neg_labels, phone_count)
 
     loss = loss.item()        
 
@@ -205,12 +223,12 @@ def main():
         wandb.watch(model, log_freq=100)
         if args.use_multi_process == "true":
             processes = []
-            p = mp.Process(target=train, args=(model, trainloader, testloader, fold, 
+            p = mp.Process(target=train, args=(model, trainloader, testloader, phone_count, fold, 
                            epochs, args.state_dict_dir, run_name, layer_amount, args.learning_rage, args.use_clipping))
             p.start()
             processes.append(p)
         else:
-            train(model, trainloader, testloader, fold, epochs, args.state_dict_dir, run_name, layer_amount, args.learning_rate, args.use_clipping)
+            train(model, trainloader, testloader, phone_count, fold, epochs, args.state_dict_dir, run_name, layer_amount, args.learning_rate, args.use_clipping)
 
         #Generate test sample list for current fold
         generate_test_sample_list(testloader, epa_root_path, args.test_sample_list_dir, 'test_sample_list_fold_' + str(fold))
