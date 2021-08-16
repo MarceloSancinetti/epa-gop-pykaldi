@@ -3,6 +3,7 @@
   epa-ref-labels-dir-path: "epa_ref_labels/"
   alignments-path:         "align_output"
   kaldi-labels-path:       "kaldi_labels/"
+  phone-weights-path:      "experiments/configs/phone_weights.yaml"
   use-kaldi-labels:        true
   folds:                   6
   epochs:                  20

@@ -127,6 +127,7 @@ def run_train(config_dict):
 				 "phones-file": 		 config_dict["phones-list-path"],
 				 "labels-dir": 			 config_dict["labels-dir"],
 				 "model-path": 			 config_dict["finetune-model-path"],
+				 "phone-weights-path":   config_dict["phone-weights-path"],
 				 "epa-root-path": 		 config_dict["epadb-root-path"],
 				 "features-path": 		 config_dict["features-path"],
 				 "conf-path": 			 config_dict["features-conf-path"],

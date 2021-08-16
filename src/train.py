@@ -2,6 +2,8 @@ import os
 import glob
 from pathlib import Path
 import argparse
+import yaml
+
 
 import torchaudio
 import torch
@@ -23,10 +25,21 @@ from IPython import embed
 from sklearn.model_selection import KFold
 
 
+
 def get_model_path_for_fold(model_path, fold, layer_amount):
     #This is used to allow training to start from a previous experiment's
     #state_dict with the same fold
     return model_path.replace("@FOLD@", str(fold)) 
+
+def get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch):
+    return state_dict_dir + run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) + '.pth'
+
+def start_from_checkpoint(PATH, model, optimizer):
+    checkpoint = torch.load(PATH)
+    model.load_state_dict(checkpoint['model_state_dict'])
+    optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+    step = checkpoint['step']
+    return model, optimizer, step        
 
 def freeze_layers_for_finetuning(model, layer_amount):
     #Generate layer names for layers that should be trained
@@ -39,50 +52,48 @@ def freeze_layers_for_finetuning(model, layer_amount):
             module.eval()
 
 #This function calculates the loss for a specific phone in the phone set given the outputs and labels
-def loss_for_phone(outputs, labels, phone_count, phone):
-        loss_fn = torch.nn.BCEWithLogitsLoss()
+def loss_for_phone(outputs, labels, phone_count, phone, phone_weights):
+        loss_fn = torch.nn.BCEWithLogitsLoss(reduction='sum')
         phone_mask = torch.zeros(phone_count)
         phone_mask[phone] = 1
         labels_for_phone = labels * phone_mask 
         outputs, labels = get_outputs_and_labels_for_loss(outputs, labels_for_phone)
         #Calculate loss
         occurrences = labels.shape[0]
+        phone_weight = phone_weights['phone' + str(phone)]
+        embed()
         if occurrences == 0:
             return 0
         else:
-            return loss_fn(outputs, labels)/occurrences
+            return loss_fn(outputs, labels)/phone_weight
 
 #Returns total batch loss, adding the loss computed for each class individually
-def criterion(batch_outputs, batch_pos_labels, batch_neg_labels, phone_count):
+def criterion(batch_outputs, batch_pos_labels, batch_neg_labels, phone_count, phone_weights):
     '''
     Calculates loss
     '''
     loss = 0
     for phone in range(phone_count):
-        loss += loss_for_phone(batch_outputs, batch_pos_labels, phone_count, phone)
+        loss += loss_for_phone(batch_outputs, batch_pos_labels, phone_count, phone, phone_weights)
 
     for phone in range(phone_count):
-        loss += loss_for_phone(batch_outputs, batch_neg_labels, phone_count, phone)
+        loss += loss_for_phone(batch_outputs, batch_neg_labels, phone_count, phone, phone_weights)
     return loss
 
-def train(model, trainloader, testloader, phone_count, fold, epochs, state_dict_dir, run_name, layer_amount, lr, use_clipping):
+def train(model, trainloader, testloader, phone_count, phone_weights, fold, epochs, state_dict_dir, run_name, layer_amount, lr, use_clipping):
     print("Started training fold " + str(fold))
 
     step = 0
 
     freeze_layers_for_finetuning(model, layer_amount)
 
-    optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=1e-5)
+    optimizer = optim.Adam(model.parameters(), lr=lr)#, weight_decay=1e-5)
 
     for epoch in range(epochs):  # loop over the dataset multiple times
-        PATH = state_dict_dir + run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) + '.pth'
+        PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch) 
         #If the checkpoint for the current epoch is already present, checkpoint is loaded and training is skipped
         if os.path.isfile(PATH):
-            checkpoint = torch.load(PATH)
-            model.load_state_dict(checkpoint['model_state_dict'])
-            optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-            step = checkpoint['step']
-            #embed()
+            model, optimizer, step = start_from_checkpoint(PATH, model, optimizer)
             continue
 
         running_loss = 0.0
@@ -100,7 +111,7 @@ def train(model, trainloader, testloader, phone_count, fold, epochs, state_dict_
             # forward + backward + optimize
             outputs = model(inputs)
 
-            loss = criterion(outputs, batch_pos_labels, batch_neg_labels, phone_count)
+            loss = criterion(outputs, batch_pos_labels, batch_neg_labels, phone_count, phone_weights)
             
             if epoch == 0 and i == 0:
                wandb.log({'train_loss_fold_' + str(fold): loss,
@@ -152,7 +163,7 @@ def test(model, testloader, phone_count):
 
 
     outputs = model(features)
-    loss = criterion(outputs, pos_labels, neg_labels, phone_count)
+    loss = criterion(outputs, pos_labels, neg_labels, phone_count, phone_weights)
 
     loss = loss.item()        
 
@@ -172,6 +183,7 @@ def main():
     parser.add_argument('--phones-file', dest='phones_file', help='File with list of phones', default=None)
     parser.add_argument('--labels-dir', dest='labels_dir', help='Directory with labels used in training', default=None)
     parser.add_argument('--model-path', dest='model_path', help='Path to .pth/pt file with model to finetune', default=None)
+    parser.add_argument('--phone-weights-path', dest='phone_weights_path', help='Path to .yaml containing weights for phone-level loss', default=None)
     parser.add_argument('--epa-root-path', dest='epa_root_path', help='EpaDB root path', default=None)
     parser.add_argument('--features-path', dest='features_path', help='Path to features directory', default=None)
     parser.add_argument('--conf-path', dest='conf_path', help='Path to config directory used in feature extraction', default=None)
@@ -198,6 +210,8 @@ def main():
 
     spkr_list = dataset.get_speaker_list()
 
+    phone_weights_fh = open(args.phone_weights_path)
+    phone_weights = yaml.safe_load(phone_weights_fh)
 
     for fold, (train_spkr_indexes, test_spkr_indexes) in enumerate(kfold.split(spkr_list)):
 
@@ -225,12 +239,13 @@ def main():
         wandb.watch(model, log_freq=100)
         if args.use_multi_process == "true":
             processes = []
-            p = mp.Process(target=train, args=(model, trainloader, testloader, phone_count, fold, 
+            p = mp.Process(target=train, args=(model, trainloader, testloader, phone_count, phone_weights, fold, 
                            epochs, args.state_dict_dir, run_name, layer_amount, args.learning_rage, args.use_clipping))
             p.start()
             processes.append(p)
         else:
-            train(model, trainloader, testloader, phone_count, fold, epochs, args.state_dict_dir, run_name, layer_amount, args.learning_rate, args.use_clipping)
+            train(model, trainloader, testloader, phone_count, phone_weights, 
+                  fold, epochs, args.state_dict_dir, run_name, layer_amount, args.learning_rate, args.use_clipping)
 
         #Generate test sample list for current fold
         generate_test_sample_list(testloader, epa_root_path, args.test_sample_list_dir, 'test_sample_list_fold_' + str(fold))
