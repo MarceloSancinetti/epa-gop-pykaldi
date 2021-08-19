@@ -7,7 +7,7 @@ import torch
 import torch.optim as optim
 
 from utils import *
-from dataset import *
+#from dataset import *
 
 from pytorch_models import *
 
@@ -47,6 +47,17 @@ def collate_fn_padd(batch):
         batch[i]['pos_labels'] = batch_pos_labels[i]
         batch[i]['neg_labels'] = batch_neg_labels[i]
     return batch
+
+#Creates dictionary mapping phone symbol to integer given a phone list path
+def get_phone_symbol_to_int_dict(phone_list_path):
+    #Open file that contains list of pure phones
+    phones_list_fh = open(phone_list_path, "r")
+
+    phone_dict = {}
+    #Get phone number for each phone
+    for i, phone_pure_name in enumerate(phones_list_fh.readlines()):
+        phone_dict[phone_pure_name.strip()] = i
+    return phone_dict
 
 #The model outputs a score for each phone in each frame. This function extracts only the relevant scores,
 #i.e the scores for the canonic phone in each frame based on the annotations.

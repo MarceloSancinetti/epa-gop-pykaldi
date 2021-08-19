@@ -10,6 +10,7 @@ import shutil
 import argparse
 import glob
 from reference_utils import *
+from finetuning_utils import *
 
 def log_problematic_utterance(utterance):
     pu_fh = open("problematic_utterances", "a+")
@@ -120,6 +121,21 @@ def get_times(kaldi_alignments, utterance):
     
     return start_times, end_times
 
+def add_phone_count(phone_count_dict, phone_sym2int, transcription):
+    for phone in transcription:
+        phone = phone_sym2int[phone]
+        if phone in phone_count_dict:
+            phone_count_dict[phone] = phone_count_dict[phone] + 1
+        else:
+            phone_count_dict[phone] = 1
+    return phone_count_dict
+
+def create_phone_weight_yaml(phone_weights_path, phone_count_dict):
+    phone_weights_fh = open(phone_weights_path, "w+")
+    phone_weights_fh.write("---\n")
+    for phone in sorted(phone_count_dict.keys()):
+        occurrences = phone_count_dict[phone]
+        phone_weights_fh.write("  phone" + str(phone) + ":    " + str(phone_count_dict[phone]) + "\n")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -128,6 +144,8 @@ if __name__ == '__main__':
     parser.add_argument('--labels-dir-path', dest='labels_dir_path', help='Path to EpaDB labels directory', default=None)
     parser.add_argument('--alignments-path', dest='align_path', help='Path to alignment output file', default=None)
     parser.add_argument('--output-dir-path', dest='output_dir_path', help='Path to output directory for labels', default=None)
+    parser.add_argument('--phones-list-path', dest='phone_list_path', help='Path to phone list', default=None)
+    parser.add_argument('--phone-weights-path', dest='phone_weights_path', help='Path to .yaml containing weights for phone-level loss', default=None)
 
     args = parser.parse_args()
 
@@ -139,11 +157,17 @@ if __name__ == '__main__':
     utterance_list = generate_utterance_list_from_path(utterance_list_path) 
     trans_dict = get_reference_for_system_alignments(reference_transcriptions_path, labels_dir_path, kaldi_alignments, utterance_list)
 
+    phone_count_dict = {}
+    phone_sym2int = get_phone_symbol_to_int_dict(args.phone_list_path)
+
     for utterance in utterance_list:
         spk, sent = utterance.split("_")
 
         start_times, end_times = get_times(kaldi_alignments, utterance)
         target_column, trans_manual, labels, start_times, end_times = match_trans_lengths(trans_dict[utterance], start_times, end_times)       
+
+        #Add occurrences of each phone to the phone count dict
+        phone_count_dict = add_phone_count(phone_count_dict, phone_sym2int, target_column)
 
         #outdir  = "%s/labels_with_kaldi_phones/%s/labels" % (args.output_dir_path, spk)
         outdir  = "%s/%s/labels" % (args.output_dir_path, spk)
@@ -155,3 +179,5 @@ if __name__ == '__main__':
             np.savetxt(outfile, np.c_[np.arange(len(target_column)), target_column, trans_manual, labels, start_times, end_times], fmt=utterance+"_%s %s %s %s %s %s")
         except ValueError as e:
             embed()
+
+    create_phone_weight_yaml(args.phone_weights_path, phone_count_dict)

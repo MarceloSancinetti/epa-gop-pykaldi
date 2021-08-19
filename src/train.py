@@ -53,7 +53,7 @@ def freeze_layers_for_finetuning(model, layer_amount):
 
 #This function calculates the loss for a specific phone in the phone set given the outputs and labels
 def loss_for_phone(outputs, labels, phone_count, phone, phone_weights):
-        loss_fn = torch.nn.BCEWithLogitsLoss(reduction='sum')
+        loss_fn = torch.nn.BCEWithLogitsLoss(reduction='mean')
         phone_mask = torch.zeros(phone_count)
         phone_mask[phone] = 1
         labels_for_phone = labels * phone_mask 
@@ -62,10 +62,10 @@ def loss_for_phone(outputs, labels, phone_count, phone, phone_weights):
         occurrences = labels.shape[0]
         phone_weight = phone_weights['phone' + str(phone)]
         embed()
-        if occurrences == 0:
+        if occurrences <= 1:
             return 0
         else:
-            return loss_fn(outputs, labels)/phone_weight
+            return loss_fn(outputs, labels) * phone_weight
 
 #Returns total batch loss, adding the loss computed for each class individually
 def criterion(batch_outputs, batch_pos_labels, batch_neg_labels, phone_count, phone_weights):
@@ -78,6 +78,7 @@ def criterion(batch_outputs, batch_pos_labels, batch_neg_labels, phone_count, ph
 
     for phone in range(phone_count):
         loss += loss_for_phone(batch_outputs, batch_neg_labels, phone_count, phone, phone_weights)
+    
     return loss
 
 def train(model, trainloader, testloader, phone_count, phone_weights, fold, epochs, state_dict_dir, run_name, layer_amount, lr, use_clipping):
