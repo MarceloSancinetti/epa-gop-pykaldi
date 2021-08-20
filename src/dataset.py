@@ -14,7 +14,7 @@ from torchaudio.datasets.utils import (
 from typing import List
 
 from utils import *
-from finetuning_utils import get_phone_symbol_to_int_dict
+from finetuning_utils import *
 from FeatureManager import FeatureManager
 
 
@@ -89,6 +89,9 @@ class EpaDB(Dataset):
 
         #Define pure phone dictionary to map pure phone symbols to a label vector index  
         self._pure_phone_dict = get_phone_symbol_to_int_dict(phones_list_path)
+
+        self.phone_int2sym_dict = get_phone_int_to_symbol_dict(phones_list_path)
+
 
         #Create dictionary to turn +/- labels into 1/-1
         self._label_dict = {'+' :  1,

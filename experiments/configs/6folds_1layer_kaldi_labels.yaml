@@ -9,7 +9,7 @@
   epochs:                  20
   layers:                  1
   learning-rate:           0.0001
-  batch-size:              32
+  batch-size:              64
   use-clipping:            "false"
   use-multi-process:       "false"
   phones-list-path:        "phones/kaldi_phones_list.txt"

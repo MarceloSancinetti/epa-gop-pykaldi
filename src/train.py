@@ -25,6 +25,7 @@ from IPython import embed
 from sklearn.model_selection import KFold
 
 
+global phone_int2sym
 
 def get_model_path_for_fold(model_path, fold, layer_amount):
     #This is used to allow training to start from a previous experiment's
@@ -33,6 +34,41 @@ def get_model_path_for_fold(model_path, fold, layer_amount):
 
 def get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch):
     return state_dict_dir + run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) + '.pth'
+
+#Logs loss for each phone in the loss dict to wandb 
+def get_log_dict_for_wandb_from_loss_dict(fold, loss_dict, tag):
+    log_dict = {}
+    for phone, loss in loss_dict.items():
+        key = tag + '_loss_fold_' + str(fold) + '_phone_' + phone 
+        log_dict[key] = loss
+    return log_dict
+
+
+#Handless all logs to wandb every i batches 
+def log_test_loss(fold, loss, step, loss_dict):
+    log_dict = {'test_loss_fold_' + str(fold): loss,
+               'step' : step}
+    loss_dict = {phone : loss for phone, loss in loss_dict.items()}
+    log_dict.update(get_log_dict_for_wandb_from_loss_dict(fold, loss_dict, 'test'))
+    wandb.log(log_dict)
+    step += 1
+    return step
+
+#Handless all logs to wandb every i batches 
+def log_and_reset_every_n_batches(fold, epoch, i, running_loss, step,  loss_dict, n):
+    if i % n == n-1:    # log every i mini-batches
+        print('Fold ' + str(fold), ' Epoch ' + str(epoch) + ' Batch ' + str(i))
+        print('running_loss ' + str(running_loss/n))
+        log_dict = {'train_loss_fold_' + str(fold): running_loss/n,
+                   'step' : step,
+                   'epoch': epoch}
+        loss_dict = {phone : loss/n for phone, loss in loss_dict.items()}
+        log_dict.update(get_log_dict_for_wandb_from_loss_dict(fold, loss_dict, 'train'))
+        wandb.log(log_dict)
+        step += 1
+        running_loss = 0.0
+    return running_loss, step, loss_dict
+
 
 def start_from_checkpoint(PATH, model, optimizer):
     checkpoint = torch.load(PATH)
@@ -51,6 +87,17 @@ def freeze_layers_for_finetuning(model, layer_amount):
         if freeze_layer:
             module.eval()
 
+#Builds a dictionary with the individual loss for each phone/class for logging purposes
+def add_loss_for_phone_to_dict(loss, phone, loss_dict, label):
+    key = phone + label
+    if key in loss_dict.keys():
+        loss_dict[key] = loss_dict[key] + loss
+    else:
+        loss_dict[key] = loss
+        
+    return loss_dict
+        
+
 #This function calculates the loss for a specific phone in the phone set given the outputs and labels
 def loss_for_phone(outputs, labels, phone_count, phone, phone_weights):
         loss_fn = torch.nn.BCEWithLogitsLoss(reduction='mean')
@@ -61,25 +108,31 @@ def loss_for_phone(outputs, labels, phone_count, phone, phone_weights):
         #Calculate loss
         occurrences = labels.shape[0]
         phone_weight = phone_weights['phone' + str(phone)]
-        embed()
-        if occurrences <= 1:
+        total_phone_occurrences = sum(phone_weights.values())
+        if occurrences <= 1 and phone_weight > 50 :
             return 0
         else:
-            return loss_fn(outputs, labels) * phone_weight
+            return loss_fn(outputs, labels) * phone_weight / total_phone_occurrences * phone_count * 2
 
 #Returns total batch loss, adding the loss computed for each class individually
-def criterion(batch_outputs, batch_pos_labels, batch_neg_labels, phone_count, phone_weights):
+def criterion(batch_outputs, batch_pos_labels, batch_neg_labels, phone_count, phone_weights, loss_dict):
     '''
     Calculates loss
     '''
+    global phone_int2sym
+
     loss = 0
     for phone in range(phone_count):
-        loss += loss_for_phone(batch_outputs, batch_pos_labels, phone_count, phone, phone_weights)
+        loss += loss_for_phone(batch_outputs, batch_pos_labels, phone_count, phone, phone_weights) 
+        phone = phone_int2sym[phone]        
+        loss_dict = add_loss_for_phone_to_dict(loss, phone, loss_dict, '+')
 
     for phone in range(phone_count):
         loss += loss_for_phone(batch_outputs, batch_neg_labels, phone_count, phone, phone_weights)
+        phone = phone_int2sym[phone]
+        loss_dict = add_loss_for_phone_to_dict(loss, phone, loss_dict, '-')    
     
-    return loss
+    return loss, loss_dict
 
 def train(model, trainloader, testloader, phone_count, phone_weights, fold, epochs, state_dict_dir, run_name, layer_amount, lr, use_clipping):
     print("Started training fold " + str(fold))
@@ -98,6 +151,7 @@ def train(model, trainloader, testloader, phone_count, phone_weights, fold, epoc
             continue
 
         running_loss = 0.0
+        loss_dict = {}
         for i, data in enumerate(trainloader, 0):            
             #print("Batch " + str(i))
             # get the inputs; data is a list of (features, transcript, speaker_id, utterance_id, labels)
@@ -112,7 +166,7 @@ def train(model, trainloader, testloader, phone_count, phone_weights, fold, epoc
             # forward + backward + optimize
             outputs = model(inputs)
 
-            loss = criterion(outputs, batch_pos_labels, batch_neg_labels, phone_count, phone_weights)
+            loss, loss_dict = criterion(outputs, batch_pos_labels, batch_neg_labels, phone_count, phone_weights, loss_dict)
             
             if epoch == 0 and i == 0:
                wandb.log({'train_loss_fold_' + str(fold): loss,
@@ -131,19 +185,10 @@ def train(model, trainloader, testloader, phone_count, phone_weights, fold, epoc
             #print statistics
             running_loss += loss.item()
 
-            if i % 5 == 4:    # log every 20 mini-batches
-                print('Fold ' + str(fold), ' Epoch ' + str(epoch) + ' Batch ' + str(i))
-                print('running_loss ' + str(running_loss/5))
-                wandb.log({'train_loss_fold_' + str(fold): running_loss/5,
-                           'step' : step,
-                           'epoch': epoch})
-                step += 1
-                running_loss = 0.0
+            running_loss, step, loss_dict = log_and_reset_every_n_batches(fold, epoch, i, running_loss, step,  loss_dict, 5)
                 
-        test_loss = test(model, testloader, phone_count)
-        wandb.log({'test_loss_fold_' + str(fold) : test_loss,
-                   'step' : step})
-        step += 1
+        test_loss, test_loss_dict = test(model, testloader, phone_count, phone_weights)
+        step = log_test_loss(fold, test_loss, step, test_loss_dict)
         
         torch.save({
             'model_state_dict': model.state_dict(),
@@ -154,7 +199,7 @@ def train(model, trainloader, testloader, phone_count, phone_weights, fold, epoc
 
     return model
 
-def test(model, testloader, phone_count):
+def test(model, testloader, phone_count, phone_weights):
 
     dataiter = iter(testloader)
     batch = dataiter.next()
@@ -164,11 +209,12 @@ def test(model, testloader, phone_count):
 
 
     outputs = model(features)
-    loss = criterion(outputs, pos_labels, neg_labels, phone_count, phone_weights)
+    loss_dict = {}
+    loss, loss_dict = criterion(outputs, pos_labels, neg_labels, phone_count, phone_weights,loss_dict)
 
     loss = loss.item()        
 
-    return loss
+    return loss, loss_dict
 
 def main():
 
@@ -203,6 +249,9 @@ def main():
 
     epa_root_path = args.epa_root_path
     dataset = EpaDB(epa_root_path, args.utterance_list, args.phones_file, args.labels_dir, args.features_path, args.conf_path)
+
+    global phone_int2sym 
+    phone_int2sym = dataset.phone_int2sym_dict
 
     seed = 42
     torch.manual_seed(seed)

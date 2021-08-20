@@ -59,6 +59,17 @@ def get_phone_symbol_to_int_dict(phone_list_path):
         phone_dict[phone_pure_name.strip()] = i
     return phone_dict
 
+#Creates dictionary mapping phone integer to symbol given a phone list path
+def get_phone_int_to_symbol_dict(phone_list_path):
+    #Open file that contains list of pure phones
+    phones_list_fh = open(phone_list_path, "r")
+
+    phone_dict = {}
+    #Get phone number for each phone
+    for i, phone_pure_name in enumerate(phones_list_fh.readlines()):
+        phone_dict[i] = phone_pure_name.strip()
+    return phone_dict
+
 #The model outputs a score for each phone in each frame. This function extracts only the relevant scores,
 #i.e the scores for the canonic phone in each frame based on the annotations.
 #If a frame has no canonic phone (silence frame), the score is set to 0.
