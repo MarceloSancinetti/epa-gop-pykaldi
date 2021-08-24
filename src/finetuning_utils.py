@@ -39,9 +39,9 @@ def collate_fn_padd(batch):
     batch_features   = [item['features'] for item in batch]
     batch_features   = torch.nn.utils.rnn.pad_sequence(batch_features, batch_first=True)
     batch_pos_labels = [item['pos_labels'] for item in batch]
-    batch_pos_labels = torch.nn.utils.rnn.pad_sequence(batch_pos_labels, batch_first=True)
+    batch_pos_labels = torch.nn.utils.rnn.pad_sequence(batch_pos_labels, batch_first=True, padding_value=-1)
     batch_neg_labels = [item['neg_labels'] for item in batch]
-    batch_neg_labels = torch.nn.utils.rnn.pad_sequence(batch_neg_labels, batch_first=True)
+    batch_neg_labels = torch.nn.utils.rnn.pad_sequence(batch_neg_labels, batch_first=True, padding_value=-1)
     for i in range(len(batch)):
         batch[i]['features']   = batch_features[i]
         batch[i]['pos_labels'] = batch_pos_labels[i]
@@ -87,11 +87,11 @@ def get_outputs_and_labels_for_loss(outputs, labels):
     #Sum over phones to keep relevant label for each frame
     labels = torch.sum(labels, dim=2)
     #Remove labels == 0 (silence frames) in both labels and outputs
-    outputs = outputs[labels != 0]
-    labels = labels[labels != 0]
+    outputs = outputs[labels != -1]
+    labels = labels[labels != -1]
     #Turn 1s into 0s and -1s into 1s to pass the labels to loss_fn
-    labels = labels - 1
-    labels = torch.abs(labels / 2)    
+    #labels = labels - 1
+    #labels = torch.abs(labels / 2)    
     return outputs, labels
 
 

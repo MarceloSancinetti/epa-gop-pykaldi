@@ -94,8 +94,8 @@ class EpaDB(Dataset):
 
 
         #Create dictionary to turn +/- labels into 1/-1
-        self._label_dict = {'+' :  1,
-                            '-' : -1}
+        self._label_dict = {'+' : 1,
+                            '-' : 0}
             
 
     def _load_epa_item(self, file_id: str, path: str, labels_path: str) -> Tuple[Tensor, str, str, str, List[Tuple[str, str, str, int, int]]]:
@@ -118,8 +118,8 @@ class EpaDB(Dataset):
         annotation_path = os.path.join(labels_path, speaker_id, "labels", file_id)
         annotation = []
         phone_count = self.phone_count()
-        pos_labels = np.zeros([features.shape[0], phone_count])
-        neg_labels = np.zeros([features.shape[0], phone_count])
+        pos_labels = np.zeros([features.shape[0], phone_count]) -1 
+        neg_labels = np.zeros([features.shape[0], phone_count]) -1
         phone_times = []
 
         with open(annotation_path + ".txt") as f:
@@ -155,7 +155,7 @@ class EpaDB(Dataset):
                         pos_labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], 1)
                     
                     if start_time != end_time and label == '-':
-                        neg_labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], -1)
+                        neg_labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], 0)
                 
                 except ValueError as e:
                     print("Bad item:")

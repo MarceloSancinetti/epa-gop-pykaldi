@@ -107,14 +107,16 @@ def run_align(config_dict):
 	run_script("src/align_using_pytorch_am.py", args_dict)
 
 def run_create_kaldi_labels(config_dict):
+	phone_count = get_phone_count(config_dict["phones-list-path"])
 	args_dict = {'reference-transcriptions-path': config_dict["epa-ref-labels-dir-path"] + "/reference_transcriptions.txt",
 				 'utterance-list-path': 		  config_dict["utterance-list-path"],
 				 'labels-dir-path': 			  config_dict["epa-ref-labels-dir-path"],
 				 'alignments-path': 			  config_dict["alignments-path"],
 				 'output-dir-path': 			  config_dict["kaldi-labels-path"],
 				 'phones-list-path': 			  config_dict["phones-list-path"],
-				 'phone-weights-path': 		      config_dict["phone-weights-path"]
-				}
+				 'phone-weights-path': 		      config_dict["phone-weights-path"],
+				 'phone-count':                   phone_count
+				 }
 	run_script("src/create_kaldi_labels.py", args_dict)
 
 def run_train(config_dict):
