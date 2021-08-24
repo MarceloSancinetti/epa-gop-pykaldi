@@ -131,7 +131,6 @@ def criterion_slow(batch_outputs, batch_pos_labels, batch_neg_labels, loss_dict)
     Calculates loss
     '''
     global phone_int2sym, phone_weights, phone_count
-    print("Slow")
 
     total_loss = 0
     for phone_int in range(phone_count):
@@ -165,7 +164,6 @@ def criterion_fast(batch_outputs, batch_pos_labels, batch_neg_labels, log_class_
     Calculates loss
     '''
     global phone_count
-    print("Fast")
     loss_pos = calculate_loss(batch_outputs, batch_pos_labels, 1)
     loss_neg = calculate_loss(batch_outputs, batch_neg_labels, 0)
     #embed()
@@ -173,10 +171,11 @@ def criterion_fast(batch_outputs, batch_pos_labels, batch_neg_labels, log_class_
     if log_class_loss:
         pos_phone_loss = torch.sum(loss_pos,dim=[0,1])
         neg_phone_loss = torch.sum(loss_neg,dim=[0,1])
+        loss_dict = {}
         for phone in range(phone_count):
             phone_sym = phone_int2sym[phone]        
-            loss_dict = add_loss_for_phone_to_dict(pos_phone_loss[phone], phone_sym, {}, '+')
-            loss_dict = add_loss_for_phone_to_dict(neg_phone_loss[phone], phone_sym, {}, '-')  
+            loss_dict = add_loss_for_phone_to_dict(pos_phone_loss[phone], phone_sym, loss_dict, '+')
+            loss_dict = add_loss_for_phone_to_dict(neg_phone_loss[phone], phone_sym, loss_dict, '-')  
         
         return (loss_pos + loss_neg).sum(), loss_dict
 

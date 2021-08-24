@@ -148,7 +148,7 @@ def create_phone_weight_yaml(phone_weights_path, phone_count_dict, class_count_d
         minority_occurences = min(class_count_dict[phone_sym + '-'], class_count_dict[phone_sym + '+'])
         occurrences = phone_count_dict[phone]
 
-        if False:#occurrences < 100 or minority_occurences < 30:
+        if occurrences < 100 or minority_occurences < 30:
             phone_weights_fh.write("  phone" + str(phone) + ":    " + str(0) + "\n")
         else:
             total_occurrences = sum(phone_count_dict.values())
