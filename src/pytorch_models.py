@@ -88,8 +88,8 @@ class OutputLayer(nn.Module):
         self.nl = nn.Sigmoid()
 
     def forward(self, x):
-        x = x.transpose(1,2)
-        x = self.bn(x).transpose(1,2)
+        #x = x.transpose(1,2)
+        #x = self.bn(x).transpose(1,2)
         x = self.linear(x)
         #x = self.nl(x)
         return x

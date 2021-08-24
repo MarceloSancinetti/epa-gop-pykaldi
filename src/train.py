@@ -96,6 +96,16 @@ def freeze_layers_for_finetuning(model, layer_amount):
         if freeze_layer:
             module.eval()
 
+def freeze_layers_for_finetuning_buggy(model, layer_amount):
+    #Generate layer names for layers that should be trained
+    layers_to_train = ['layer' + str(19 - x) for x in range(layer_amount)]
+
+    #Freeze all layers except #layer_amount layers starting from the last
+    for name, param in model.named_parameters():
+        freeze_layer = all([layer not in name for layer in layers_to_train])
+        if freeze_layer:
+            param.requires_grad = False
+
 #Builds a dictionary with the individual loss for each phone/class for logging purposes
 def add_loss_for_phone_to_dict(loss, phone, loss_dict, label):
     key = phone + label
@@ -190,7 +200,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
 
     step = 0
 
-    freeze_layers_for_finetuning(model, layer_amount)
+    freeze_layers_for_finetuning_buggy(model, layer_amount)
 
     optimizer = optim.Adam(model.parameters(), lr=lr)#, weight_decay=1e-5)
 
