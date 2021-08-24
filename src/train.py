@@ -184,8 +184,8 @@ def criterion_fast(batch_outputs, batch_pos_labels, batch_neg_labels, log_class_
         loss_dict = {}
         for phone in range(phone_count):
             phone_sym = phone_int2sym[phone]        
-            loss_dict = add_loss_for_phone_to_dict(pos_phone_loss[phone], phone_sym, loss_dict, '+')
-            loss_dict = add_loss_for_phone_to_dict(neg_phone_loss[phone], phone_sym, loss_dict, '-')  
+            loss_dict = add_loss_for_phone_to_dict(pos_phone_loss[phone]/phone_weights[phone], phone_sym, loss_dict, '+')
+            loss_dict = add_loss_for_phone_to_dict(neg_phone_loss[phone]/phone_weights[phone], phone_sym, loss_dict, '-')  
         
         return (loss_pos + loss_neg).sum(), loss_dict
 
@@ -230,8 +230,10 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
             loss = criterion_fast(outputs, batch_pos_labels, batch_neg_labels)
             
             if epoch == 0 and i == 0:
-               wandb.log({'train_loss_fold_' + str(fold): loss,
+                wandb.log({'train_loss_fold_' + str(fold): loss,
                           'step' : step})
+                test_loss, test_loss_dict = test(model, testloader)
+                step = log_test_loss(fold, test_loss, step, test_loss_dict)
 
             loss.backward()
             if use_clipping=='true':
