@@ -162,7 +162,8 @@ def criterion_slow(batch_outputs, batch_pos_labels, batch_neg_labels, loss_dict)
 def calculate_loss(outputs, labels, label):
     global phone_weights
     mask = (labels == label)
-    weights = torch.nan_to_num(mask * phone_weights / torch.sum(mask, dim=[0,1]))
+    #weights = torch.nan_to_num(mask * phone_weights / torch.sum(mask, dim=[0,1]))
+    weights = mask# * phone_weights / torch.sum(mask, dim=[0,1]))
     #Calculate loss
     loss_fn = torch.nn.BCEWithLogitsLoss(reduction='none', weight=weights)
     #embed()
@@ -176,7 +177,8 @@ def criterion_fast(batch_outputs, batch_pos_labels, batch_neg_labels, log_class_
     global phone_count
     loss_pos = calculate_loss(batch_outputs, batch_pos_labels, 1)
     loss_neg = calculate_loss(batch_outputs, batch_neg_labels, 0)
-    #embed()
+    pos_frame_count = torch.sum(batch_pos_labels == 1, dim=[0,1])
+    neg_frame_count = torch.sum(batch_neg_labels == 0, dim=[0,1])
 
     if log_class_loss:
         pos_phone_loss = torch.sum(loss_pos,dim=[0,1])
@@ -187,9 +189,9 @@ def criterion_fast(batch_outputs, batch_pos_labels, batch_neg_labels, log_class_
             loss_dict = add_loss_for_phone_to_dict(pos_phone_loss[phone]/phone_weights[phone], phone_sym, loss_dict, '+')
             loss_dict = add_loss_for_phone_to_dict(neg_phone_loss[phone]/phone_weights[phone], phone_sym, loss_dict, '-')  
         
-        return (loss_pos + loss_neg).sum(), loss_dict
+        return (loss_pos/pos_frame_count + loss_neg/neg_frame_count).sum(), loss_dict
 
-    return (loss_pos + loss_neg).sum()
+    return (loss_pos/pos_frame_count + loss_neg/neg_frame_count).sum()
 
 
 
