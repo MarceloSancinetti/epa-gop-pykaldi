@@ -125,6 +125,7 @@ def run_train(config_dict):
 				 "folds": 				 config_dict["folds"],
  				 "epochs": 				 config_dict["epochs"],
 				 "layers": 		 		 config_dict["layers"],
+				 "use-dropout": 		 config_dict["use-dropout"],
 				 "learning-rate":        config_dict["learning-rate"],
 				 "batch-size":           config_dict["batch-size"],
 				 "use-clipping":         config_dict["use-clipping"],

@@ -86,7 +86,7 @@ def start_from_checkpoint(PATH, model, optimizer):
     step = checkpoint['step']
     return model, optimizer, step        
 
-def freeze_layers_for_finetuning(model, layer_amount):
+def freeze_layers_for_finetuning(model, layer_amount, use_dropout):
     #Generate layer names for layers that should be trained
     layers_to_train = ['layer' + str(19 - x) for x in range(layer_amount)]
 
@@ -95,6 +95,11 @@ def freeze_layers_for_finetuning(model, layer_amount):
         freeze_layer = all([layer not in name for layer in layers_to_train])
         if freeze_layer:
             module.eval()
+
+    #Unfreeze dropouts
+    for name, module in model.named_modules():
+        if 'dropout' in name and use_dropout:
+            module.train()
 
 def freeze_layers_for_finetuning_buggy(model, layer_amount):
     #Generate layer names for layers that should be trained
@@ -159,39 +164,48 @@ def criterion_slow(batch_outputs, batch_pos_labels, batch_neg_labels, loss_dict)
     return total_loss, loss_dict
 
 
-def calculate_loss(outputs, labels, label):
-    global phone_weights
-    mask = (labels == label)
-    #weights = torch.nan_to_num(mask * phone_weights / torch.sum(mask, dim=[0,1]))
-    weights = mask# * phone_weights / torch.sum(mask, dim=[0,1]))
-    #Calculate loss
+def calculate_loss(outputs, mask, labels, phone_weights=None, norm_per_phone=False):
+
+    weights = mask
+    
+    if phone_weights is not None:
+        weights *= phone_weights
+
+    if norm_per_phone:
+        weights *= torch.nan_to_num(1 / torch.sum(mask, dim=[0,1]))
+
     loss_fn = torch.nn.BCEWithLogitsLoss(reduction='none', weight=weights)
-    #embed()
+
     return loss_fn(outputs, labels)
 
-#Returns total batch loss, adding the loss computed for each class individually
-def criterion_fast(batch_outputs, batch_pos_labels, batch_neg_labels, log_class_loss=False):
-    '''
-    Calculates loss
-    '''
-    global phone_count
-    loss_pos = calculate_loss(batch_outputs, batch_pos_labels, 1)
-    loss_neg = calculate_loss(batch_outputs, batch_neg_labels, 0)
-    pos_frame_count = torch.sum(batch_pos_labels == 1, dim=[0,1,2])
-    neg_frame_count = torch.sum(batch_neg_labels == 0, dim=[0,1,2])
+
+def criterion_fast(batch_outputs, batch_labels, phone_weights=None, norm_per_phone=False, log_class_loss=False, phone_int2sym=None):
+
+    batch_labels_for_loss = (batch_labels+1)/2
+
+    loss_pos = calculate_loss(batch_outputs, batch_labels ==  1, batch_labels_for_loss)
+    loss_neg = calculate_loss(batch_outputs, batch_labels == -1, batch_labels_for_loss)
+
+    total_loss = (loss_pos + loss_neg).sum() 
+
+    if not norm_per_phone:
+        frame_count = torch.sum(batch_labels != 0)
+        total_loss /= frame_count
 
     if log_class_loss:
+
         pos_phone_loss = torch.sum(loss_pos,dim=[0,1])
         neg_phone_loss = torch.sum(loss_neg,dim=[0,1])
         loss_dict = {}
-        for phone in range(phone_count):
-            phone_sym = phone_int2sym[phone]        
-            loss_dict = add_loss_for_phone_to_dict(pos_phone_loss[phone]/phone_weights[phone], phone_sym, loss_dict, '+')
-            loss_dict = add_loss_for_phone_to_dict(neg_phone_loss[phone]/phone_weights[phone], phone_sym, loss_dict, '-')  
-        
-        return (loss_pos/pos_frame_count + loss_neg/neg_frame_count).sum(), loss_dict
+        for phone, phone_sym in phone_int2sym.items():
+            loss_dict[phone_sym+'+'] = pos_phone_loss[phone]/phone_weights[phone]
+            loss_dict[phone_sym+'-'] = neg_phone_loss[phone]/phone_weights[phone]
+  
+        return total_loss, loss_dict
 
-    return (loss_pos/pos_frame_count + loss_neg/neg_frame_count).sum()
+    else:
+
+        return total_loss
 
 def criterion_simple(batch_outputs, batch_labels):
     '''
@@ -206,14 +220,14 @@ def criterion_simple(batch_outputs, batch_labels):
     return loss
 
 
-def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name, layer_amount, lr, use_clipping):
+def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name, layer_amount, use_dropout, lr, use_clipping):
     global phone_weights, phone_count
 
     print("Started training fold " + str(fold))
 
     step = 0
 
-    freeze_layers_for_finetuning_buggy(model, layer_amount)
+    freeze_layers_for_finetuning_buggy(model, layer_amount, use_dropout)
 
     optimizer = optim.Adam(model.parameters(), lr=lr)#, weight_decay=1e-5)
 
@@ -228,7 +242,6 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
         #loss_dict = {}
         for i, data in enumerate(trainloader, 0):            
             #print("Batch " + str(i))
-            # get the inputs; data is a list of (features, transcript, speaker_id, utterance_id, labels)
             logids = unpack_logids_from_batch(data)
             inputs = unpack_features_from_batch(data)
             batch_pos_labels = unpack_pos_labels_from_batch(data)
@@ -238,7 +251,6 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
             # zero the parameter gradients
             optimizer.zero_grad()
 
-            # forward + backward + optimize
             outputs = model(inputs)
 
             #loss = criterion_fast(outputs, batch_pos_labels, batch_neg_labels)
@@ -251,7 +263,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
                 step = log_test_loss(fold, test_loss, step, test_loss_dict)
 
             loss.backward()
-            if use_clipping=='true':
+            if use_clipping:
                 nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0, error_if_nonfinite=True, norm_type=2)
             optimizer.step()
 
@@ -308,6 +320,7 @@ def main():
     parser.add_argument('--learning-rate', dest='learning_rate', help='Learning rate to use during training', type=float, default=None)
     parser.add_argument('--batch-size', dest='batch_size', help='Batch size for training', type=int, default=None)
     parser.add_argument('--use-clipping', dest='use_clipping', help='Whether to use gradien clipping or not', default=None)
+    parser.add_argument('--use-dropout', dest='use_dropout', help='Whether to unfreeze dropout components or not', default=None)
     parser.add_argument('--phones-file', dest='phones_file', help='File with list of phones', default=None)
     parser.add_argument('--labels-dir', dest='labels_dir', help='Directory with labels used in training', default=None)
     parser.add_argument('--model-path', dest='model_path', help='Path to .pth/pt file with model to finetune', default=None)
@@ -324,6 +337,16 @@ def main():
     folds        = int(args.fold_amount)
     epochs       = int(args.epoch_amount)
     layer_amount = int(args.layer_amount)
+
+    if args.use_dropout == "true":
+        use_dropout = True
+    else:
+        use_dropout = False
+
+    if args.use_clipping == "true":
+        use_clipping = True 
+    else:
+        use_clipping = False
 
     wandb.init(project="gop-finetuning")
     wandb.run.name = run_name
@@ -370,12 +393,12 @@ def main():
         if args.use_multi_process == "true":
             processes = []
             p = mp.Process(target=train, args=(model, trainloader, testloader, fold, 
-                           epochs, args.state_dict_dir, run_name, layer_amount, args.learning_rage, args.use_clipping))
+                           epochs, args.state_dict_dir, run_name, layer_amount, use_dropout, args.learning_rage, use_clipping))
             p.start()
             processes.append(p)
         else:
             train(model, trainloader, testloader, fold, epochs, args.state_dict_dir,
-                  run_name, layer_amount, args.learning_rate, args.use_clipping)
+                  run_name, layer_amount, use_dropout, args.learning_rate, use_clipping)
 
         #Generate test sample list for current fold
         generate_test_sample_list(testloader, epa_root_path, args.test_sample_list_dir, 'test_sample_list_fold_' + str(fold))
