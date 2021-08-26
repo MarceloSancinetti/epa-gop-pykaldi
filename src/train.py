@@ -177,8 +177,8 @@ def criterion_fast(batch_outputs, batch_pos_labels, batch_neg_labels, log_class_
     global phone_count
     loss_pos = calculate_loss(batch_outputs, batch_pos_labels, 1)
     loss_neg = calculate_loss(batch_outputs, batch_neg_labels, 0)
-    pos_frame_count = torch.sum(batch_pos_labels == 1, dim=[0,1])
-    neg_frame_count = torch.sum(batch_neg_labels == 0, dim=[0,1])
+    pos_frame_count = torch.sum(batch_pos_labels == 1, dim=[0,1,2])
+    neg_frame_count = torch.sum(batch_neg_labels == 0, dim=[0,1,2])
 
     if log_class_loss:
         pos_phone_loss = torch.sum(loss_pos,dim=[0,1])
@@ -193,6 +193,15 @@ def criterion_fast(batch_outputs, batch_pos_labels, batch_neg_labels, log_class_
 
     return (loss_pos/pos_frame_count + loss_neg/neg_frame_count).sum()
 
+def criterion_simple(batch_outputs, batch_labels):
+    '''
+    Calculates loss
+    '''
+    loss_fn = torch.nn.BCEWithLogitsLoss()
+    batch_outputs, batch_labels = get_outputs_and_labels_for_loss(batch_outputs, batch_labels)
+    #Calculate loss
+    loss = loss_fn(batch_outputs, batch_labels)
+    return loss
 
 
 def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name, layer_amount, lr, use_clipping):
@@ -222,6 +231,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
             inputs = unpack_features_from_batch(data)
             batch_pos_labels = unpack_pos_labels_from_batch(data)
             batch_neg_labels = unpack_neg_labels_from_batch(data)
+            labels = unpack_labels_from_batch(data)
 
             # zero the parameter gradients
             optimizer.zero_grad()
@@ -229,7 +239,8 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
             # forward + backward + optimize
             outputs = model(inputs)
 
-            loss = criterion_fast(outputs, batch_pos_labels, batch_neg_labels)
+            #loss = criterion_fast(outputs, batch_pos_labels, batch_neg_labels)
+            loss = criterion_simple(outputs, batch_labels)
             
             if epoch == 0 and i == 0:
                 wandb.log({'train_loss_fold_' + str(fold): loss,
@@ -270,14 +281,16 @@ def test(model, testloader):
 
     dataiter = iter(testloader)
     batch = dataiter.next()
-    features   = unpack_features_from_batch(batch)
-    pos_labels = unpack_pos_labels_from_batch(batch)
-    neg_labels = unpack_neg_labels_from_batch(batch)
-
+    features = unpack_features_from_batch(batch)
+    #pos_labels = unpack_pos_labels_from_batch(batch)
+    #neg_labels = unpack_neg_labels_from_batch(batch)
+    labels   = unpack_labels_from_batch(batch)
 
     outputs = model(features)
-    loss, loss_dict = criterion_fast(outputs, pos_labels, neg_labels, log_class_loss=True)
-
+    loss_dict = {}
+    #loss, loss_dict = criterion_fast(outputs, pos_labels, neg_labels, log_class_loss=True)
+    loss = criterion_simple(outputs, labels)
+    
     loss = loss.item()        
 
     return loss, loss_dict

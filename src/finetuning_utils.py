@@ -42,10 +42,13 @@ def collate_fn_padd(batch):
     batch_pos_labels = torch.nn.utils.rnn.pad_sequence(batch_pos_labels, batch_first=True, padding_value=-1)
     batch_neg_labels = [item['neg_labels'] for item in batch]
     batch_neg_labels = torch.nn.utils.rnn.pad_sequence(batch_neg_labels, batch_first=True, padding_value=-1)
+    batch_labels     = [item['labels'] for item in batch]
+    batch_labels     = torch.nn.utils.rnn.pad_sequence(batch_labels, batch_first=True, padding_value=-1)
     for i in range(len(batch)):
         batch[i]['features']   = batch_features[i]
         batch[i]['pos_labels'] = batch_pos_labels[i]
         batch[i]['neg_labels'] = batch_neg_labels[i]
+        batch[i]['labels']     = batch_labels[i]
     return batch
 
 #Creates dictionary mapping phone symbol to integer given a phone list path

@@ -120,6 +120,7 @@ class EpaDB(Dataset):
         phone_count = self.phone_count()
         pos_labels = np.zeros([features.shape[0], phone_count]) -1 
         neg_labels = np.zeros([features.shape[0], phone_count]) -1
+        labels     = np.zeros([features.shape[0], phone_count]) -1        
         phone_times = []
 
         with open(annotation_path + ".txt") as f:
@@ -152,11 +153,13 @@ class EpaDB(Dataset):
                     #If the phone was pronounced correcly, put a 1 in the labels
                     #(If start_time == end_time we cant assign a label)
                     if start_time != end_time and label == '+':
-                        pos_labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], 1)
+                        pos_labels[start_time:end_time, self._pure_phone_dict[target_phone]] = 1
+                        labels[start_time:end_time, self._pure_phone_dict[target_phone]] = 1                        
                     
                     if start_time != end_time and label == '-':
-                        neg_labels[start_time:end_time, self._pure_phone_dict[target_phone]] = np.full([end_time-start_time], 0)
-                
+                        neg_labels[start_time:end_time, self._pure_phone_dict[target_phone]] = 0
+                        labels[start_time:end_time, self._pure_phone_dict[target_phone]] = 0
+
                 except ValueError as e:
                     print("Bad item:")
                     print("Speaker: " + speaker_id)
@@ -182,6 +185,7 @@ class EpaDB(Dataset):
                        'utterance_id': utterance_id,
                        'pos_labels'  : torch.from_numpy(pos_labels),
                        'neg_labels'  : torch.from_numpy(neg_labels), 
+                       'labels'      : torch.from_numpy(labels), 
                        'phone_times' : phone_times
                       }
 
