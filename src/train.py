@@ -198,9 +198,11 @@ def criterion_simple(batch_outputs, batch_labels):
     Calculates loss
     '''
     loss_fn = torch.nn.BCEWithLogitsLoss()
+    #embed()
     batch_outputs, batch_labels = get_outputs_and_labels_for_loss(batch_outputs, batch_labels)
     #Calculate loss
     loss = loss_fn(batch_outputs, batch_labels)
+    #embed()
     return loss
 
 
@@ -231,7 +233,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
             inputs = unpack_features_from_batch(data)
             batch_pos_labels = unpack_pos_labels_from_batch(data)
             batch_neg_labels = unpack_neg_labels_from_batch(data)
-            labels = unpack_labels_from_batch(data)
+            batch_labels = unpack_labels_from_batch(data)
 
             # zero the parameter gradients
             optimizer.zero_grad()
@@ -261,7 +263,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
             #print statistics
             running_loss += loss.item()
 
-            running_loss, step = log_and_reset_every_n_batches(fold, epoch, i, running_loss, step, 5)
+            running_loss, step = log_and_reset_every_n_batches(fold, epoch, i, running_loss, step, 10)
                 
         test_loss, test_loss_dict = test(model, testloader)
         step = log_test_loss(fold, test_loss, step, test_loss_dict)

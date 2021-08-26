@@ -118,9 +118,9 @@ class EpaDB(Dataset):
         annotation_path = os.path.join(labels_path, speaker_id, "labels", file_id)
         annotation = []
         phone_count = self.phone_count()
-        pos_labels = np.zeros([features.shape[0], phone_count]) -1 
+        pos_labels = np.zeros([features.shape[0], phone_count]) -1
         neg_labels = np.zeros([features.shape[0], phone_count]) -1
-        labels     = np.zeros([features.shape[0], phone_count]) -1        
+        labels     = np.zeros([features.shape[0], phone_count])
         phone_times = []
 
         with open(annotation_path + ".txt") as f:
@@ -158,7 +158,7 @@ class EpaDB(Dataset):
                     
                     if start_time != end_time and label == '-':
                         neg_labels[start_time:end_time, self._pure_phone_dict[target_phone]] = 0
-                        labels[start_time:end_time, self._pure_phone_dict[target_phone]] = 0
+                        labels[start_time:end_time, self._pure_phone_dict[target_phone]] = -1
 
                 except ValueError as e:
                     print("Bad item:")

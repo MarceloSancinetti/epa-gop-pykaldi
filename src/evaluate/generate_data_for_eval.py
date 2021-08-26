@@ -130,6 +130,7 @@ def get_gop_alignments(path_filename, phone_pure_dic):
 
     output = []
     print(path_filename)
+#    embed()
     for line in open(path_filename).readlines():
         print(line)
         l=line.split()
@@ -273,6 +274,7 @@ if __name__ == '__main__':
             annot_kaldi = []
             for phone_idx in phone_idxs:
                 print(phone_idx)
+ #               embed()
                 phone = phone_pure_dict[phone_idx]
                 if phone not in ['sil', '[key]', 'sp', '', 'SIL', '[KEY]', 'SP']:
                     if phone[-1] not in ['1', '0', '2']:
