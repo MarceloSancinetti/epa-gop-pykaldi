@@ -178,13 +178,12 @@ def calculate_loss(outputs, mask, labels, phone_weights=None, norm_per_phone=Fal
 
     return loss_fn(outputs, labels)
 
-
 def criterion_fast(batch_outputs, batch_labels, phone_weights=None, norm_per_phone=False, log_class_loss=False, phone_int2sym=None):
 
-    batch_labels_for_loss = (batch_labels+1)/2
+    batch_labels_for_loss = torch.abs((batch_labels-1)/2)
 
-    loss_pos = calculate_loss(batch_outputs, batch_labels ==  1, batch_labels_for_loss)
-    loss_neg = calculate_loss(batch_outputs, batch_labels == -1, batch_labels_for_loss)
+    loss_pos = calculate_loss(batch_outputs, batch_labels ==  1, batch_labels_for_loss, phone_weight, norm_per_phone)
+    loss_neg = calculate_loss(batch_outputs, batch_labels == -1, batch_labels_for_loss, phone_weight, norm_per_phone)
 
     total_loss = (loss_pos + loss_neg).sum() 
 
@@ -202,15 +201,15 @@ def criterion_fast(batch_outputs, batch_labels, phone_weights=None, norm_per_pho
             loss_dict[phone_sym+'-'] = neg_phone_loss[phone]/phone_weights[phone]
   
         return total_loss, loss_dict
-
+        
     else:
-
         return total_loss
 
 def criterion_simple(batch_outputs, batch_labels):
     '''
     Calculates loss
     '''
+    embed()
     loss_fn = torch.nn.BCEWithLogitsLoss()
     #embed()
     batch_outputs, batch_labels = get_outputs_and_labels_for_loss(batch_outputs, batch_labels)
@@ -227,7 +226,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
 
     step = 0
 
-    freeze_layers_for_finetuning_buggy(model, layer_amount, use_dropout)
+    freeze_layers_for_finetuning(model, layer_amount, use_dropout)
 
     optimizer = optim.Adam(model.parameters(), lr=lr)#, weight_decay=1e-5)
 
