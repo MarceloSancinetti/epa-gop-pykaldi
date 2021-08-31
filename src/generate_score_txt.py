@@ -51,9 +51,7 @@ def generate_score_txt(model, testloader, score_file_name, phone_dict, alignment
 
         logids = unpack_logids_from_batch(batch)
         features = unpack_features_from_batch(batch)
-        pos_labels = unpack_pos_labels_from_batch(batch)
-        neg_labels = unpack_neg_labels_from_batch(batch)
-        labels = pos_labels + neg_labels
+        labels = unpack_labels_from_batch(batch)
         outputs = (-1) * model(features)
 
         frame_level_scores = get_scores_for_canonic_phones(outputs, labels)

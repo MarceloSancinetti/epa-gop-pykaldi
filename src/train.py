@@ -95,6 +95,13 @@ def freeze_layers_for_finetuning(model, layer_amount, use_dropout):
         freeze_layer = all([layer not in name for layer in layers_to_train])
         if freeze_layer:
             module.eval()
+        else:
+            module.train()
+
+    for name, param in model.named_parameters():
+        freeze_layer = all([layer not in name for layer in layers_to_train])
+        if freeze_layer:
+            param.requires_grad = False
 
     #Unfreeze dropouts
     for name, module in model.named_modules():
@@ -166,30 +173,32 @@ def criterion_slow(batch_outputs, batch_pos_labels, batch_neg_labels, loss_dict)
 
 def calculate_loss(outputs, mask, labels, phone_weights=None, norm_per_phone=False):
 
-    weights = mask
+    weights = mask *1
     
     if phone_weights is not None:
-        weights *= phone_weights
+        weights = weights * phone_weights
 
     if norm_per_phone:
-        weights *= torch.nan_to_num(1 / torch.sum(mask, dim=[0,1]))
+        weights = weights * torch.nan_to_num(1 / torch.sum(mask, dim=[0,1]))
 
     loss_fn = torch.nn.BCEWithLogitsLoss(reduction='none', weight=weights)
 
-    return loss_fn(outputs, labels)
+    return loss_fn(outputs, labels), torch.sum(weights)
 
 def criterion_fast(batch_outputs, batch_labels, phone_weights=None, norm_per_phone=False, log_class_loss=False, phone_int2sym=None):
 
     batch_labels_for_loss = torch.abs((batch_labels-1)/2)
 
-    loss_pos = calculate_loss(batch_outputs, batch_labels ==  1, batch_labels_for_loss, phone_weight, norm_per_phone)
-    loss_neg = calculate_loss(batch_outputs, batch_labels == -1, batch_labels_for_loss, phone_weight, norm_per_phone)
+    loss_pos, weights_pos = calculate_loss(batch_outputs, batch_labels ==  1, batch_labels_for_loss, phone_weights=phone_weights, norm_per_phone=norm_per_phone)
+    loss_neg, weights_neg = calculate_loss(batch_outputs, batch_labels == -1, batch_labels_for_loss, phone_weights=phone_weights, norm_per_phone=norm_per_phone)
 
-    total_loss = (loss_pos + loss_neg).sum() 
+    total_weights = weights_pos + weights_neg
+    total_loss = (loss_pos + loss_neg).sum()
+
 
     if not norm_per_phone:
-        frame_count = torch.sum(batch_labels != 0)
-        total_loss /= frame_count
+        #frame_count = torch.sum(batch_labels != 0)
+        total_loss /= total_weights
 
     if log_class_loss:
 
@@ -197,8 +206,8 @@ def criterion_fast(batch_outputs, batch_labels, phone_weights=None, norm_per_pho
         neg_phone_loss = torch.sum(loss_neg,dim=[0,1])
         loss_dict = {}
         for phone, phone_sym in phone_int2sym.items():
-            loss_dict[phone_sym+'+'] = pos_phone_loss[phone]/phone_weights[phone]
-            loss_dict[phone_sym+'-'] = neg_phone_loss[phone]/phone_weights[phone]
+            loss_dict[phone_sym+'+'] = pos_phone_loss[phone]/phone_weights[phone]/weights_pos
+            loss_dict[phone_sym+'-'] = neg_phone_loss[phone]/phone_weights[phone]/weights_neg
   
         return total_loss, loss_dict
         
@@ -209,7 +218,7 @@ def criterion_simple(batch_outputs, batch_labels):
     '''
     Calculates loss
     '''
-    embed()
+    #embed()
     loss_fn = torch.nn.BCEWithLogitsLoss()
     #embed()
     batch_outputs, batch_labels = get_outputs_and_labels_for_loss(batch_outputs, batch_labels)
@@ -252,9 +261,9 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
 
             outputs = model(inputs)
 
-            #loss = criterion_fast(outputs, batch_pos_labels, batch_neg_labels)
-            loss = criterion_simple(outputs, batch_labels)
-            
+            loss = criterion_fast(outputs, batch_labels, phone_weights=phone_weights, phone_int2sym=phone_int2sym)
+            #loss = criterion_simple(outputs, batch_labels)
+
             if epoch == 0 and i == 0:
                 wandb.log({'train_loss_fold_' + str(fold): loss,
                           'step' : step})
@@ -275,10 +284,10 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
             running_loss += loss.item()
 
             running_loss, step = log_and_reset_every_n_batches(fold, epoch, i, running_loss, step, 10)
-                
+
         test_loss, test_loss_dict = test(model, testloader)
         step = log_test_loss(fold, test_loss, step, test_loss_dict)
-        
+
         torch.save({
             'model_state_dict': model.state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),
@@ -290,7 +299,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
 
 def test(model, testloader):
 
-    global phone_weights, phone_count
+    global phone_weights, phone_count, phone_int2sym
 
     dataiter = iter(testloader)
     batch = dataiter.next()
@@ -301,12 +310,23 @@ def test(model, testloader):
 
     outputs = model(features)
     loss_dict = {}
-    #loss, loss_dict = criterion_fast(outputs, pos_labels, neg_labels, log_class_loss=True)
-    loss = criterion_simple(outputs, labels)
-    
-    loss = loss.item()        
+    loss, loss_dict = criterion_fast(outputs, labels, phone_weights=phone_weights, log_class_loss=True, phone_int2sym=phone_int2sym)
+    #loss = criterion_simple(outputs, labels)
+
+    loss = loss.item()
 
     return loss, loss_dict
+
+def parse_bool_arg(arg):
+    if arg not in ["true", "false"]:
+        raise Exception("Argument must be true or false, got " + arg)
+
+    if arg == "true":
+        arg = True
+    else:
+        arg = False
+
+    return arg
 
 def main():
 
@@ -320,6 +340,7 @@ def main():
     parser.add_argument('--batch-size', dest='batch_size', help='Batch size for training', type=int, default=None)
     parser.add_argument('--use-clipping', dest='use_clipping', help='Whether to use gradien clipping or not', default=None)
     parser.add_argument('--use-dropout', dest='use_dropout', help='Whether to unfreeze dropout components or not', default=None)
+    parser.add_argument('--use-batchnorm', dest='use_bn', help='Whether to use batch normalization on last layer or not', default=None)
     parser.add_argument('--phones-file', dest='phones_file', help='File with list of phones', default=None)
     parser.add_argument('--labels-dir', dest='labels_dir', help='Directory with labels used in training', default=None)
     parser.add_argument('--model-path', dest='model_path', help='Path to .pth/pt file with model to finetune', default=None)
@@ -336,16 +357,9 @@ def main():
     folds        = int(args.fold_amount)
     epochs       = int(args.epoch_amount)
     layer_amount = int(args.layer_amount)
-
-    if args.use_dropout == "true":
-        use_dropout = True
-    else:
-        use_dropout = False
-
-    if args.use_clipping == "true":
-        use_clipping = True 
-    else:
-        use_clipping = False
+    use_dropout  = parse_bool_arg(args.use_dropout)
+    use_clipping = parse_bool_arg(args.use_clipping)
+    use_bn       = parse_bool_arg(args.use_bn)
 
     wandb.init(project="gop-finetuning")
     wandb.run.name = run_name
@@ -383,7 +397,7 @@ def main():
         phone_count = dataset.phone_count()
 
         #Get acoustic model to train
-        model = FTDNN(out_dim=phone_count) 
+        model = FTDNN(out_dim=phone_count, use_bn=use_bn) 
         state_dict = torch.load(get_model_path_for_fold(args.model_path, fold, layer_amount))
         model.load_state_dict(state_dict['model_state_dict'])
 

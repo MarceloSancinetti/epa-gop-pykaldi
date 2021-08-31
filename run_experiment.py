@@ -129,6 +129,7 @@ def run_train(config_dict):
 				 "learning-rate":        config_dict["learning-rate"],
 				 "batch-size":           config_dict["batch-size"],
 				 "use-clipping":         config_dict["use-clipping"],
+                                 "use-batchnorm":        config_dict["use-batchnorm"],
 				 "phones-file": 		 config_dict["phones-list-path"],
 				 "labels-dir": 			 config_dict["labels-dir"],
 				 "model-path": 			 config_dict["finetune-model-path"],

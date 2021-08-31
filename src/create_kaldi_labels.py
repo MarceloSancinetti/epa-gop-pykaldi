@@ -181,7 +181,7 @@ if __name__ == '__main__':
     utterance_list_path           = args.utterance_list_path
     labels_dir_path               = args.labels_dir_path
     phone_count                   = int(args.phone_count)
-    create_phone_count_yamls      = True
+    create_phone_count_yamls      = False
 
     kaldi_alignments = get_kaldi_alignments(args.align_path)
     utterance_list = generate_utterance_list_from_path(utterance_list_path) 

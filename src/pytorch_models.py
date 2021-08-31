@@ -77,19 +77,21 @@ class OutputXentLayer(nn.Module):
 
 class OutputLayer(nn.Module):
 
-    def __init__(self, in_dim, out_dim):
+    def __init__(self, in_dim, out_dim, use_bn=False):
 
         super(OutputLayer, self).__init__()
         self.in_dim = in_dim
         self.out_dim = out_dim
+        self.use_bn = use_bn
 
         self.bn = nn.BatchNorm1d(self.in_dim, affine=False)
         self.linear = nn.Linear(self.in_dim, self.out_dim, bias=True) 
         self.nl = nn.Sigmoid()
 
     def forward(self, x):
-        #x = x.transpose(1,2)
-        #x = self.bn(x).transpose(1,2)
+        if self.use_bn:
+            x = x.transpose(1,2)
+            x = self.bn(x).transpose(1,2)
         x = self.linear(x)
         #x = self.nl(x)
         return x
@@ -147,7 +149,7 @@ def sum_outputs_and_feed_to_layer(x, x_2, layer):
 
 class FTDNN(nn.Module):
 
-    def __init__(self, in_dim=220, out_dim=40):
+    def __init__(self, in_dim=220, out_dim=40, use_bn=False):
 
         super(FTDNN, self).__init__()
 
@@ -169,7 +171,7 @@ class FTDNN(nn.Module):
         self.layer16 = FTDNNLayer(3072, 160, 320, 1536, 3)
         self.layer17 = FTDNNLayer(3072, 160, 320, 1536, 3)
         self.layer18 = nn.Linear(1536, 256, bias=False) #This is the prefinal-l layer
-        self.layer19 = OutputLayer(256, out_dim)
+        self.layer19 = OutputLayer(256, out_dim, use_bn=use_bn)
         
     def forward(self, x):
 
