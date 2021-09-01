@@ -86,7 +86,7 @@ def start_from_checkpoint(PATH, model, optimizer):
     step = checkpoint['step']
     return model, optimizer, step        
 
-def freeze_layers_for_finetuning(model, layer_amount, use_dropout):
+def freeze_layers_for_finetuning(model, layer_amount, use_dropout, use_first_bn):
     #Generate layer names for layers that should be trained
     layers_to_train = ['layer' + str(19 - x) for x in range(layer_amount)]
 
@@ -97,6 +97,9 @@ def freeze_layers_for_finetuning(model, layer_amount, use_dropout):
             module.eval()
         else:
             module.train()
+
+    if use_first_bn:
+        model.layer1.bn.train()
 
     for name, param in model.named_parameters():
         freeze_layer = all([layer not in name for layer in layers_to_train])
@@ -275,11 +278,6 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
                 nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0, error_if_nonfinite=True, norm_type=2)
             optimizer.step()
 
-            if loss > 1000000:
-                print(logids)
-#                embed()
-
-
             #print statistics
             running_loss += loss.item()
 
@@ -340,7 +338,8 @@ def main():
     parser.add_argument('--batch-size', dest='batch_size', help='Batch size for training', type=int, default=None)
     parser.add_argument('--use-clipping', dest='use_clipping', help='Whether to use gradien clipping or not', default=None)
     parser.add_argument('--use-dropout', dest='use_dropout', help='Whether to unfreeze dropout components or not', default=None)
-    parser.add_argument('--use-batchnorm', dest='use_bn', help='Whether to use batch normalization on last layer or not', default=None)
+    parser.add_argument('--use-first-batchnorm', dest='use_first_bn', help='Whether to use batch normalization on first layer or not', default=None)
+    parser.add_argument('--use-final-batchnorm', dest='use_final_bn', help='Whether to use batch normalization on last layer or not', default=None)
     parser.add_argument('--phones-file', dest='phones_file', help='File with list of phones', default=None)
     parser.add_argument('--labels-dir', dest='labels_dir', help='Directory with labels used in training', default=None)
     parser.add_argument('--model-path', dest='model_path', help='Path to .pth/pt file with model to finetune', default=None)
@@ -352,16 +351,18 @@ def main():
     parser.add_argument('--state-dict-dir', dest='state_dict_dir', help='Path to output directory to save state dicts', default=None)
     parser.add_argument('--use-multi-process', dest='use_multi_process', help='Whether to use multiple processes or not', default=None)
 
-    args         = parser.parse_args()
-    run_name     = args.run_name
-    folds        = int(args.fold_amount)
-    epochs       = int(args.epoch_amount)
-    layer_amount = int(args.layer_amount)
-    use_dropout  = parse_bool_arg(args.use_dropout)
-    use_clipping = parse_bool_arg(args.use_clipping)
-    use_bn       = parse_bool_arg(args.use_bn)
+    args              = parser.parse_args()
+    run_name          = args.run_name
+    folds             = int(args.fold_amount)
+    epochs            = int(args.epoch_amount)
+    layer_amount      = int(args.layer_amount)
+    use_dropout       = parse_bool_arg(args.use_dropout)
+    use_clipping      = parse_bool_arg(args.use_clipping)
+    use_final_bn      = parse_bool_arg(args.use_final_bn)
+    use_first_bn      = parse_bool_arg(args.use_first_bn)
+    use_multi_process = parse_bool_arg(args.use_multi_process)
 
-    wandb.init(project="gop-finetuning")
+    wandb.init(project="gop-finetuning", entity="pronscoring-liaa")
     wandb.run.name = run_name
 
     epa_root_path = args.epa_root_path
@@ -397,16 +398,17 @@ def main():
         phone_count = dataset.phone_count()
 
         #Get acoustic model to train
-        model = FTDNN(out_dim=phone_count, use_bn=use_bn) 
+        model = FTDNN(out_dim=phone_count, use_final_bn=use_final_bn, use_first_bn=use_first_bn) 
         state_dict = torch.load(get_model_path_for_fold(args.model_path, fold, layer_amount))
         model.load_state_dict(state_dict['model_state_dict'])
 
         #Train the model
         wandb.watch(model, log_freq=100)
-        if args.use_multi_process == "true":
+        if use_multi_process:
             processes = []
             p = mp.Process(target=train, args=(model, trainloader, testloader, fold, 
-                           epochs, args.state_dict_dir, run_name, layer_amount, use_dropout, args.learning_rage, use_clipping))
+                           epochs, args.state_dict_dir, run_name, layer_amount, use_dropout, 
+                           args.learning_rate, use_clipping))
             p.start()
             processes.append(p)
         else:
@@ -416,7 +418,7 @@ def main():
         #Generate test sample list for current fold
         generate_test_sample_list(testloader, epa_root_path, args.test_sample_list_dir, 'test_sample_list_fold_' + str(fold))
 
-    if args.use_multi_process == "true":
+    if use_multi_process:
         for p in processes:
             p.join()
 

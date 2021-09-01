@@ -11,7 +11,8 @@
   learning-rate:           0.001
   batch-size:              32
   use-dropout:             "false"
-  use-batchnorm:           "true"
+  use-first-batchnorm:     "true"
+  use-final-batchnorm:     "false"
   use-clipping:            "false"
   use-multi-process:       "false"
   phones-list-path:        "phones/kaldi_phones_list.txt"

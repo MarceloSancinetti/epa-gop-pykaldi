@@ -12,7 +12,7 @@
   batch-size:              32
   use-dropout:             "false"
   use-first-batchnorm:     "false"
-  use-final-batchnorm:     "false"
+  use-final-batchnorm:     "true"
   use-clipping:            "false"
   use-multi-process:       "false"
   phones-list-path:        "phones/kaldi_phones_list.txt"
