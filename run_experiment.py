@@ -119,13 +119,14 @@ def run_create_kaldi_labels(config_dict):
 				 }
 	run_script("src/create_kaldi_labels.py", args_dict)
 
-def run_train(config_dict):
+def run_train(config_dict, device_name):
 	args_dict = {"run-name": 			 config_dict["run-name"],
 				 "utterance-list": 		 config_dict["utterance-list-path"],
 				 "folds": 				 config_dict["folds"],
  				 "epochs": 				 config_dict["epochs"],
 				 "layers": 		 		 config_dict["layers"],
 				 "use-dropout": 		 config_dict["use-dropout"],
+				 "dropout-p": 		     config_dict["dropout-p"],
 				 "learning-rate":        config_dict["learning-rate"],
 				 "batch-size":           config_dict["batch-size"],
 				 "use-clipping":         config_dict["use-clipping"],
@@ -140,7 +141,8 @@ def run_train(config_dict):
 				 "conf-path": 			 config_dict["features-conf-path"],
 				 "test-sample-list-dir": config_dict["test-sample-list-dir"],
 				 "state-dict-dir": 		 config_dict["state-dict-dir"],
-				 "use-multi-process":    config_dict["use-multi-process"]
+				 "use-multi-process":    config_dict["use-multi-process"],
+				 "device":               config_dict["device"]				 
 				}
 	run_script("src/train.py", args_dict)
 
@@ -156,7 +158,8 @@ def run_generate_scores(config_dict):
 					 "gop-txt-dir":     config_dict["gop-scores-dir"],
 					 "features-path":   config_dict["features-path"],
 					 "conf-path":       config_dict["features-conf-path"],
-					 "alignments-path": config_dict["alignments-path"]
+					 "alignments-path": config_dict["alignments-path"],
+				     "device":          config_dict["device"]				 
 					}
 		run_script("src/generate_score_txt.py", args_dict)
 		cat_file_names += args_dict['gop-txt-dir'] + '/' +'gop-'+args_dict['model-name']+'.txt ' #Codigo repetido con generate_score_txt
@@ -175,7 +178,7 @@ def run_evaluate(config_dict):
 	run_script("src/evaluate/generate_data_for_eval.py", args_dict)
 
 
-def run_all(config_yaml, stage):
+def run_all(config_yaml, stage, device_name):
 	config_fh = open(config_yaml, "r")
 	config_dict = yaml.safe_load(config_fh)	
 
@@ -194,11 +197,11 @@ def run_all(config_yaml, stage):
 			print("Creating Kaldi labels")
 			run_create_kaldi_labels(config_dict)
 		print("Running training")
-		run_train(config_dict)
+		run_train(config_dict, device_name)
 	
 	if stage in ["scores", "all"]:
 		print("Generating GOP scores")
-		run_generate_scores(config_dict)
+		run_generate_scores(config_dict, device_name)
 
 	if stage in ["evaluate", "all"]:
 		print("Evaluating results")
@@ -209,7 +212,8 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--config', dest='config_yaml',  help='Path .yaml config file for experiment', default=None)
 	parser.add_argument('--stage', dest='stage',  help='Stage to run (dataprep, align, train, scores, evaluate), or \'all\' to run all stages', default=None)
+    parser.add_argument('--device', dest='device_name', help='Device name to use, such as cpu or cuda', default=None)
 
 	args = parser.parse_args()
 
-	run_all(args.config_yaml, args.stage)
+	run_all(args.config_yaml, args.stage, args.device_name)

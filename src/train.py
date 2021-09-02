@@ -338,6 +338,7 @@ def main():
     parser.add_argument('--batch-size', dest='batch_size', help='Batch size for training', type=int, default=None)
     parser.add_argument('--use-clipping', dest='use_clipping', help='Whether to use gradien clipping or not', default=None)
     parser.add_argument('--use-dropout', dest='use_dropout', help='Whether to unfreeze dropout components or not', default=None)
+    parser.add_argument('--dropout-p', dest='dropout_p', help='Dropout probability', type=float, default=None)
     parser.add_argument('--use-first-batchnorm', dest='use_first_bn', help='Whether to use batch normalization on first layer or not', default=None)
     parser.add_argument('--use-final-batchnorm', dest='use_final_bn', help='Whether to use batch normalization on last layer or not', default=None)
     parser.add_argument('--phones-file', dest='phones_file', help='File with list of phones', default=None)
@@ -350,9 +351,11 @@ def main():
     parser.add_argument('--test-sample-list-dir', dest='test_sample_list_dir', help='Path to output directory to save test sample lists', default=None)
     parser.add_argument('--state-dict-dir', dest='state_dict_dir', help='Path to output directory to save state dicts', default=None)
     parser.add_argument('--use-multi-process', dest='use_multi_process', help='Whether to use multiple processes or not', default=None)
+    parser.add_argument('--device', dest='device_name', help='Device name to use, such as cpu or cuda', default=None)
 
     args              = parser.parse_args()
     run_name          = args.run_name
+    device_name       = args.device_name
     folds             = int(args.fold_amount)
     epochs            = int(args.epoch_amount)
     layer_amount      = int(args.layer_amount)
@@ -371,7 +374,7 @@ def main():
     global phone_int2sym, phone_weights, phone_count, device
     phone_int2sym = dataset.phone_int2sym_dict
 
-    device = torch.device('cuda')
+    device = torch.device(device_name)
 
     seed = 42
     torch.manual_seed(seed)
@@ -400,7 +403,7 @@ def main():
         phone_count = dataset.phone_count()
 
         #Get acoustic model to train
-        model = FTDNN(out_dim=phone_count, use_final_bn=use_final_bn, use_first_bn=use_first_bn) 
+        model = FTDNN(out_dim=phone_count, use_final_bn=use_final_bn, use_first_bn=use_first_bn, dropout_p=args.dropout_p, device_name=device_name) 
         model.to(device)
         state_dict = torch.load(get_model_path_for_fold(args.model_path, fold, layer_amount))
         model.load_state_dict(state_dict['model_state_dict'])

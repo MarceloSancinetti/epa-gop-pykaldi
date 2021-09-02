@@ -93,6 +93,7 @@ def main():
     parser.add_argument('--features-path', dest='features_path', help='Path to features directory', default=None)
     parser.add_argument('--conf-path', dest='conf_path', help='Path to config directory used in feature extraction', default=None)
     parser.add_argument('--alignments-path', dest='alignments_path', help='Path to aligner output', default=None)
+    parser.add_argument('--device', dest='device_name', help='Device name to use, such as cpu or cuda', default=None)
     args = parser.parse_args()
 
     state_dict_dir      = args.state_dict_dir
@@ -105,6 +106,7 @@ def main():
     features_path       = args.features_path
     conf_path           = args.conf_path
     alignments_path     = args.alignments_path
+    device_name         = args.device_name
 
     testset = EpaDB(epa_root_path, sample_list, phone_list_path, labels_dir, features_path, conf_path)
     testloader = torch.utils.data.DataLoader(testset, batch_size=16,
@@ -113,7 +115,8 @@ def main():
     phone_count = testset.phone_count()
 
     #Get acoustic model to test
-    model = FTDNN(out_dim=phone_count)
+    model = FTDNN(out_dim=phone_count, device_name=device_name)
+    model.eval()
     state_dict = torch.load(state_dict_dir + '/' + model_name + '.pth')
     model.load_state_dict(state_dict['model_state_dict'])
 

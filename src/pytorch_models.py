@@ -5,7 +5,7 @@ from IPython import embed
 
 class FTDNNLayer(nn.Module):
 
-    def __init__(self, semi_orth_in_dim, semi_orth_out_dim, affine_in_dim, out_dim, time_offset, dropout_p=0.02, device='cuda'):
+    def __init__(self, semi_orth_in_dim, semi_orth_out_dim, affine_in_dim, out_dim, time_offset, dropout_p=0.005851493, device='cpu'):
         '''
         3 stage factorised TDNN http://danielpovey.com/files/2018_interspeech_tdnnf.pdf
         '''
@@ -150,27 +150,27 @@ def sum_outputs_and_feed_to_layer(x, x_2, layer):
 
 class FTDNN(nn.Module):
 
-    def __init__(self, in_dim=220, out_dim=40, use_first_bn=False, use_final_bn=False):
+    def __init__(self, in_dim=220, out_dim=40, use_first_bn=False, use_final_bn=False, dropout_p=0.005851493, device_name='cpu'):
 
         super(FTDNN, self).__init__()
 
         self.layer01 = InputLayer(input_dim=in_dim, output_dim=1536, batch_norm=use_first_bn)
-        self.layer02 = FTDNNLayer(3072, 160, 320, 1536, 1)
-        self.layer03 = FTDNNLayer(3072, 160, 320, 1536, 1)
-        self.layer04 = FTDNNLayer(3072, 160, 320, 1536, 1)
-        self.layer05 = FTDNNLayer(1536, 160, 160, 1536, 0)
-        self.layer06 = FTDNNLayer(3072, 160, 320, 1536, 3)
-        self.layer07 = FTDNNLayer(3072, 160, 320, 1536, 3)
-        self.layer08 = FTDNNLayer(3072, 160, 320, 1536, 3)
-        self.layer09 = FTDNNLayer(3072, 160, 320, 1536, 3)
-        self.layer10 = FTDNNLayer(3072, 160, 320, 1536, 3)
-        self.layer11 = FTDNNLayer(3072, 160, 320, 1536, 3)
-        self.layer12 = FTDNNLayer(3072, 160, 320, 1536, 3)
-        self.layer13 = FTDNNLayer(3072, 160, 320, 1536, 3)
-        self.layer14 = FTDNNLayer(3072, 160, 320, 1536, 3)
-        self.layer15 = FTDNNLayer(3072, 160, 320, 1536, 3)
-        self.layer16 = FTDNNLayer(3072, 160, 320, 1536, 3)
-        self.layer17 = FTDNNLayer(3072, 160, 320, 1536, 3)
+        self.layer02 = FTDNNLayer(3072, 160, 320, 1536, 1, dropout_p=dropout_p, device=device_name)
+        self.layer03 = FTDNNLayer(3072, 160, 320, 1536, 1, dropout_p=dropout_p, device=device_name)
+        self.layer04 = FTDNNLayer(3072, 160, 320, 1536, 1, dropout_p=dropout_p, device=device_name)
+        self.layer05 = FTDNNLayer(1536, 160, 160, 1536, 0, dropout_p=dropout_p, device=device_name)
+        self.layer06 = FTDNNLayer(3072, 160, 320, 1536, 3, dropout_p=dropout_p, device=device_name)
+        self.layer07 = FTDNNLayer(3072, 160, 320, 1536, 3, dropout_p=dropout_p, device=device_name)
+        self.layer08 = FTDNNLayer(3072, 160, 320, 1536, 3, dropout_p=dropout_p, device=device_name)
+        self.layer09 = FTDNNLayer(3072, 160, 320, 1536, 3, dropout_p=dropout_p, device=device_name)
+        self.layer10 = FTDNNLayer(3072, 160, 320, 1536, 3, dropout_p=dropout_p, device=device_name)
+        self.layer11 = FTDNNLayer(3072, 160, 320, 1536, 3, dropout_p=dropout_p, device=device_name)
+        self.layer12 = FTDNNLayer(3072, 160, 320, 1536, 3, dropout_p=dropout_p, device=device_name)
+        self.layer13 = FTDNNLayer(3072, 160, 320, 1536, 3, dropout_p=dropout_p, device=device_name)
+        self.layer14 = FTDNNLayer(3072, 160, 320, 1536, 3, dropout_p=dropout_p, device=device_name)
+        self.layer15 = FTDNNLayer(3072, 160, 320, 1536, 3, dropout_p=dropout_p, device=device_name)
+        self.layer16 = FTDNNLayer(3072, 160, 320, 1536, 3, dropout_p=dropout_p, device=device_name)
+        self.layer17 = FTDNNLayer(3072, 160, 320, 1536, 3, dropout_p=dropout_p, device=device_name)
         self.layer18 = nn.Linear(1536, 256, bias=False) #This is the prefinal-l layer
         self.layer19 = OutputLayer(256, out_dim, use_bn=use_final_bn)
         
