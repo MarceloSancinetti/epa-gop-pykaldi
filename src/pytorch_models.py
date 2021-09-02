@@ -5,7 +5,7 @@ from IPython import embed
 
 class FTDNNLayer(nn.Module):
 
-    def __init__(self, semi_orth_in_dim, semi_orth_out_dim, affine_in_dim, out_dim, time_offset, dropout_p=0.005851493):
+    def __init__(self, semi_orth_in_dim, semi_orth_out_dim, affine_in_dim, out_dim, time_offset, dropout_p=0.02, device='cuda'):
         '''
         3 stage factorised TDNN http://danielpovey.com/files/2018_interspeech_tdnnf.pdf
         '''
@@ -16,7 +16,7 @@ class FTDNNLayer(nn.Module):
         self.out_dim = out_dim
         self.time_offset = time_offset
         self.dropout_p = dropout_p
-
+        self.device = device
 
 
         self.sorth = nn.Linear(self.semi_orth_in_dim, self.semi_orth_out_dim, bias=False)
@@ -35,7 +35,9 @@ class FTDNNLayer(nn.Module):
         x = self.sorth(x)
         if time_offset != 0:
             padding = x[:,-1,:][:,None,:]
-            padding = torch.zeros(padding.shape)            
+            padding = torch.zeros(padding.shape)
+            if self.device == 'cuda':
+                padding = padding.cuda()
             xd = torch.cat([x]+[padding]*time_offset, axis=1)
             xd = xd[:,time_offset:,:]
             x = torch.cat([x, xd], axis=2)
@@ -116,8 +118,7 @@ class InputLayer(nn.Module):
 
         self.nonlinearity = nn.ReLU()
         self.batch_norm = batch_norm
-        if batch_norm:
-            self.bn = nn.BatchNorm1d(output_dim, affine=False, eps=0.001)
+        self.bn = nn.BatchNorm1d(output_dim, affine=False, eps=0.001)
         self.drop = nn.Dropout(p=self.dropout_p)
 
     def forward(self, x):

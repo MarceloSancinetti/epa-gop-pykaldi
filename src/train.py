@@ -33,13 +33,14 @@ def get_model_path_for_fold(model_path, fold, layer_amount):
     return model_path.replace("@FOLD@", str(fold)) 
 
 def get_phone_weights_as_torch(phone_weights_path):
+    global device
     phone_weights_fh = open(phone_weights_path)
     phone_weights = yaml.safe_load(phone_weights_fh)
     weights_list = []
     for phone, weight in phone_weights.items():
         weights_list.append(weight)
     phone_weights = weights_list
-    return torch.FloatTensor(phone_weights)
+    return torch.cuda.FloatTensor(phone_weights, device=device)
 
 def get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch):
     return state_dict_dir + run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) + '.pth'
@@ -99,7 +100,7 @@ def freeze_layers_for_finetuning(model, layer_amount, use_dropout, use_first_bn)
             module.train()
 
     if use_first_bn:
-        model.layer1.bn.train()
+        model.layer01.bn.train()
 
     for name, param in model.named_parameters():
         freeze_layer = all([layer not in name for layer in layers_to_train])
@@ -231,14 +232,14 @@ def criterion_simple(batch_outputs, batch_labels):
     return loss
 
 
-def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name, layer_amount, use_dropout, lr, use_clipping):
-    global phone_weights, phone_count
+def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name, layer_amount, use_dropout, lr, use_clipping, use_first_bn):
+    global phone_weights, phone_count, device
 
     print("Started training fold " + str(fold))
 
     step = 0
 
-    freeze_layers_for_finetuning(model, layer_amount, use_dropout)
+    freeze_layers_for_finetuning(model, layer_amount, use_dropout, use_first_bn)
 
     optimizer = optim.Adam(model.parameters(), lr=lr)#, weight_decay=1e-5)
 
@@ -254,15 +255,14 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
         for i, data in enumerate(trainloader, 0):            
             #print("Batch " + str(i))
             logids = unpack_logids_from_batch(data)
-            inputs = unpack_features_from_batch(data)
-            batch_pos_labels = unpack_pos_labels_from_batch(data)
-            batch_neg_labels = unpack_neg_labels_from_batch(data)
-            batch_labels = unpack_labels_from_batch(data)
+            inputs = unpack_features_from_batch(data).to(device)
+            batch_labels = unpack_labels_from_batch(data).to(device)
 
             # zero the parameter gradients
             optimizer.zero_grad()
 
             outputs = model(inputs)
+            #embed()
 
             loss = criterion_fast(outputs, batch_labels, phone_weights=phone_weights, phone_int2sym=phone_int2sym)
             #loss = criterion_simple(outputs, batch_labels)
@@ -297,14 +297,14 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
 
 def test(model, testloader):
 
-    global phone_weights, phone_count, phone_int2sym
+    global phone_weights, phone_count, phone_int2sym, device
 
     dataiter = iter(testloader)
     batch = dataiter.next()
-    features = unpack_features_from_batch(batch)
+    features = unpack_features_from_batch(batch).to(device)
     #pos_labels = unpack_pos_labels_from_batch(batch)
     #neg_labels = unpack_neg_labels_from_batch(batch)
-    labels   = unpack_labels_from_batch(batch)
+    labels   = unpack_labels_from_batch(batch).to(device)
 
     outputs = model(features)
     loss_dict = {}
@@ -368,8 +368,10 @@ def main():
     epa_root_path = args.epa_root_path
     dataset = EpaDB(epa_root_path, args.utterance_list, args.phones_file, args.labels_dir, args.features_path, args.conf_path)
 
-    global phone_int2sym, phone_weights, phone_count
+    global phone_int2sym, phone_weights, phone_count, device
     phone_int2sym = dataset.phone_int2sym_dict
+
+    device = torch.device('cuda')
 
     seed = 42
     torch.manual_seed(seed)
@@ -399,6 +401,7 @@ def main():
 
         #Get acoustic model to train
         model = FTDNN(out_dim=phone_count, use_final_bn=use_final_bn, use_first_bn=use_first_bn) 
+        model.to(device)
         state_dict = torch.load(get_model_path_for_fold(args.model_path, fold, layer_amount))
         model.load_state_dict(state_dict['model_state_dict'])
 
@@ -413,7 +416,7 @@ def main():
             processes.append(p)
         else:
             train(model, trainloader, testloader, fold, epochs, args.state_dict_dir,
-                  run_name, layer_amount, use_dropout, args.learning_rate, use_clipping)
+                  run_name, layer_amount, use_dropout, args.learning_rate, use_clipping, use_first_bn)
 
         #Generate test sample list for current fold
         generate_test_sample_list(testloader, epa_root_path, args.test_sample_list_dir, 'test_sample_list_fold_' + str(fold))
