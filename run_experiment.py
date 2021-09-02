@@ -130,8 +130,7 @@ def run_train(config_dict, device_name):
 				 "learning-rate":        config_dict["learning-rate"],
 				 "batch-size":           config_dict["batch-size"],
 				 "use-clipping":         config_dict["use-clipping"],
-                 "use-first-batchnorm":  config_dict["use-first-batchnorm"],
-				 "use-final-batchnorm":  config_dict["use-final-batchnorm"],
+                                 "batchnorm":  config_dict["batchnorm"],
 				 "phones-file": 		 config_dict["phones-list-path"],
 				 "labels-dir": 			 config_dict["labels-dir"],
 				 "model-path": 			 config_dict["finetune-model-path"],
@@ -142,11 +141,11 @@ def run_train(config_dict, device_name):
 				 "test-sample-list-dir": config_dict["test-sample-list-dir"],
 				 "state-dict-dir": 		 config_dict["state-dict-dir"],
 				 "use-multi-process":    config_dict["use-multi-process"],
-				 "device":               config_dict["device"]				 
+				 "device":               device_name				 
 				}
 	run_script("src/train.py", args_dict)
 
-def run_generate_scores(config_dict):
+def run_generate_scores(config_dict, device_name):
 	cat_file_names = ""
 	for fold in range(config_dict["folds"]):
 		args_dict = {"state-dict-dir":  config_dict["state-dict-dir"],
@@ -159,7 +158,7 @@ def run_generate_scores(config_dict):
 					 "features-path":   config_dict["features-path"],
 					 "conf-path":       config_dict["features-conf-path"],
 					 "alignments-path": config_dict["alignments-path"],
-				     "device":          config_dict["device"]				 
+				     "device":          device_name				 
 					}
 		run_script("src/generate_score_txt.py", args_dict)
 		cat_file_names += args_dict['gop-txt-dir'] + '/' +'gop-'+args_dict['model-name']+'.txt ' #Codigo repetido con generate_score_txt
@@ -212,7 +211,7 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--config', dest='config_yaml',  help='Path .yaml config file for experiment', default=None)
 	parser.add_argument('--stage', dest='stage',  help='Stage to run (dataprep, align, train, scores, evaluate), or \'all\' to run all stages', default=None)
-    parser.add_argument('--device', dest='device_name', help='Device name to use, such as cpu or cuda', default=None)
+	parser.add_argument('--device', dest='device_name', help='Device name to use, such as cpu or cuda', default=None)
 
 	args = parser.parse_args()
 

@@ -416,7 +416,7 @@ def main():
             processes.append(p)
         else:
             train(model, trainloader, testloader, fold, epochs, args.state_dict_dir,
-                  run_name, layer_amount, use_dropout, args.learning_rate, use_clipping, batchnorm)
+                  run_name, layer_amount, use_dropout, args.learning_rate, use_clipping, args.batchnorm)
 
         #Generate test sample list for current fold
         generate_test_sample_list(testloader, epa_root_path, args.test_sample_list_dir, 'test_sample_list_fold_' + str(fold))

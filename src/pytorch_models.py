@@ -150,9 +150,16 @@ def sum_outputs_and_feed_to_layer(x, x_2, layer):
 
 class FTDNN(nn.Module):
 
-    def __init__(self, in_dim=220, out_dim=40, use_first_bn=False, use_final_bn=False, dropout_p=0.005851493, device_name='cpu'):
+    def __init__(self, in_dim=220, out_dim=40, batchnorm=None, dropout_p=0.005851493, device_name='cpu'):
 
         super(FTDNN, self).__init__()
+
+        use_first_bn = False
+        use_final_bn = False
+        if batchnorm in ["all", "first"]:
+            use_first_bn=True
+        if batchnorm in ["all", "final", "last"]:
+            use_final_bn=True
 
         self.layer01 = InputLayer(input_dim=in_dim, output_dim=1536, batch_norm=use_first_bn)
         self.layer02 = FTDNNLayer(3072, 160, 320, 1536, 1, dropout_p=dropout_p, device=device_name)

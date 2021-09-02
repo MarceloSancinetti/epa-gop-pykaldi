@@ -11,6 +11,7 @@
   learning-rate:           0.001
   batch-size:              32
   use-dropout:             "true"
+  dropout-p:               0.02
   use-first-batchnorm:     "true"
   use-final-batchnorm:      "false"
   use-clipping:            "false"
