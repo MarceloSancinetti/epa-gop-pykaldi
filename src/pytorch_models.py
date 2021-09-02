@@ -156,9 +156,9 @@ class FTDNN(nn.Module):
 
         use_first_bn = False
         use_final_bn = False
-        if batchnorm in ["all", "first"]:
+        if batchnorm in ["all", "first", "firstlast"]:
             use_first_bn=True
-        if batchnorm in ["all", "final", "last"]:
+        if batchnorm in ["all", "final", "last", "firstlast"]:
             use_final_bn=True
 
         self.layer01 = InputLayer(input_dim=in_dim, output_dim=1536, batch_norm=use_first_bn)

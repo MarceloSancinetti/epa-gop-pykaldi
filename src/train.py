@@ -99,7 +99,7 @@ def freeze_layers_for_finetuning(model, layer_amount, use_dropout, batchnorm):
         else:
             module.train()
 
-    if batchnorm == 'first':
+    if batchnorm == 'first' or batchnorm=='firstlast':
         model.layer01.bn.train()
 
     for name, param in model.named_parameters():
@@ -232,7 +232,7 @@ def criterion_simple(batch_outputs, batch_labels):
     return loss
 
 
-def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name, layer_amount, use_dropout, lr, use_clipping, batchnorm):
+def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name, layer_amount, use_dropout, lr, use_clipping, batchnorm, norm_per_phone):
     global phone_weights, phone_count, device
 
     print("Started training fold " + str(fold))
@@ -264,7 +264,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
             outputs = model(inputs)
             #embed()
 
-            loss = criterion_fast(outputs, batch_labels, phone_weights=phone_weights, phone_int2sym=phone_int2sym)
+            loss = criterion_fast(outputs, batch_labels, phone_weights=phone_weights, phone_int2sym=phone_int2sym, norm_per_phone=norm_per_phone)
             #loss = criterion_simple(outputs, batch_labels)
 
             if epoch == 0 and i == 0:
@@ -336,7 +336,8 @@ def main():
     parser.add_argument('--layers', dest='layer_amount', help='Amount of layers to train starting from the last (if layers=1 train only the last layer)', default=None)
     parser.add_argument('--learning-rate', dest='learning_rate', help='Learning rate to use during training', type=float, default=None)
     parser.add_argument('--batch-size', dest='batch_size', help='Batch size for training', type=int, default=None)
-    parser.add_argument('--use-clipping', dest='use_clipping', help='Whether to use gradien clipping or not', default=None)
+    parser.add_argument('--norm-per-phone', dest='norm_per_phone', help='Whether to normalize phone level loss by frame count or not', default=None)
+    parser.add_argument('--use-clipping', dest='use_clipping', help='Whether to use gradient clipping or not', default=None)
     parser.add_argument('--use-dropout', dest='use_dropout', help='Whether to unfreeze dropout components or not', default=None)
     parser.add_argument('--dropout-p', dest='dropout_p', help='Dropout probability', type=float, default=None)
     parser.add_argument('--batchnorm', dest='batchnorm', help='Batchnorm option (first, final, all)', default=None)
@@ -361,6 +362,7 @@ def main():
     use_dropout       = parse_bool_arg(args.use_dropout)
     use_clipping      = parse_bool_arg(args.use_clipping)
     use_multi_process = parse_bool_arg(args.use_multi_process)
+    norm_per_phone    = parse_bool_arg(args.norm_per_phone)
 
     wandb.init(project="gop-finetuning", entity="pronscoring-liaa")
     wandb.run.name = run_name
@@ -416,7 +418,7 @@ def main():
             processes.append(p)
         else:
             train(model, trainloader, testloader, fold, epochs, args.state_dict_dir,
-                  run_name, layer_amount, use_dropout, args.learning_rate, use_clipping, args.batchnorm)
+                  run_name, layer_amount, use_dropout, args.learning_rate, use_clipping, args.batchnorm, norm_per_phone)
 
         #Generate test sample list for current fold
         generate_test_sample_list(testloader, epa_root_path, args.test_sample_list_dir, 'test_sample_list_fold_' + str(fold))
