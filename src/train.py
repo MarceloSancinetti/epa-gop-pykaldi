@@ -87,19 +87,19 @@ def start_from_checkpoint(PATH, model, optimizer):
     step = checkpoint['step']
     return model, optimizer, step        
 
-def freeze_layers_for_finetuning(model, layer_amount, use_dropout, use_first_bn):
+def freeze_layers_for_finetuning(model, layer_amount, use_dropout, batchnorm):
     #Generate layer names for layers that should be trained
     layers_to_train = ['layer' + str(19 - x) for x in range(layer_amount)]
 
     #Freeze all layers except #layer_amount layers starting from the last
     for name, module in model.named_modules():
         freeze_layer = all([layer not in name for layer in layers_to_train])
-        if freeze_layer:
+        if freeze_layer and (batchnorm != 'all' or 'bn' not in name):
             module.eval()
         else:
             module.train()
 
-    if use_first_bn:
+    if batchnorm == 'first':
         model.layer01.bn.train()
 
     for name, param in model.named_parameters():
@@ -232,14 +232,14 @@ def criterion_simple(batch_outputs, batch_labels):
     return loss
 
 
-def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name, layer_amount, use_dropout, lr, use_clipping, use_first_bn):
+def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name, layer_amount, use_dropout, lr, use_clipping, batchnorm):
     global phone_weights, phone_count, device
 
     print("Started training fold " + str(fold))
 
     step = 0
 
-    freeze_layers_for_finetuning(model, layer_amount, use_dropout, use_first_bn)
+    freeze_layers_for_finetuning(model, layer_amount, use_dropout, batchnorm)
 
     optimizer = optim.Adam(model.parameters(), lr=lr)#, weight_decay=1e-5)
 
@@ -339,8 +339,7 @@ def main():
     parser.add_argument('--use-clipping', dest='use_clipping', help='Whether to use gradien clipping or not', default=None)
     parser.add_argument('--use-dropout', dest='use_dropout', help='Whether to unfreeze dropout components or not', default=None)
     parser.add_argument('--dropout-p', dest='dropout_p', help='Dropout probability', type=float, default=None)
-    parser.add_argument('--use-first-batchnorm', dest='use_first_bn', help='Whether to use batch normalization on first layer or not', default=None)
-    parser.add_argument('--use-final-batchnorm', dest='use_final_bn', help='Whether to use batch normalization on last layer or not', default=None)
+    parser.add_argument('--batchnorm', dest='batchnorm', help='Batchnorm option (first, final, all)', default=None)
     parser.add_argument('--phones-file', dest='phones_file', help='File with list of phones', default=None)
     parser.add_argument('--labels-dir', dest='labels_dir', help='Directory with labels used in training', default=None)
     parser.add_argument('--model-path', dest='model_path', help='Path to .pth/pt file with model to finetune', default=None)
@@ -361,8 +360,6 @@ def main():
     layer_amount      = int(args.layer_amount)
     use_dropout       = parse_bool_arg(args.use_dropout)
     use_clipping      = parse_bool_arg(args.use_clipping)
-    use_final_bn      = parse_bool_arg(args.use_final_bn)
-    use_first_bn      = parse_bool_arg(args.use_first_bn)
     use_multi_process = parse_bool_arg(args.use_multi_process)
 
     wandb.init(project="gop-finetuning", entity="pronscoring-liaa")
@@ -403,7 +400,7 @@ def main():
         phone_count = dataset.phone_count()
 
         #Get acoustic model to train
-        model = FTDNN(out_dim=phone_count, use_final_bn=use_final_bn, use_first_bn=use_first_bn, dropout_p=args.dropout_p, device_name=device_name) 
+        model = FTDNN(out_dim=phone_count, batchnorm=args.batchnorm, dropout_p=args.dropout_p, device_name=device_name) 
         model.to(device)
         state_dict = torch.load(get_model_path_for_fold(args.model_path, fold, layer_amount))
         model.load_state_dict(state_dict['model_state_dict'])
@@ -419,7 +416,7 @@ def main():
             processes.append(p)
         else:
             train(model, trainloader, testloader, fold, epochs, args.state_dict_dir,
-                  run_name, layer_amount, use_dropout, args.learning_rate, use_clipping, use_first_bn)
+                  run_name, layer_amount, use_dropout, args.learning_rate, use_clipping, batchnorm)
 
         #Generate test sample list for current fold
         generate_test_sample_list(testloader, epa_root_path, args.test_sample_list_dir, 'test_sample_list_fold_' + str(fold))
