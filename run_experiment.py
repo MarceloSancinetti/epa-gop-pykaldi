@@ -71,7 +71,8 @@ def run_data_prep(config_dict):
 				 "phone-count":             phone_count,
 				 "experiment-dir-path":     config_dict["experiment-dir-path"],
 				 "setup":                   "exp",
-				 "batchnorm":     			config_dict["batchnorm"]}
+				 "batchnorm":     			config_dict["batchnorm"],
+				 "seed":                    42}
 	run_script("src/prepare_data.py", args_dict)
 
 def run_align(config_dict):

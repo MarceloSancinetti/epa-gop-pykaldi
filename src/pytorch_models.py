@@ -105,7 +105,6 @@ class InputLayer(nn.Module):
         self,
         input_dim=220,
         output_dim=1536,
-        batch_norm=True,
         dropout_p=0.005851493):
 
         super(InputLayer, self).__init__()
@@ -118,7 +117,6 @@ class InputLayer(nn.Module):
                                 self.output_dim)
 
         self.nonlinearity = nn.ReLU()
-        self.batch_norm = batch_norm
         self.bn = nn.BatchNorm1d(output_dim, affine=False, eps=0.001)
         self.drop = nn.Dropout(p=self.dropout_p)
 
@@ -135,9 +133,8 @@ class InputLayer(nn.Module):
         x = self.kernel(x)
         x = self.nonlinearity(x)
 
-        if self.batch_norm:
-            x = x.transpose(1, 2)
-            x = self.bn(x).transpose(1,2)
+        x = x.transpose(1, 2)
+        x = self.bn(x).transpose(1,2)
         x = self.drop(x)
         return x
 
@@ -155,14 +152,11 @@ class FTDNN(nn.Module):
 
         super(FTDNN, self).__init__()
 
-        use_first_bn = False
         use_final_bn = False
-        if batchnorm in ["all", "first", "firstlast"]:
-            use_first_bn=True
         if batchnorm in ["all", "final", "last", "firstlast"]:
             use_final_bn=True
 
-        self.layer01 = InputLayer(input_dim=in_dim, output_dim=1536, batch_norm=use_first_bn)
+        self.layer01 = InputLayer(input_dim=in_dim, output_dim=1536)
         self.layer02 = FTDNNLayer(3072, 160, 320, 1536, 1, dropout_p=dropout_p, device=device_name)
         self.layer03 = FTDNNLayer(3072, 160, 320, 1536, 1, dropout_p=dropout_p, device=device_name)
         self.layer04 = FTDNNLayer(3072, 160, 320, 1536, 1, dropout_p=dropout_p, device=device_name)

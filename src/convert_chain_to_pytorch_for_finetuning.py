@@ -90,6 +90,7 @@ if __name__ == '__main__':
 	parser.add_argument('--output-path', dest='output_path', help='Path to save the torch model', default=None)
 	parser.add_argument('--phone-count', dest='phone_count', help='Size of the phone set for the current system', default=None)
 	parser.add_argument('--batchnorm', dest='batchnorm', help='Batchnorm mode (first, last, all, etc)', default=None)
+	parser.add_argument('--seed', dest='seed', help='Random seed', type=int, default=None)
 
 	args = parser.parse_args()
 
@@ -175,6 +176,7 @@ if __name__ == '__main__':
 
 	
 	#Add layer to finetune 
+	torch.manual_seed(args.seed)
 	model_state_dict['layer19.linear.weight']   = torch.randn([phone_count, 256])
 	model_state_dict['layer19.linear.bias']     = torch.randn([phone_count])
 	if args.batchnorm in ["all", "final", "last", "firstlast"]:
