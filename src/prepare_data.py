@@ -22,7 +22,7 @@ def download_librispeech_models(librispeech_models_path):
         os.system("rm -f 0013_librispeech_v1_lm.tar.gz")
         os.system("rm -f 0013_librispeech_v1_extractor.tar.gz")
 
-def prepare_pytorch_models(pytorch_models_path, libri_chain_mdl_path, libri_chain_txt_path, acoustic_model_path,  setup, finetune_model_path = None, phone_count = None):
+def prepare_pytorch_models(pytorch_models_path, libri_chain_mdl_path, libri_chain_txt_path, acoustic_model_path,  setup, batchnorm, finetune_model_path = None, phone_count = None):
     #Convert librispeech acoustic model .mdl to .txt
     if not os.path.exists(libri_chain_txt_path):
         os.system("nnet3-copy --binary=false " + libri_chain_mdl_path + " " + libri_chain_txt_path)
@@ -42,7 +42,8 @@ def prepare_pytorch_models(pytorch_models_path, libri_chain_mdl_path, libri_chai
     if  setup == "exp" and not os.path.exists(finetune_model_path):
         args_dict = {"chain-model-path": libri_chain_txt_path,
                      "output-path":      finetune_model_path,
-                     "phone-count":      phone_count}
+                     "phone-count":      phone_count,
+                     "batchnorm":        batchnorm}
         arguments = generate_arguments(args_dict)
         os.system("python src/convert_chain_to_pytorch_for_finetuning.py " + arguments)
 
@@ -116,6 +117,7 @@ if __name__ == '__main__':
     parser.add_argument('--phone-count', dest='phone_count', help='Size of the phone set for the current system', default=None)
     parser.add_argument('--experiment-dir-path', dest='experiment_dir_path', help='Path where the directory for the current expriment\'s files will be created', default=None)
     parser.add_argument('--setup', dest='setup', help='The setup you want to run (either exp or gop)', default=None)
+    parser.add_argument('--batchnorm', dest='batchnorm', help='Batchnorm mode (first, last, all, etc)', default=None)
     args = parser.parse_args()
 
     features_path   = args.features_path
@@ -133,7 +135,7 @@ if __name__ == '__main__':
 
     #Prepare pytorch models
     prepare_pytorch_models(args.pytorch_models_path, args.libri_chain_mdl_path, args.libri_chain_txt_path, 
-                           args.acoustic_model_path, setup, args.finetune_model_path, args.phone_count)
+                           args.acoustic_model_path, setup, args.batchnorm, args.finetune_model_path, args.phone_count)
 
     #Extract features
     feature_manager = FeatureManager(epadb_root_path, features_path, conf_path)

@@ -86,7 +86,8 @@ class OutputLayer(nn.Module):
         self.out_dim = out_dim
         self.use_bn = use_bn
 
-        self.bn = nn.BatchNorm1d(self.in_dim, affine=False)
+        if use_bn:
+            self.bn = nn.BatchNorm1d(self.in_dim, affine=False)
         self.linear = nn.Linear(self.in_dim, self.out_dim, bias=True) 
         self.nl = nn.Sigmoid()
 

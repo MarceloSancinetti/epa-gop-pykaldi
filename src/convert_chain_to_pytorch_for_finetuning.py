@@ -89,6 +89,7 @@ if __name__ == '__main__':
 	parser.add_argument('--chain-model-path', dest='chain_file',  help='Path to Kaldi chain model (FTDNN) in text form (final.txt)', default=None)
 	parser.add_argument('--output-path', dest='output_path', help='Path to save the torch model', default=None)
 	parser.add_argument('--phone-count', dest='phone_count', help='Size of the phone set for the current system', default=None)
+	parser.add_argument('--batchnorm', dest='batchnorm', help='Batchnorm mode (first, last, all, etc)', default=None)
 
 	args = parser.parse_args()
 
@@ -149,7 +150,7 @@ if __name__ == '__main__':
 
 	phone_count = int(args.phone_count)
 
-	ftdnn = FTDNN(out_dim=phone_count)
+	ftdnn = FTDNN(out_dim=phone_count, batchnorm=args.batchnorm)
 
 	model_state_dict = {}
 
@@ -176,8 +177,9 @@ if __name__ == '__main__':
 	#Add layer to finetune 
 	model_state_dict['layer19.linear.weight']   = torch.randn([phone_count, 256])
 	model_state_dict['layer19.linear.bias']     = torch.randn([phone_count])
-	model_state_dict['layer19.bn.running_mean'] = torch.zeros(256)
-	model_state_dict['layer19.bn.running_var']  = torch.ones(256)
+	if args.batchnorm in ["all", "final", "last", "firstlast"]:
+		model_state_dict['layer19.bn.running_mean'] = torch.zeros(256)
+		model_state_dict['layer19.bn.running_var']  = torch.ones(256)
 
 	torch.nn.init.xavier_uniform(ftdnn.layer19.linear.weight)
 

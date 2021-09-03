@@ -40,7 +40,7 @@ def get_phone_weights_as_torch(phone_weights_path):
     for phone, weight in phone_weights.items():
         weights_list.append(weight)
     phone_weights = weights_list
-    return torch.cuda.FloatTensor(phone_weights, device=device)
+    return torch.tensor(phone_weights, device=device)
 
 def get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch):
     return state_dict_dir + run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) + '.pth'
@@ -198,7 +198,6 @@ def criterion_fast(batch_outputs, batch_labels, phone_weights=None, norm_per_pho
 
     total_weights = weights_pos + weights_neg
     total_loss = (loss_pos + loss_neg).sum()
-
 
     if not norm_per_phone:
         #frame_count = torch.sum(batch_labels != 0)

@@ -69,7 +69,8 @@ def run_data_prep(config_dict):
 				 "utterance-list-path":     config_dict["utterance-list-path"],
 				 "phone-count":             phone_count,
 				 "experiment-dir-path":     config_dict["experiment-dir-path"],
-				 "setup":                   "exp"}
+				 "setup":                   "exp",
+				 "batchnorm":     			config_dict["batchnorm"]}
 	run_script("src/prepare_data.py", args_dict)
 
 def run_align(config_dict):
@@ -146,7 +147,7 @@ def run_train(config_dict, device_name):
 				}
 	run_script("src/train.py", args_dict)
 
-def run_generate_scores(config_dict, device_name):
+def run_generate_scores(config_dict):
 	cat_file_names = ""
 	for fold in range(config_dict["folds"]):
 		args_dict = {"state-dict-dir":  config_dict["state-dict-dir"],
@@ -159,7 +160,7 @@ def run_generate_scores(config_dict, device_name):
 					 "features-path":   config_dict["features-path"],
 					 "conf-path":       config_dict["features-conf-path"],
 					 "alignments-path": config_dict["alignments-path"],
-				     "device":          device_name				 
+				     "device":          "cpu"				 
 					}
 		run_script("src/generate_score_txt.py", args_dict)
 		cat_file_names += args_dict['gop-txt-dir'] + '/' +'gop-'+args_dict['model-name']+'.txt ' #Codigo repetido con generate_score_txt
@@ -170,7 +171,7 @@ def run_evaluate(config_dict):
 	args_dict = {"transcription-file": config_dict["transcription-file"],
 				 "utterance-list": 	   config_dict["utterance-list-path"],
 				 "output-dir": 		   config_dict["eval-dir"],
-				 "output-filename":    "data_for_eval.picke",
+				 "output-filename":    "data_for_eval.pickle",
 				 "gop-file": 		   config_dict["full-gop-score-path"],
 				 "phones-pure-file":   config_dict["kaldi-phones-pure-path"],
 				 "labels": 	   		   config_dict["labels-dir"]
@@ -201,7 +202,7 @@ def run_all(config_yaml, stage, device_name):
 	
 	if stage in ["scores", "all"]:
 		print("Generating GOP scores")
-		run_generate_scores(config_dict, device_name)
+		run_generate_scores(config_dict)
 
 	if stage in ["evaluate", "all"]:
 		print("Evaluating results")
