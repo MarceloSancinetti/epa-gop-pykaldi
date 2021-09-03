@@ -40,7 +40,8 @@ def extend_config_dict(config_yaml, config_dict):
 	config_dict["alignments-path"]      = config_dict["experiment-dir-path"] 	 + "align_output"
 	config_dict["loglikes-path"]        = config_dict["experiment-dir-path"] 	 + "loglikes.ark"
 	config_dict["transcription-file"]   = config_dict["epa-ref-labels-dir-path"] + "reference_transcriptions.txt"
-
+	config_dict["finetune-model-path"]  = config_dict["experiment-dir-path"]     + "/model_finetuning_kaldi.pt"
+	
 	#Choose labels dir
 	if config_dict["use-kaldi-labels"]:
 		config_dict["labels-dir"] = config_dict["kaldi-labels-path"]
