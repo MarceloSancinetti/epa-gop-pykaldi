@@ -162,7 +162,8 @@ def run_generate_scores(config_dict):
 					 "features-path":   config_dict["features-path"],
 					 "conf-path":       config_dict["features-conf-path"],
 					 "alignments-path": config_dict["alignments-path"],
-				     "device":          "cpu"				 
+       				         "device":          "cpu",
+                                         "batchnorm":       config_dict["batchnorm"]
 					}
 		run_script("src/generate_score_txt.py", args_dict)
 		cat_file_names += args_dict['gop-txt-dir'] + '/' +'gop-'+args_dict['model-name']+'.txt ' #Codigo repetido con generate_score_txt

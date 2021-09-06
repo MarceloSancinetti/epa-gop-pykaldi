@@ -285,11 +285,12 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
         test_loss, test_loss_dict = test(model, testloader)
         step = log_test_loss(fold, test_loss, step, test_loss_dict)
 
-        torch.save({
-            'model_state_dict': model.state_dict(),
-            'optimizer_state_dict': optimizer.state_dict(),
-            'step': step
-            }, PATH)
+        if epoch % 5 == 4:
+            torch.save({
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'step': step
+                }, PATH)
 
 
     return model

@@ -179,7 +179,7 @@ if __name__ == '__main__':
 	torch.manual_seed(args.seed)
 	model_state_dict['layer19.linear.weight']   = torch.randn([phone_count, 256])
 	model_state_dict['layer19.linear.bias']     = torch.randn([phone_count])
-	if args.batchnorm in ["all", "final", "last", "firstlast"]:
+	if args.batchnorm in ["final", "last", "firstlast"]:
 		model_state_dict['layer19.bn.running_mean'] = torch.zeros(256)
 		model_state_dict['layer19.bn.running_var']  = torch.ones(256)
 

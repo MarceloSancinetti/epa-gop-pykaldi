@@ -153,7 +153,7 @@ class FTDNN(nn.Module):
         super(FTDNN, self).__init__()
 
         use_final_bn = False
-        if batchnorm in ["all", "final", "last", "firstlast"]:
+        if batchnorm in ["final", "last", "firstlast"]:
             use_final_bn=True
 
         self.layer01 = InputLayer(input_dim=in_dim, output_dim=1536)
