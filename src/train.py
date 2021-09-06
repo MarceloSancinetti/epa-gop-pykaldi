@@ -394,10 +394,10 @@ def main():
         test_subsampler  = torch.utils.data.SubsetRandomSampler(test_sample_indexes)
 
         trainloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size,
-                                     num_workers=1, sampler=train_subsampler, collate_fn=collate_fn_padd)
+                                     num_workers=0, sampler=train_subsampler, collate_fn=collate_fn_padd)
 
         testloader = torch.utils.data.DataLoader(dataset, batch_size=32, 
-                                     num_workers=1, sampler=test_subsampler, collate_fn=collate_fn_padd)
+                                     num_workers=0, sampler=test_subsampler, collate_fn=collate_fn_padd)
 
         phone_count = dataset.phone_count()
 

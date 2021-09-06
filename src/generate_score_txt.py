@@ -113,7 +113,7 @@ def main():
 
     testset = EpaDB(epa_root_path, sample_list, phone_list_path, labels_dir, features_path, conf_path)
     testloader = torch.utils.data.DataLoader(testset, batch_size=16,
-                                          shuffle=False, num_workers=2, collate_fn=collate_fn_padd)
+                                          shuffle=False, num_workers=0, collate_fn=collate_fn_padd)
 
     phone_count = testset.phone_count()
 

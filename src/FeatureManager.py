@@ -15,6 +15,7 @@ class FeatureManager:
 		self.spk2utt_path = features_path + '/spk2utt'
 		self.feats_scp_path = features_path + '/feats.scp'
 		self.conf_path = conf_path
+		self.cache = dict()
 
 		self.ivector_period = self._read_ivector_period_from_conf()
 
@@ -55,33 +56,37 @@ class FeatureManager:
 	#Returns features (MFCCs+iVectors) for given logid in the format the acoustic model expects
 	def get_features_for_logid(self, logid):
 
-		if not os.path.isfile(self.mfcc_path):
-			raise Exception("MFCCs for utterance "+logid+" not found. Did you extract the features?")
+		if not logid in self.cache:
 
-		if not os.path.isfile(self.ivectors_path):
-			raise Exception("iVectors for utterance "+logid+" not found. Did you extract the features?")
-
-
-		transcription = self._get_transcription_for_logid(logid)
-
-		mfccs_rspec = ("ark:" + self.mfcc_path)
-		ivectors_rspec = ("ark:" + self.ivectors_path)
-
-		with RandomAccessMatrixReader(mfccs_rspec) as mfccs_reader, \
-		RandomAccessMatrixReader(ivectors_rspec) as ivectors_reader:
-			if not ivectors_reader.has_key(logid):
-				raise Exception("iVectors for utterance "+logid+" not found. Did you extract the features?")
-			if not mfccs_reader.has_key(logid):
+			if not os.path.isfile(self.mfcc_path):
 				raise Exception("MFCCs for utterance "+logid+" not found. Did you extract the features?")
-			mfccs = mfccs_reader[logid]
-			ivectors = ivectors_reader[logid]
-			ivectors = np.repeat(ivectors, self.ivector_period, axis=0) 
-			ivectors = ivectors[:mfccs.shape[0],:]
-			x = np.concatenate((mfccs,ivectors), axis=1)
-			#x = np.expand_dims(x, axis=0)
-			feats = torch.from_numpy(x)
 
-			return feats, transcription.strip()
+			if not os.path.isfile(self.ivectors_path):
+				raise Exception("iVectors for utterance "+logid+" not found. Did you extract the features?")
+
+
+			transcription = self._get_transcription_for_logid(logid)
+
+			mfccs_rspec = ("ark:" + self.mfcc_path)
+			ivectors_rspec = ("ark:" + self.ivectors_path)
+
+			with RandomAccessMatrixReader(mfccs_rspec) as mfccs_reader, \
+			RandomAccessMatrixReader(ivectors_rspec) as ivectors_reader:
+				if not ivectors_reader.has_key(logid):
+					raise Exception("iVectors for utterance "+logid+" not found. Did you extract the features?")
+				if not mfccs_reader.has_key(logid):
+					raise Exception("MFCCs for utterance "+logid+" not found. Did you extract the features?")
+				mfccs = mfccs_reader[logid]
+				ivectors = ivectors_reader[logid]
+				ivectors = np.repeat(ivectors, self.ivector_period, axis=0) 
+				ivectors = ivectors[:mfccs.shape[0],:]
+				x = np.concatenate((mfccs,ivectors), axis=1)
+				#x = np.expand_dims(x, axis=0)
+				feats = torch.from_numpy(x)
+
+			self.cache[logid] = [feats, transcription.strip()]
+
+		return self.cache[logid]
 
 	def _read_ivector_period_from_conf(self):
 		conf_fh = open(self.conf_path + '/ivector_extractor.conf')
