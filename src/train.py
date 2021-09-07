@@ -64,7 +64,7 @@ def log_test_loss(fold, loss, step, loss_dict):
     step += 1
     return step
 
-#Handless all logs to wandb every i batches during training 
+#Handles all logs to wandb every i batches during training 
 def log_and_reset_every_n_batches(fold, epoch, i, running_loss, step, n):
     if i % n == n-1:    # log every i mini-batches
         print('Fold ' + str(fold), ' Epoch ' + str(epoch) + ' Batch ' + str(i))
@@ -175,50 +175,53 @@ def criterion_slow(batch_outputs, batch_pos_labels, batch_neg_labels, loss_dict)
     return total_loss, loss_dict
 
 
-def calculate_loss(outputs, mask, labels, phone_weights=None, norm_per_phone=False, min_frame_count=5):
+def calculate_loss(outputs, mask, labels, phone_weights=None, norm_per_phone_and_class=False, min_frame_count=0):
 
     weights = mask *1
-    
+
     if phone_weights is not None:
         weights = weights * phone_weights
 
-    if norm_per_phone:
+    if norm_per_phone_and_class:
         frame_count = torch.sum(mask, dim=[0,1])
         weights = weights * torch.nan_to_num(1 / frame_count)
-        weights[frame_count<min_frame_count] = 0.0
+        if min_frame_count > 0:
+            # Set to 0 the weights for the phones with too few cases in this batch
+            weights[:,:,frame_count<min_frame_count] = 0.0
 
     loss_fn = torch.nn.BCEWithLogitsLoss(reduction='none', weight=weights)
 
     return loss_fn(outputs, labels), torch.sum(weights)
 
-def criterion_fast(batch_outputs, batch_labels, phone_weights=None, norm_per_phone=False, log_class_loss=False, phone_int2sym=None):
+
+def criterion_fast(batch_outputs, batch_labels, weights=None, norm_per_phone_and_class=False, log_per_phone_and_class_loss=False, phone_int2sym=None, min_frame_count=0):
 
     batch_labels_for_loss = torch.abs((batch_labels-1)/2)
 
-    loss_pos, weights_pos = calculate_loss(batch_outputs, batch_labels ==  1, batch_labels_for_loss, phone_weights=phone_weights, norm_per_phone=norm_per_phone)
-    loss_neg, weights_neg = calculate_loss(batch_outputs, batch_labels == -1, batch_labels_for_loss, phone_weights=phone_weights, norm_per_phone=norm_per_phone)
+    loss_pos, sum_weights_pos = calculate_loss(batch_outputs, batch_labels ==  1, batch_labels_for_loss, phone_weights=weights[1],  norm_per_per_phone_and_class=norm_per_phone_and_class, min_frame_count=min_frame_count)
+    loss_neg, sum_weights_neg = calculate_loss(batch_outputs, batch_labels == -1, batch_labels_for_loss, phone_weights=weights[-1], norm_per_per_phone_and_class=norm_per_phone_and_class, min_frame_count=min_frame_count)
 
-    total_weights = weights_pos + weights_neg
     total_loss = (loss_pos + loss_neg).sum()
 
-
-    if not norm_per_phone:
-        #frame_count = torch.sum(batch_labels != 0)
+    if not norm_per_phone_and_class:
+        total_weights = sum_weights_pos + sum_weights_neg
         total_loss /= total_weights
 
-    if log_class_loss:
+    if log_per_phone_and_class_loss:
 
         pos_phone_loss = torch.sum(loss_pos,dim=[0,1])
         neg_phone_loss = torch.sum(loss_neg,dim=[0,1])
         loss_dict = {}
         for phone, phone_sym in phone_int2sym.items():
-            loss_dict[phone_sym+'+'] = pos_phone_loss[phone]/phone_weights[phone]/weights_pos
-            loss_dict[phone_sym+'-'] = neg_phone_loss[phone]/phone_weights[phone]/weights_neg
-  
+            loss_dict[phone_sym+'+'] = pos_phone_loss[phone]/phone_weights[phone]/sum_weights_pos
+            loss_dict[phone_sym+'-'] = neg_phone_loss[phone]/phone_weights[phone]/sum_weights_neg
+
         return total_loss, loss_dict
-        
+
     else:
         return total_loss
+
+
 
 def criterion_simple(batch_outputs, batch_labels):
     '''
@@ -234,7 +237,7 @@ def criterion_simple(batch_outputs, batch_labels):
     return loss
 
 
-def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name, layer_amount, use_dropout, lr, use_clipping, batchnorm, norm_per_phone):
+def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name, layer_amount, use_dropout, lr, use_clipping, batchnorm, norm_per_phone_and_class):
     global phone_weights, phone_count, device
 
     print("Started training fold " + str(fold))
@@ -245,20 +248,26 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
 
     optimizer = optim.Adam(model.parameters(), lr=lr)#, weight_decay=1e-5)
 
-    PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, 0) 
-    torch.save({
-        'model_state_dict': model.state_dict(),
-        'optimizer_state_dict': optimizer.state_dict(),
-        'step': step
-    }, PATH)
-
-
-    for epoch in range(epochs):  # loop over the dataset multiple times
-        PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch+1) 
-        #If the checkpoint for the current epoch is already present, checkpoint is loaded and training is skipped
+    # Look in the output dir for any existing check points, from last to first.
+    start_from_epoch = 0
+    for epoch in range(epochs, 0, -1):
+        PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch) 
         if os.path.isfile(PATH):
             model, optimizer, step = start_from_checkpoint(PATH, model, optimizer)
-            continue
+            start_from_epoch = epoch+1
+            print("Loaded pre-existing checkpoint for epoch %d (%s)"% (epoch, PATH))            
+
+    if start_from_epoch == 0:
+        # Save the initial model
+        PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, 0) 
+        torch.save({
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'step': step
+        }, PATH)
+
+
+    for epoch in range(start_from_epoch, epochs):  # loop over the dataset multiple times
 
         running_loss = 0.0
         #loss_dict = {}
@@ -294,7 +303,8 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
             time3 = time.time()
             time_loop2 += time3 - time2
             
-            loss = criterion_fast(outputs, batch_labels, phone_weights=phone_weights, phone_int2sym=phone_int2sym, norm_per_phone=norm_per_phone)
+            loss = criterion_fast(outputs, batch_labels, weights=phone_weights, phone_int2sym=phone_int2sym, norm_per_phone_and_class=norm_per_phone_and_class, min_frame_count=0)
+
             #loss = criterion_simple(outputs, batch_labels)
 
             if epoch == 0 and i == 0:
@@ -352,7 +362,7 @@ def test(model, testloader):
 
     outputs = model(features)
     loss_dict = {}
-    loss, loss_dict = criterion_fast(outputs, labels, phone_weights=phone_weights, log_class_loss=True, phone_int2sym=phone_int2sym)
+    loss, loss_dict = criterion_fast(outputs, labels, weights=phone_weights, log_per_phone_and_class_loss=True, phone_int2sym=phone_int2sym)    
     #loss = criterion_simple(outputs, labels)
 
     loss = loss.item()
@@ -380,7 +390,7 @@ def main():
     parser.add_argument('--layers', dest='layer_amount', help='Amount of layers to train starting from the last (if layers=1 train only the last layer)', default=None)
     parser.add_argument('--learning-rate', dest='learning_rate', help='Learning rate to use during training', type=float, default=None)
     parser.add_argument('--batch-size', dest='batch_size', help='Batch size for training', type=int, default=None)
-    parser.add_argument('--norm-per-phone', dest='norm_per_phone', help='Whether to normalize phone level loss by frame count or not', default=None)
+    parser.add_argument('--norm-per-phone-and-class', dest='norm_per_phone_and_class', help='Whether to normalize phone level loss by frame count or not', default=None)
     parser.add_argument('--use-clipping', dest='use_clipping', help='Whether to use gradient clipping or not', default=None)
     parser.add_argument('--use-dropout', dest='use_dropout', help='Whether to unfreeze dropout components or not', default=None)
     parser.add_argument('--dropout-p', dest='dropout_p', help='Dropout probability', type=float, default=None)
@@ -397,16 +407,16 @@ def main():
     parser.add_argument('--use-multi-process', dest='use_multi_process', help='Whether to use multiple processes or not', default=None)
     parser.add_argument('--device', dest='device_name', help='Device name to use, such as cpu or cuda', default=None)
 
-    args              = parser.parse_args()
-    run_name          = args.run_name
-    device_name       = args.device_name
-    folds             = int(args.fold_amount)
-    epochs            = int(args.epoch_amount)
-    layer_amount      = int(args.layer_amount)
-    use_dropout       = parse_bool_arg(args.use_dropout)
-    use_clipping      = parse_bool_arg(args.use_clipping)
-    use_multi_process = parse_bool_arg(args.use_multi_process)
-    norm_per_phone    = parse_bool_arg(args.norm_per_phone)
+    args                     = parser.parse_args()
+    run_name                 = args.run_name
+    device_name              = args.device_name
+    folds                    = int(args.fold_amount)
+    epochs                   = int(args.epoch_amount)
+    layer_amount             = int(args.layer_amount)
+    use_dropout              = parse_bool_arg(args.use_dropout)
+    use_clipping             = parse_bool_arg(args.use_clipping)
+    use_multi_process        = parse_bool_arg(args.use_multi_process)
+    norm_per_phone_and_class = parse_bool_arg(args.norm_per_phone_and_class)
 
     wandb.init(project="gop-finetuning", entity="pronscoring-liaa")
     wandb.run.name = run_name
@@ -462,7 +472,7 @@ def main():
             processes.append(p)
         else:
             train(model, trainloader, testloader, fold, epochs, args.state_dict_dir,
-                  run_name, layer_amount, use_dropout, args.learning_rate, use_clipping, args.batchnorm, norm_per_phone)
+                  run_name, layer_amount, use_dropout, args.learning_rate, use_clipping, args.batchnorm, norm_per_phone_and_class)
 
         #Generate test sample list for current fold
         generate_test_sample_list(testloader, epa_root_path, args.test_sample_list_dir, 'test_sample_list_fold_' + str(fold))
