@@ -56,12 +56,12 @@ def generate_scores_for_sample(phone_times, frame_level_scores):
         #Use fixed negative score for deletions
         else:
             current_phone_score = -1000
-        scores.append(phone_name, current_phone_score)
+        scores.append((phone_name, current_phone_score))
     return scores
 
 def generate_scores_for_testset(model, testloader):
     print('Generating scores for testset')
-    scores = []
+    scores = {}
     for i, batch in enumerate(testloader, 0):       
         print('Batch ' + str(i+1) + '/' + str(len(testloader)))
         logids      = unpack_logids_from_batch(batch)
@@ -69,23 +69,24 @@ def generate_scores_for_testset(model, testloader):
         labels      = unpack_labels_from_batch(batch)
         phone_times = unpack_phone_times_from_batch(batch)
         outputs     = (-1) * model(features)
-        batch_size  = len(logids)
 
         frame_level_scores = get_scores_for_canonic_phones(outputs, labels)
-        for i in range(batch_size):
+        for i,logid in enumerate(logids):
             current_sample_scores = generate_scores_for_sample(phone_times[i], frame_level_scores[i])
-            scores.append(current_sample_scores)
+            scores[logid] = current_sample_scores
     return scores
 
-def log_sample_scores_to_txt(scores, score_log_fh, phone_dict):
-    for phone, score in scores:
+def log_sample_scores_to_txt(logid, scores, score_log_fh, phone_dict):
+    score_log_fh.write(logid + ' ')
+    for phone_name, score in scores:
         phone_number = phone_dict[phone_name] + 3
         score_log_fh.write( '[ ' + str(phone_number) + ' ' + str(score)  + ' ] ')
+    score_log_fh.write('\n')
 
 def log_testset_scores_to_txt(scores, score_log_fh, phone_dict):
     print('Writing scores to .txt')
-    for sample_score in scores:
-        log_sample_scores_to_txt(sample_score, score_log_fh, phone_dict)
+    for logid, sample_score in scores.items():
+        log_sample_scores_to_txt(logid, sample_score, score_log_fh, phone_dict)
 
 def main():
     parser = argparse.ArgumentParser()
@@ -111,7 +112,6 @@ def main():
     gop_txt_dir         = args.gop_txt_dir
     features_path       = args.features_path
     conf_path           = args.conf_path
-    alignments_path     = args.alignments_path
     device_name         = args.device_name
 
     testset = EpaDB(epa_root_path, sample_list, phone_list_path, labels_dir, features_path, conf_path)
