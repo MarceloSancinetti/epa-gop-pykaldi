@@ -3,7 +3,7 @@ import glob
 from pathlib import Path
 import argparse
 import yaml
-
+import time
 
 import torchaudio
 import torch
@@ -175,7 +175,7 @@ def criterion_slow(batch_outputs, batch_pos_labels, batch_neg_labels, loss_dict)
     return total_loss, loss_dict
 
 
-def calculate_loss(outputs, mask, labels, phone_weights=None, norm_per_phone=False):
+def calculate_loss(outputs, mask, labels, phone_weights=None, norm_per_phone=False, min_frame_count=5):
 
     weights = mask *1
     
@@ -183,7 +183,9 @@ def calculate_loss(outputs, mask, labels, phone_weights=None, norm_per_phone=Fal
         weights = weights * phone_weights
 
     if norm_per_phone:
-        weights = weights * torch.nan_to_num(1 / torch.sum(mask, dim=[0,1]))
+        frame_count = torch.sum(mask, dim=[0,1])
+        weights = weights * torch.nan_to_num(1 / frame_count)
+        weights[frame_count<min_frame_count] = 0.0
 
     loss_fn = torch.nn.BCEWithLogitsLoss(reduction='none', weight=weights)
 
@@ -198,6 +200,7 @@ def criterion_fast(batch_outputs, batch_labels, phone_weights=None, norm_per_pho
 
     total_weights = weights_pos + weights_neg
     total_loss = (loss_pos + loss_neg).sum()
+
 
     if not norm_per_phone:
         #frame_count = torch.sum(batch_labels != 0)
@@ -242,8 +245,16 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
 
     optimizer = optim.Adam(model.parameters(), lr=lr)#, weight_decay=1e-5)
 
+    PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, 0) 
+    torch.save({
+        'model_state_dict': model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'step': step
+    }, PATH)
+
+
     for epoch in range(epochs):  # loop over the dataset multiple times
-        PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch) 
+        PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch+1) 
         #If the checkpoint for the current epoch is already present, checkpoint is loaded and training is skipped
         if os.path.isfile(PATH):
             model, optimizer, step = start_from_checkpoint(PATH, model, optimizer)
@@ -251,18 +262,38 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
 
         running_loss = 0.0
         #loss_dict = {}
-        for i, data in enumerate(trainloader, 0):            
+
+        time0 = time.time()
+        time_load = 0.0
+        time_loop1 = 0.0
+        time_loop2 = 0.0
+        time_loop3 = 0.0
+        time_loop4 = 0.0
+        lengths = []
+        
+        for i, data in enumerate(trainloader, 0):
+
+            time1 = time.time()
+            time_load += time1 - time0 
+            time1 = time.time()
             #print("Batch " + str(i))
             logids = unpack_logids_from_batch(data)
             inputs = unpack_features_from_batch(data).to(device)
             batch_labels = unpack_labels_from_batch(data).to(device)
 
+            lengths.append(inputs.shape[1])
+            
             # zero the parameter gradients
             optimizer.zero_grad()
 
+            time2 = time.time()
+            time_loop1 += time2 - time1
+            
             outputs = model(inputs)
-            #embed()
 
+            time3 = time.time()
+            time_loop2 += time3 - time2
+            
             loss = criterion_fast(outputs, batch_labels, phone_weights=phone_weights, phone_int2sym=phone_int2sym, norm_per_phone=norm_per_phone)
             #loss = criterion_simple(outputs, batch_labels)
 
@@ -271,6 +302,9 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
                           'step' : step})
                 test_loss, test_loss_dict = test(model, testloader)
                 step = log_test_loss(fold, test_loss, step, test_loss_dict)
+
+            time4 = time.time()
+            time_loop3 += time4 - time3
 
             loss.backward()
             if use_clipping:
@@ -282,6 +316,16 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
 
             running_loss, step = log_and_reset_every_n_batches(fold, epoch, i, running_loss, step, 10)
 
+            time0 = time.time()
+            time_loop4 += time0 - time4
+            
+        print("--- Train loop1  %s seconds ---" % time_loop1)
+        print("--- Train loop2  %s seconds ---" % time_loop2)
+        print("--- Train loop3  %s seconds ---" % time_loop3)
+        print("--- Train loop4  %s seconds ---" % time_loop4)
+        print("--- Data loading %s seconds %d batches ---" % (time_load,i))
+        print("--- Average sequence length %f, min %f, max %f, median %f"% (np.mean(lengths), np.min(lengths), np.max(lengths), np.median(lengths)), flush=True)
+        
         test_loss, test_loss_dict = test(model, testloader)
         step = log_test_loss(fold, test_loss, step, test_loss_dict)
 
@@ -290,7 +334,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
                 'model_state_dict': model.state_dict(),
                 'optimizer_state_dict': optimizer.state_dict(),
                 'step': step
-                }, PATH)
+            }, PATH)
 
 
     return model
