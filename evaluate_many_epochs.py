@@ -21,7 +21,7 @@ def get_run_name(config_yaml):
 def get_experiment_directory(config_yaml):
 	return "experiments/" + get_run_name(config_yaml) + '/'
 
-def get_model_name(config_dict, fold, epoch=config_dict["epochs"] - 1):
+def get_model_name(config_dict, fold, epoch):
 	run_name   = config_dict["run-name"]
 	return run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) #Aca hay codigo repetido entre el PATH de train y esto
 
@@ -39,6 +39,7 @@ def extend_config_dict(config_yaml, config_dict):
 	config_dict["alignments-path"]      = config_dict["experiment-dir-path"] 	 + "align_output"
 	config_dict["loglikes-path"]        = config_dict["experiment-dir-path"] 	 + "loglikes.ark"
 	config_dict["transcription-file"]   = config_dict["epa-ref-labels-dir-path"] + "reference_transcriptions.txt"
+	config_dict["finetune-model-path"]  = config_dict["experiment-dir-path"]     + "/model_finetuning_kaldi.pt"
 
 	#Choose labels dir
 	if config_dict["use-kaldi-labels"]:
@@ -49,19 +50,23 @@ def extend_config_dict(config_yaml, config_dict):
 	return config_dict
 
 def run_create_kaldi_labels(config_dict):
+	phone_count = get_phone_count(config_dict["phones-list-path"])
 	args_dict = {'reference-transcriptions-path': config_dict["epa-ref-labels-dir-path"] + "/reference_transcriptions.txt",
 				 'utterance-list-path': 		  config_dict["utterance-list-path"],
 				 'labels-dir-path': 			  config_dict["epa-ref-labels-dir-path"],
 				 'alignments-path': 			  config_dict["alignments-path"],
-				 'output-dir-path': 			  config_dict["kaldi-labels-path"]
+				 'phones-list-path': 			  config_dict["phones-list-path"],
+				 'phone-weights-path': 		          config_dict["phone-weights-path"],
+				 'output-dir-path': 			  config_dict["kaldi-labels-path"],
+                                 'phone-count':                           phone_count
 				}
 	run_script("src/create_kaldi_labels.py", args_dict)
 
-def run_generate_scores(config_dict):
+def run_generate_scores(config_dict, epoch):
 	cat_file_names = ""
 	for fold in range(config_dict["folds"]):
 		args_dict = {"state-dict-dir":  config_dict["state-dict-dir"],
-					 "model-name": 	    get_model_name(config_dict, fold),
+					 "model-name": 	    get_model_name(config_dict, fold, epoch),
 					 "epa-root": 	    config_dict["epadb-root-path"],
 					 "sample-list":     get_test_sample_list_path_for_fold(config_dict["test-sample-list-dir"], fold),
 					 "phone-list":      config_dict["phones-list-path"],
@@ -69,14 +74,15 @@ def run_generate_scores(config_dict):
 					 "gop-txt-dir":     config_dict["gop-scores-dir"],
 					 "features-path":   config_dict["features-path"],
 					 "conf-path":       config_dict["features-conf-path"],
-					 "alignments-path": config_dict["alignments-path"]
+			                 "device":          "cpu",
+                                         "batchnorm":       config_dict["batchnorm"]
 					}
 		run_script("src/generate_score_txt.py", args_dict)
 		cat_file_names += args_dict['gop-txt-dir'] + '/' +'gop-'+args_dict['model-name']+'.txt ' #Codigo repetido con generate_score_txt
 	#Concatenate gop scores for all folds
 	os.system("cat " + cat_file_names + " > " + config_dict["full-gop-score-path"])
 
-def run_evaluate(config_dict, epoch=''):
+def run_evaluate(config_dict, epoch):
 
 	args_dict = {"transcription-file": config_dict["transcription-file"],
 				 "utterance-list": 	   config_dict["utterance-list-path"],
@@ -102,9 +108,9 @@ def run_all(config_yaml, step):
 		run_create_kaldi_labels(config_dict)
 	
 	for epoch in range(0, epochs, step):
-		print("Evaluating epoch %s/%s", str(epoch/step), str(epochs/step))
-		run_generate_scores(config_dict, epoch=epoch)
-		run_evaluate(config_dict, epoch=epoch)
+		print("Evaluating epoch %d/%d" % (int(epoch/step), int(epochs/step)))
+		run_generate_scores(config_dict, epoch)
+		run_evaluate(config_dict, epoch)
 
 
 if __name__ == '__main__':

@@ -3,18 +3,22 @@
   epa-ref-labels-dir-path: "epa_ref_labels/"
   alignments-path:         "align_output"
   kaldi-labels-path:       "kaldi_labels/"
-  phone-weights-path:      "experiments/configs/phone_weights.yaml"
+  phone-weights-path:      "experiments/configs/phone_weights_trivial.yaml"
   use-kaldi-labels:        true
   folds:                   6
-  epochs:                  80
-  layers:                  2
-  learning-rate:           0.0005
-  batch-size:              32  
+  epochs:                  35
+  layers:                  1
+  learning-rate:           0.001
+  batch-size:              4
+  use-dropout:             "false"
+  dropout-p:               0.005851493
+  batchnorm:               "last"
+  norm-per-phone:          "false"
   use-clipping:            "false"
   use-multi-process:       "false"
   phones-list-path:        "phones/kaldi_phones_list.txt"
   kaldi-phones-pure-path:  "phones/kaldi/phones-pure.txt"
-  finetune-model-path:     "experiments/6folds_35epochs_kaldi_labels/state_dicts/6folds_35epochs_kaldi_labels-fold-@FOLD@-epoch-49.pth"
+  finetune-model-path:     "pytorch_models/model_finetuning_kaldi.pt"
   epadb-root-path:         "EpaDB/"
   features-path:           "features/data/"
   features-conf-path:      "features/conf/"

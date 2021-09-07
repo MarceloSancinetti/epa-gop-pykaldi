@@ -3,7 +3,7 @@
   epa-ref-labels-dir-path: "epa_ref_labels/"
   alignments-path:         "align_output"
   kaldi-labels-path:       "kaldi_labels/"
-  phone-weights-path:      "experiments/configs/phone_weights_simple.yaml"
+  phone-weights-path:      "experiments/configs/phone_weights_trivial.yaml"
   use-kaldi-labels:        true
   folds:                   6
   epochs:                  35
@@ -11,8 +11,9 @@
   learning-rate:           0.001
   batch-size:              32
   use-dropout:             "true"
-  use-first-batchnorm:     "false"
-  use-final-batchnorm:      "false"
+  dropout-p:               0.005851493
+  batchnorm:               "all"
+  norm-per-phone:          "false"
   use-clipping:            "false"
   use-multi-process:       "false"
   phones-list-path:        "phones/kaldi_phones_list.txt"
