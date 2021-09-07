@@ -149,12 +149,12 @@ def create_phone_weight_yaml(phone_weights_path, phone_count_dict, class_count_d
         occurrences = phone_count_dict[phone]
 
         if occurrences < 100 or minority_occurences < 30:
-            phone_weights_fh.write("  phone" + str(phone) + ":    " + str(0) + "\n")
+            phone_weights_fh.write("  " + str(phone_sym) + ":    " + str(0) + "\n")
         else:
             total_occurrences = sum(phone_count_dict.values())
             phone_count = len(phone_count_dict.keys())
             weight = occurrences / total_occurrences * phone_count * 2
-            phone_weights_fh.write("  phone" + str(phone) + ":    " + str(weight) + "\n")
+            phone_weights_fh.write("  " + str(phone_sym) + ":    " + str(weight) + "\n")
 
 def create_phone_class_count_list(class_count_dict):
     class_counts_fh = open("phone_class_counts.yaml", "w+")
