@@ -126,19 +126,15 @@ def get_alignments(alignments_dir_path, df_phones_pure):
         if len(l) > 3 and l[1] == 'transitions':
             waveform_name = l[0]
             transition_lists = []
-            current_phone_transition = int(removeSymbols(l[2],['[',']',',']))
-            current_phone = get_phone_from_transition_id(current_phone_transition, df_phones_pure)
             transitions = []
             #alignments_dict[waveform_name] = {}
             for i in range(2, len(l)):
                 transition_id = int(removeSymbols(l[i],['[',']',',']))
-                phone = get_phone_from_transition_id(transition_id, df_phones_pure)
+                transitions.append(transition_id)
                 if ']' in l[i]:
                     transition_lists.append(transitions)
                     transitions = []
                     current_phone_transition = transition_id
-                    current_phone = get_phone_from_transition_id(current_phone_transition, df_phones_pure)
-                transitions.append(transition_id)
             alignments_dict[waveform_name]['transitions'] = transition_lists
 
         #Get phones alignments
