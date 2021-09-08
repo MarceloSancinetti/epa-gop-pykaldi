@@ -198,8 +198,8 @@ def criterion_fast(batch_outputs, batch_labels, weights=None, norm_per_phone_and
 
     batch_labels_for_loss = torch.abs((batch_labels-1)/2)
 
-    loss_pos, sum_weights_pos = calculate_loss(batch_outputs, batch_labels ==  1, batch_labels_for_loss, phone_weights=weights[1],  norm_per_per_phone_and_class=norm_per_phone_and_class, min_frame_count=min_frame_count)
-    loss_neg, sum_weights_neg = calculate_loss(batch_outputs, batch_labels == -1, batch_labels_for_loss, phone_weights=weights[-1], norm_per_per_phone_and_class=norm_per_phone_and_class, min_frame_count=min_frame_count)
+    loss_pos, sum_weights_pos = calculate_loss(batch_outputs, batch_labels ==  1, batch_labels_for_loss, phone_weights=weights[1],  norm_per_phone_and_class=norm_per_phone_and_class, min_frame_count=min_frame_count)
+    loss_neg, sum_weights_neg = calculate_loss(batch_outputs, batch_labels == -1, batch_labels_for_loss, phone_weights=weights[-1], norm_per_phone_and_class=norm_per_phone_and_class, min_frame_count=min_frame_count)
 
     total_loss = (loss_pos + loss_neg).sum()
 
@@ -259,7 +259,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
 
     if start_from_epoch == 0:
         # Save the initial model
-        PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, 0) 
+        PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch+1) 
         torch.save({
             'model_state_dict': model.state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),

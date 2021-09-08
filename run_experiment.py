@@ -22,7 +22,7 @@ def get_experiment_directory(config_yaml):
 	return "experiments/" + get_run_name(config_yaml) + '/'
 
 def get_model_name(config_dict, fold):
-	last_epoch = config_dict["epochs"] - 1
+	last_epoch = config_dict["epochs"]
 	run_name   = config_dict["run-name"]
 	return run_name + '-fold-' + str(fold) + '-epoch-' + str(last_epoch) #Aca hay codigo repetido entre el PATH de train y esto
 
