@@ -121,8 +121,7 @@ def get_times(kaldi_alignments, utterance):
     
     return start_times, end_times
 
-def add_phone_count(phone_count_dict, transcription, as_int=False, separate_pos_neg=False, labels=None):
-    global phone_sym2int
+def add_phone_count(phone_count_dict, transcription, phone_sym2int, as_int=False, separate_pos_neg=False, labels=None):
 
     for i, phone in enumerate(transcription):
         if as_int:
@@ -136,9 +135,7 @@ def add_phone_count(phone_count_dict, transcription, as_int=False, separate_pos_
             phone_count_dict[phone] = 1
     return phone_count_dict
 
-def create_phone_weight_yaml(phone_weights_path, phone_count_dict, class_count_dict):
-    global phone_sym2int, phone_int2sym
-    
+def create_phone_weight_yaml(phone_weights_path, phone_count_dict, class_count_dict, phone_sym2int, phone_int2sym):    
 
     phone_weights_fh = open(phone_weights_path, "w+")
     phone_weights_fh.write("---\n")
@@ -172,7 +169,7 @@ if __name__ == '__main__':
     parser.add_argument('--output-dir-path', dest='output_dir_path', help='Path to output directory for labels', default=None)
     parser.add_argument('--phones-list-path', dest='phone_list_path', help='Path to phone list', default=None)
     parser.add_argument('--phone-weights-path', dest='phone_weights_path', help='Path to .yaml containing weights for phone-level loss', default=None)
-    parser.add_argument('--phone-count', dest='phone_count', help='Amount of phones in the phone set', default=None)
+    parser.add_argument('--phone-count', dest='phone_count', help='Amount of phones in the phone set', type=int, default=0)
 
     args = parser.parse_args()
     global phone_count
@@ -180,20 +177,20 @@ if __name__ == '__main__':
     reference_transcriptions_path = args.reference_transcriptions_path
     utterance_list_path           = args.utterance_list_path
     labels_dir_path               = args.labels_dir_path
-    phone_count                   = int(args.phone_count)
+    phone_count                   = args.phone_count
     create_phone_count_yamls      = False
 
     kaldi_alignments = get_kaldi_alignments(args.align_path)
     utterance_list = generate_utterance_list_from_path(utterance_list_path) 
     trans_dict = get_reference_for_system_alignments(reference_transcriptions_path, labels_dir_path, kaldi_alignments, utterance_list)
 
-    global phone_sym2int, phone_int2sym
-    phone_sym2int = get_phone_symbol_to_int_dict(args.phone_list_path)
-    phone_int2sym = get_phone_int_to_symbol_dict(args.phone_list_path)
+    if create_phone_count_yamls:
+        phone_sym2int = get_phone_symbol_to_int_dict(args.phone_list_path)
+        phone_int2sym = get_phone_int_to_symbol_dict(args.phone_list_path)
 
-    phone_int_count_dict = {phone:0 for phone in range(phone_count)}
-    phone_sym_count_dict = {phone_int2sym[phone_int]+'+':0 for phone_int in range(phone_count)}
-    phone_sym_count_dict.update({phone_int2sym[phone_int]+'-':0 for phone_int in range(phone_count)})
+        phone_int_count_dict = {phone:0 for phone in range(phone_count)}
+        phone_sym_count_dict = {phone_int2sym[phone_int]+'+':0 for phone_int in range(phone_count)}
+        phone_sym_count_dict.update({phone_int2sym[phone_int]+'-':0 for phone_int in range(phone_count)})
 
     for utterance in utterance_list:
         spk, sent = utterance.split("_")
@@ -201,9 +198,10 @@ if __name__ == '__main__':
         start_times, end_times = get_times(kaldi_alignments, utterance)
         target_column, trans_manual, labels, start_times, end_times = match_trans_lengths(trans_dict[utterance], start_times, end_times)       
 
-        #Add occurrences of each phone to the phone count dict
-        phone_int_count_dict = add_phone_count(phone_int_count_dict, target_column, as_int=True)
-        phone_sym_count_dict = add_phone_count(phone_sym_count_dict, target_column, separate_pos_neg=True, labels=labels)
+        if create_phone_count_yamls:
+            #Add occurrences of each phone to the phone count dict
+            phone_int_count_dict = add_phone_count(phone_int_count_dict, target_column, phone_sym2int, as_int=True)
+            phone_sym_count_dict = add_phone_count(phone_sym_count_dict, target_column, phone_sym2int, separate_pos_neg=True, labels=labels)
 
 
         #outdir  = "%s/labels_with_kaldi_phones/%s/labels" % (args.output_dir_path, spk)
@@ -219,4 +217,4 @@ if __name__ == '__main__':
 
     if create_phone_count_yamls:
         create_phone_class_count_list(phone_sym_count_dict)
-        create_phone_weight_yaml(args.phone_weights_path, phone_int_count_dict, phone_sym_count_dict)    
+        create_phone_weight_yaml(args.phone_weights_path, phone_int_count_dict, phone_sym_count_dict, phone_sym2int, phone_int2sym)    
