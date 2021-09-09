@@ -32,7 +32,7 @@ def run_all(config_yaml, step):
 
 	epochs = config_dict['epochs']
 	
-	for epoch in range(0, epochs, step):
+	for epoch in range(0, epochs+1, step):
 		print("Evaluating epoch %d/%d" % (int(epoch/step), int(epochs/step)))
 		run_generate_scores(config_dict, epoch=epoch)
 		run_evaluate(config_dict, epoch=epoch)
