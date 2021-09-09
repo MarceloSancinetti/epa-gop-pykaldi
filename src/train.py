@@ -256,6 +256,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
             model, optimizer, step = start_from_checkpoint(PATH, model, optimizer)
             start_from_epoch = epoch+1
             print("Loaded pre-existing checkpoint for epoch %d (%s)"% (epoch, PATH))            
+            break
 
     if start_from_epoch == 0:
         # Save the initial model
