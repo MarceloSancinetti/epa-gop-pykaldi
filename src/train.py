@@ -259,7 +259,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
 
     if start_from_epoch == 0:
         # Save the initial model
-        PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch+1) 
+        PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, 0) 
         torch.save({
             'model_state_dict': model.state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),
@@ -340,6 +340,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
         step = log_test_loss(fold, test_loss, step, test_loss_dict)
 
         if epoch % 5 == 4:
+            PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch+1) 
             torch.save({
                 'model_state_dict': model.state_dict(),
                 'optimizer_state_dict': optimizer.state_dict(),
