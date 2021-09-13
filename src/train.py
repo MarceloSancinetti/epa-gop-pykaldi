@@ -22,9 +22,6 @@ import wandb
 
 from IPython import embed
 
-from sklearn.model_selection import KFold
-
-
 global phone_int2sym
 
 def get_model_path_for_fold(model_path, fold, layer_amount):
@@ -385,10 +382,11 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--run-name', dest='run_name', help='Run name', default=None)
-    parser.add_argument('--utterance-list', dest='utterance_list', help='File with utt list', default=None)
-    parser.add_argument('--folds', dest='fold_amount', help='Amount of folds to use in training', default=None)
-    parser.add_argument('--epochs', dest='epoch_amount', help='Amount of epochs to use in training', default=None)
-    parser.add_argument('--layers', dest='layer_amount', help='Amount of layers to train starting from the last (if layers=1 train only the last layer)', default=None)
+    parser.add_argument('--trainset-list', dest='trainset_list', help='File with trainset utt list', default=None)
+    parser.add_argument('--testset-list', dest='testset_list', help='File with testset utt list', default=None)
+    parser.add_argument('--fold', dest='fold', help='Fold number', type=int, default=None)
+    parser.add_argument('--epochs', dest='epoch_amount', help='Amount of epochs to use in training', type=int, default=None)
+    parser.add_argument('--layers', dest='layer_amount', help='Amount of layers to train starting from the last (if layers=1 train only the last layer)', type=int, default=None)
     parser.add_argument('--learning-rate', dest='learning_rate', help='Learning rate to use during training', type=float, default=None)
     parser.add_argument('--batch-size', dest='batch_size', help='Batch size for training', type=int, default=None)
     parser.add_argument('--norm-per-phone-and-class', dest='norm_per_phone_and_class', help='Whether to normalize phone level loss by frame count or not', default=None)
@@ -411,9 +409,9 @@ def main():
     args                     = parser.parse_args()
     run_name                 = args.run_name
     device_name              = args.device_name
-    folds                    = int(args.fold_amount)
-    epochs                   = int(args.epoch_amount)
-    layer_amount             = int(args.layer_amount)
+    layer_amount             = args.layer_amount
+    epochs                   = args.epoch_amount
+    fold                     = args.fold
     use_dropout              = parse_bool_arg(args.use_dropout)
     use_clipping             = parse_bool_arg(args.use_clipping)
     use_multi_process        = parse_bool_arg(args.use_multi_process)
@@ -423,64 +421,38 @@ def main():
     wandb.run.name = run_name
 
     epa_root_path = args.epa_root_path
-    dataset = EpaDB(epa_root_path, args.utterance_list, args.phones_file, args.labels_dir, args.features_path, args.conf_path)
+    trainset = EpaDB(epa_root_path, args.trainset_list, args.phones_file, args.labels_dir, args.features_path, args.conf_path)
+    testset  = EpaDB(epa_root_path, args.testset_list , args.phones_file, args.labels_dir, args.features_path, args.conf_path)
 
     global phone_int2sym, phone_weights, phone_count, device
-    phone_int2sym = dataset.phone_int2sym_dict
+    phone_int2sym = trainset.phone_int2sym_dict
 
     device = torch.device(device_name)
 
     seed = 42
     torch.manual_seed(seed)
 
-    kfold = KFold(n_splits=folds, shuffle=True, random_state = seed)
-
-    spkr_list = dataset.get_speaker_list()
-
     phone_weights = get_phone_weights_as_torch(args.phone_weights_path)
 
-    for fold, (train_spkr_indexes, test_spkr_indexes) in enumerate(kfold.split(spkr_list)):
 
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size,
+                                 num_workers=0, collate_fn=collate_fn_padd)
 
-        train_sample_indexes = dataset.get_sample_indexes_from_spkr_indexes(train_spkr_indexes)
-        test_sample_indexes  = dataset.get_sample_indexes_from_spkr_indexes(test_spkr_indexes)
+    testloader = torch.utils.data.DataLoader(testset, batch_size=args.batch_size, 
+                                 num_workers=0, collate_fn=collate_fn_padd)
 
-        train_subsampler = torch.utils.data.SubsetRandomSampler(train_sample_indexes)
-        test_subsampler  = torch.utils.data.SubsetRandomSampler(test_sample_indexes)
+    phone_count = trainset.phone_count()
 
-        trainloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size,
-                                     num_workers=0, sampler=train_subsampler, collate_fn=collate_fn_padd)
+    #Get acoustic model to train
+    model = FTDNN(out_dim=phone_count, batchnorm=args.batchnorm, dropout_p=args.dropout_p, device_name=device_name) 
+    model.to(device)
+    state_dict = torch.load(get_model_path_for_fold(args.model_path, fold, layer_amount))
+    model.load_state_dict(state_dict['model_state_dict'])
 
-        testloader = torch.utils.data.DataLoader(dataset, batch_size=32, 
-                                     num_workers=0, sampler=test_subsampler, collate_fn=collate_fn_padd)
-
-        phone_count = dataset.phone_count()
-
-        #Get acoustic model to train
-        model = FTDNN(out_dim=phone_count, batchnorm=args.batchnorm, dropout_p=args.dropout_p, device_name=device_name) 
-        model.to(device)
-        state_dict = torch.load(get_model_path_for_fold(args.model_path, fold, layer_amount))
-        model.load_state_dict(state_dict['model_state_dict'])
-
-        #Train the model
-        wandb.watch(model, log_freq=100)
-        if use_multi_process:
-            processes = []
-            p = mp.Process(target=train, args=(model, trainloader, testloader, fold, 
-                           epochs, args.state_dict_dir, run_name, layer_amount, use_dropout, 
-                           args.learning_rate, use_clipping))
-            p.start()
-            processes.append(p)
-        else:
-            train(model, trainloader, testloader, fold, epochs, args.state_dict_dir,
-                  run_name, layer_amount, use_dropout, args.learning_rate, use_clipping, args.batchnorm, norm_per_phone_and_class)
-
-        #Generate test sample list for current fold
-        generate_test_sample_list(testloader, epa_root_path, args.test_sample_list_dir, 'test_sample_list_fold_' + str(fold))
-
-    if use_multi_process:
-        for p in processes:
-            p.join()
+    #Train the model
+    wandb.watch(model, log_freq=100)
+    train(model, trainloader, testloader, fold, epochs, args.state_dict_dir,
+          run_name, layer_amount, use_dropout, args.learning_rate, use_clipping, args.batchnorm, norm_per_phone_and_class)
 
 if __name__ == '__main__':
     main()

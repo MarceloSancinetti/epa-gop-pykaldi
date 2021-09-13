@@ -71,22 +71,8 @@ class EpaDB(Dataset):
         self._feature_manager = FeatureManager(root_path, features_path, conf_path)
 
         # Read from sample list and create dictionary mapping fileid to .wav path and file list mapping int to logid
-        file_id_list = []
-        logids_by_speaker = {}
-        sample_list_fh = open(sample_list_path, "r")
-        for line in sample_list_fh.readlines():
-            line = line.split()
-            logid = line[0]
-            speaker_id = logid.split('_')[0]
-            sample_path = line[1]
-            file_id_list.append(logid)
-            if speaker_id in logids_by_speaker:
-                logids_by_speaker[speaker_id].append(logid)
-            else:
-                logids_by_speaker[speaker_id] = [logid]
-        self._filelist = file_id_list
-        self._logids_by_speaker = logids_by_speaker
-
+        self._filelist, self._logids_by_speaker = generate_fileid_list_and_spkr2logid_dict(sample_list_path)
+        
         #Define pure phone dictionary to map pure phone symbols to a label vector index  
         self._pure_phone_dict = get_phone_symbol_to_int_dict(phones_list_path)
 

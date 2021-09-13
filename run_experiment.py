@@ -4,17 +4,18 @@ import os
 from utils import *
 
 def extend_config_dict(config_yaml, config_dict):
-	config_dict["experiment-dir-path"] 	= get_experiment_directory(config_yaml)
-	config_dict["run-name"] 			= get_run_name(config_yaml)
-	config_dict["test-sample-list-dir"] = config_dict["experiment-dir-path"] 	 + "test_sample_lists/"
-	config_dict["state-dict-dir"] 		= config_dict["experiment-dir-path"] 	 + "state_dicts/"
-	config_dict["gop-scores-dir"] 		= config_dict["experiment-dir-path"] 	 + "gop_scores/"
-	config_dict["full-gop-score-path"] 	= config_dict["gop-scores-dir"] 	 	 + "gop-all-folds.txt"
-	config_dict["eval-dir"] 			= config_dict["experiment-dir-path"] 	 + "eval/"
-	config_dict["alignments-path"]      = config_dict["experiment-dir-path"] 	 + "align_output"
-	config_dict["loglikes-path"]        = config_dict["experiment-dir-path"] 	 + "loglikes.ark"
-	config_dict["transcription-file"]   = config_dict["epa-ref-labels-dir-path"] + "reference_transcriptions.txt"
-	config_dict["finetune-model-path"]  = config_dict["experiment-dir-path"]     + "/model_finetuning_kaldi.pt"
+	config_dict["experiment-dir-path"] 	 = get_experiment_directory(config_yaml)
+	config_dict["run-name"] 			 = get_run_name(config_yaml)
+	config_dict["test-sample-list-dir"]  = config_dict["experiment-dir-path"] 	 + "test_sample_lists/"
+	config_dict["train-sample-list-dir"] = config_dict["experiment-dir-path"] 	 + "train_sample_lists/"
+	config_dict["state-dict-dir"] 		 = config_dict["experiment-dir-path"] 	 + "state_dicts/"
+	config_dict["gop-scores-dir"] 		 = config_dict["experiment-dir-path"] 	 + "gop_scores/"
+	config_dict["full-gop-score-path"] 	 = config_dict["gop-scores-dir"] 	 	 + "gop-all-folds.txt"
+	config_dict["eval-dir"] 			 = config_dict["experiment-dir-path"] 	 + "eval/"
+	config_dict["alignments-path"]       = config_dict["experiment-dir-path"] 	 + "align_output"
+	config_dict["loglikes-path"]         = config_dict["experiment-dir-path"] 	 + "loglikes.ark"
+	config_dict["transcription-file"]    = config_dict["epa-ref-labels-dir-path"] + "reference_transcriptions.txt"
+	config_dict["finetune-model-path"]   = config_dict["experiment-dir-path"]     + "/model_finetuning_kaldi.pt"
 	
 	#Choose labels dir
 	if config_dict["use-kaldi-labels"]:
@@ -25,31 +26,43 @@ def extend_config_dict(config_yaml, config_dict):
 	return config_dict
 
 def run_train(config_dict, device_name):
-	args_dict = {"run-name": 			 	 config_dict["run-name"],
-				 "utterance-list": 		 	 config_dict["utterance-list-path"],
-				 "folds": 				 	 config_dict["folds"],
- 				 "epochs": 				 	 config_dict["epochs"],
-				 "layers": 		 		 	 config_dict["layers"],
-				 "use-dropout": 		 	 config_dict["use-dropout"],
-				 "dropout-p": 		     	 config_dict["dropout-p"],
-				 "learning-rate":        	 config_dict["learning-rate"],
-				 "batch-size":           	 config_dict["batch-size"],
-				 "norm-per-phone-and-class": config_dict["norm-per-phone-and-class"],
-                 "use-clipping":         	 config_dict["use-clipping"],
-                 "batchnorm":            	 config_dict["batchnorm"],
-				 "phones-file": 		 	 config_dict["phones-list-path"],
-				 "labels-dir": 			 	 config_dict["labels-dir"],
-				 "model-path": 			 	 config_dict["finetune-model-path"],
-				 "phone-weights-path":   	 config_dict["phone-weights-path"],
-				 "epa-root-path": 		 	 config_dict["epadb-root-path"],
-				 "features-path": 		 	 config_dict["features-path"],
-				 "conf-path": 			 	 config_dict["features-conf-path"],
-				 "test-sample-list-dir": 	 config_dict["test-sample-list-dir"],
-				 "state-dict-dir": 		 	 config_dict["state-dict-dir"],
-				 "use-multi-process":    	 config_dict["use-multi-process"],
-				 "device":               	 device_name				 
-				}
-	run_script("src/train.py", args_dict)
+	fold_amount = config_dict["folds"]
+	args_dict = {"utterance-list-path":       config_dict["utterance-list-path"], 
+	             "folds":                     fold_amount,
+	             "epadb-root-path":           config_dict["epadb-root-path"],
+				 "train-sample-list-dir":     config_dict["train-sample-list-dir"],
+				 "test-sample-list-dir":      config_dict["test-sample-list-dir"]
+	            }
+	run_script("src/generate_kfold_utt_lists.py", args_dict)
+
+
+	for fold in range(fold_amount):
+		args_dict = {"run-name": 			 	 config_dict["run-name"],
+					 "trainset-list": 		 	 config_dict["train-sample-list-dir"] + 'train_sample_list_fold_' + str(fold),
+ 					 "testset-list": 		 	 config_dict["test-sample-list-dir"]  + 'test_sample_list_fold_'  + str(fold),
+					 "fold": 				 	 fold,
+	 				 "epochs": 				 	 config_dict["epochs"],
+					 "layers": 		 		 	 config_dict["layers"],
+					 "use-dropout": 		 	 config_dict["use-dropout"],
+					 "dropout-p": 		     	 config_dict["dropout-p"],
+					 "learning-rate":        	 config_dict["learning-rate"],
+					 "batch-size":           	 config_dict["batch-size"],
+					 "norm-per-phone-and-class": config_dict["norm-per-phone-and-class"],
+	                 "use-clipping":         	 config_dict["use-clipping"],
+	                 "batchnorm":            	 config_dict["batchnorm"],
+					 "phones-file": 		 	 config_dict["phones-list-path"],
+					 "labels-dir": 			 	 config_dict["labels-dir"],
+					 "model-path": 			 	 config_dict["finetune-model-path"],
+					 "phone-weights-path":   	 config_dict["phone-weights-path"],
+					 "epa-root-path": 		 	 config_dict["epadb-root-path"],
+					 "features-path": 		 	 config_dict["features-path"],
+					 "conf-path": 			 	 config_dict["features-conf-path"],
+					 "test-sample-list-dir": 	 config_dict["test-sample-list-dir"],
+					 "state-dict-dir": 		 	 config_dict["state-dict-dir"],
+					 "use-multi-process":    	 config_dict["use-multi-process"],
+					 "device":               	 device_name				 
+					}
+		run_script("src/train.py", args_dict)
 
 def run_evaluate_many_epochs(config_yaml, step=50):
 	args_dict = {"config": config_yaml,

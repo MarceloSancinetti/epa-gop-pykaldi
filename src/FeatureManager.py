@@ -16,8 +16,8 @@ class FeatureManager:
 		self.feats_scp_path = features_path + '/feats.scp'
 		self.conf_path = conf_path
 		self.cache = dict()
+		self.ivector_period = None
 
-		self.ivector_period = self._read_ivector_period_from_conf()
 
 
 	def extract_features_using_kaldi(self):
@@ -55,6 +55,9 @@ class FeatureManager:
 
 	#Returns features (MFCCs+iVectors) for given logid in the format the acoustic model expects
 	def get_features_for_logid(self, logid):
+		
+		if self.ivector_period == None:
+			self.ivector_period = self._read_ivector_period_from_conf()
 
 		if not logid in self.cache:
 

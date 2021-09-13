@@ -87,13 +87,16 @@ def create_ref_labels_symlinks(epadb_root_path, labels_path):
 def make_experiment_directory(experiment_dir_path, setup):
     #This will create the experiment directory and the test sample list, 
     #state dict, and gop scores directories inside of it
-    test_sample_lists_dir = experiment_dir_path + "/test_sample_lists/"
-    state_dicts_dir       = experiment_dir_path + "/state_dicts/"
-    gop_scores_dir        = experiment_dir_path + "/gop_scores/"
-    eval_dir              = experiment_dir_path + "/eval/"
+    test_sample_lists_dir  = experiment_dir_path + "/test_sample_lists/"
+    train_sample_lists_dir = experiment_dir_path + "/train_sample_lists/"
+    state_dicts_dir        = experiment_dir_path + "/state_dicts/"
+    gop_scores_dir         = experiment_dir_path + "/gop_scores/"
+    eval_dir               = experiment_dir_path + "/eval/"
     
     if not os.path.exists(test_sample_lists_dir) and setup == "exp":
         os.makedirs(test_sample_lists_dir)
+    if not os.path.exists(train_sample_lists_dir) and setup == "exp":
+        os.makedirs(train_sample_lists_dir)
     if not os.path.exists(state_dicts_dir) and setup == "exp":
         os.makedirs(state_dicts_dir)
     if not os.path.exists(gop_scores_dir):

@@ -132,14 +132,44 @@ def log_phone_number_and_score(log_fh, labels, scores, start_time, end_time, met
 	    log_fh.write( '[ ' + str(phone_number_start) + ' ' + str(phone_level_score) + ' ] ')
 
 
-#This function takes a testloader and writes the logids and paths of all samples
-#in the testloader to directory/filename. The generated sample list is used to test 
+#This function takes a dataloader and writes the logids and paths of all samples
+#in the dataloader to directory/filename. The generated sample list is used to train/test 
 #the model for each fold. 
-def generate_test_sample_list(testloader, epa_root_path, directory, filename):
+def generate_sample_list(dataloader, epa_root_path, directory, filename):
     sample_list_fh = open(directory + '/' + filename, 'w+')
-    for i, data in enumerate(testloader, 0):
+    for i, data in enumerate(dataloader, 0):
         logids = unpack_logids_from_batch(data)
         for logid in logids:
             spkr_id = logid.split('_')[0]
             sample_path = epa_root_path + '/' + spkr_id + '/waveforms/' + logid + '.wav'
             sample_list_fh.write(logid + ' ' + sample_path + '\n')
+
+#This function takes the path to an utterance list and returns a list of logids 
+#and a dictionary mapping speaker ids to logid lists 
+def generate_fileid_list_and_spkr2logid_dict(sample_list_path):
+    file_id_list = []
+    logids_by_speaker = {}
+    sample_list_fh = open(sample_list_path, "r")
+    for line in sample_list_fh.readlines():
+        line = line.split()
+        logid = line[0]
+        speaker_id = logid.split('_')[0]
+        sample_path = line[1]
+        file_id_list.append(logid)
+        if speaker_id in logids_by_speaker:
+            logids_by_speaker[speaker_id].append(logid)
+        else:
+            logids_by_speaker[speaker_id] = [logid]
+    return file_id_list, logids_by_speaker
+
+#This function takes the path to an utterance list and returns a list of speaker ids
+def get_speaker_list_from_utterance_list_file(sample_path):
+    speaker_list = []
+    sample_list_fh = open(sample_list_path, "r")
+    for line in sample_list_fh.readlines():
+        line = line.split()
+        logid = line[0]
+        speaker_id = logid.split('_')[0]
+        if speaker_id not in speaker_list:
+            speaker_list.append(speaker_id)
+    return speaker_listr
