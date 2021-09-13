@@ -6,14 +6,14 @@
   phone-weights-path:      "experiments/configs/phone_weights_trivial.yaml"
   use-kaldi-labels:        true
   folds:                   6
-  epochs:                  35
+  epochs:                  400
   layers:                  1
-  learning-rate:           0.001
+  learning-rate:           0.005
   batch-size:              32
   use-dropout:             "true"
-  dropout-p:               0.005851493
-  batchnorm:               "all"
-  norm-per-phone:          "false"
+  dropout-p:               0.3
+  batchnorm:               "last"
+  norm-per-phone-and-class: "false"
   use-clipping:            "false"
   use-multi-process:       "false"
   phones-list-path:        "phones/kaldi_phones_list.txt"
