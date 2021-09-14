@@ -122,6 +122,12 @@ def run_create_kaldi_labels(config_dict, setup):
 	run_script("src/create_kaldi_labels.py", args_dict)
 
 def run_generate_scores(config_dict, epoch=None):
+	if "held-out" in config_dict and config_dict["held-out"]:
+		run_generate_scores_heldout(config_dict, epoch=epoch)
+	else:
+		run_generate_scores_kfold(config_dict, epoch=epoch)
+
+def run_generate_scores_kfold(config_dict, epoch=None):
 	cat_file_names = ""
 	for fold in range(config_dict["folds"]):
 		args_dict = {"state-dict-dir":  config_dict["state-dict-dir"],
@@ -140,3 +146,18 @@ def run_generate_scores(config_dict, epoch=None):
 		cat_file_names += args_dict['gop-txt-dir'] + '/' +'gop-'+args_dict['model-name']+'.txt ' #Codigo repetido con generate_score_txt
 	#Concatenate gop scores for all folds
 	os.system("cat " + cat_file_names + " > " + config_dict["full-gop-score-path"])
+
+def run_generate_scores_heldout(config_dict, epoch=None):
+	args_dict = {"state-dict-dir":  config_dict["state-dict-dir"],
+				 "model-name": 	    get_model_name(config_dict, 0, epoch=epoch),
+				 "epa-root": 	    config_dict["epadb-root-path"],
+				 "sample-list":     config_dict["test-list-path"],
+				 "phone-list":      config_dict["phones-list-path"],
+				 "labels-dir":      config_dict["labels-dir"],
+				 "gop-txt-dir":     config_dict["gop-scores-dir"],
+				 "features-path":   config_dict["features-path"],
+				 "conf-path":       config_dict["features-conf-path"],
+		         "device":          "cpu",
+                 "batchnorm":       config_dict["batchnorm"]
+				}
+	run_script("src/generate_score_txt.py", args_dict)

@@ -26,6 +26,12 @@ def extend_config_dict(config_yaml, config_dict):
 	return config_dict
 
 def run_train(config_dict, device_name):
+	if "held-out" in config_dict and config_dict["held-out"]:
+		run_train_heldout(config_dict, device_name)
+	else:
+		run_train_kfold(config_dict, device_name)
+
+def run_train_kfold(config_dict, device_name):
 	fold_amount = config_dict["folds"]
 	args_dict = {"utterance-list-path":       config_dict["utterance-list-path"], 
 	             "folds":                     fold_amount,
@@ -63,6 +69,35 @@ def run_train(config_dict, device_name):
 					 "device":               	 device_name				 
 					}
 		run_script("src/train.py", args_dict)
+
+def run_train_heldout(config_dict, device_name):
+	args_dict = {"run-name": 			 	 config_dict["run-name"],
+				 "trainset-list": 		 	 config_dict["train-list-path"],
+				 "testset-list": 		 	 config_dict["test-list-path"],
+				 "fold": 				 	 0,
+ 				 "epochs": 				 	 config_dict["epochs"],
+				 "layers": 		 		 	 config_dict["layers"],
+				 "use-dropout": 		 	 config_dict["use-dropout"],
+				 "dropout-p": 		     	 config_dict["dropout-p"],
+				 "learning-rate":        	 config_dict["learning-rate"],
+				 "batch-size":           	 config_dict["batch-size"],
+				 "norm-per-phone-and-class": config_dict["norm-per-phone-and-class"],
+                 "use-clipping":         	 config_dict["use-clipping"],
+                 "batchnorm":            	 config_dict["batchnorm"],
+				 "phones-file": 		 	 config_dict["phones-list-path"],
+				 "labels-dir": 			 	 config_dict["labels-dir"],
+				 "model-path": 			 	 config_dict["finetune-model-path"],
+				 "phone-weights-path":   	 config_dict["phone-weights-path"],
+				 "epa-root-path": 		 	 config_dict["epadb-root-path"],
+				 "features-path": 		 	 config_dict["features-path"],
+				 "conf-path": 			 	 config_dict["features-conf-path"],
+				 "test-sample-list-dir": 	 config_dict["test-sample-list-dir"],
+				 "state-dict-dir": 		 	 config_dict["state-dict-dir"],
+				 "use-multi-process":    	 config_dict["use-multi-process"],
+				 "device":               	 device_name				 
+				}
+	run_script("src/train.py", args_dict)
+
 
 def run_evaluate_many_epochs(config_yaml, step=50):
 	args_dict = {"config": config_yaml,
