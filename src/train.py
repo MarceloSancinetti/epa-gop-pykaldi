@@ -337,7 +337,7 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
         test_loss, test_loss_dict = test(model, testloader)
         step = log_test_loss(fold, test_loss, step, test_loss_dict)
 
-        if epoch % 5 == 4:
+        if epoch % 25 == 24:
             PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch+1) 
             torch.save({
                 'model_state_dict': model.state_dict(),
