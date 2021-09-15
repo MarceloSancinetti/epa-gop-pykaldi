@@ -2,8 +2,9 @@ import yaml
 import argparse
 import os
 from utils import *
+from IPython import embed
 
-def extend_config_dict(config_yaml, config_dict):
+def extend_config_dict(config_yaml, config_dict, use_heldout):
 	config_dict["experiment-dir-path"] 	 = get_experiment_directory(config_yaml)
 	config_dict["run-name"] 			 = get_run_name(config_yaml)
 	config_dict["test-sample-list-dir"]  = config_dict["experiment-dir-path"] 	 + "test_sample_lists/"
@@ -16,12 +17,16 @@ def extend_config_dict(config_yaml, config_dict):
 	config_dict["loglikes-path"]         = config_dict["experiment-dir-path"] 	 + "loglikes.ark"
 	config_dict["transcription-file"]    = config_dict["epa-ref-labels-dir-path"] + "reference_transcriptions.txt"
 	config_dict["finetune-model-path"]   = config_dict["experiment-dir-path"]     + "/model_finetuning_kaldi.pt"
-	
+	config_dict["held-out"]   = use_heldout
+
 	#Choose labels dir
 	if config_dict["use-kaldi-labels"]:
 		config_dict["labels-dir"] = config_dict["kaldi-labels-path"]
 	else:
 		config_dict["labels-dir"] = config_dict["epa-ref-labels-dir-path"]
+
+	if "utterance-list-path" not in config_dict:
+		config_dict["utterance-list-path"] = config_dict["train-list-path"]
 
 	return config_dict
 
@@ -105,11 +110,11 @@ def run_evaluate_many_epochs(config_yaml, step=50):
 	            }
 	run_script("evaluate_many_epochs.py", args_dict)
 
-def run_all(config_yaml, stage, device_name):
+def run_all(config_yaml, stage, device_name, use_heldout):
 	config_fh = open(config_yaml, "r")
 	config_dict = yaml.safe_load(config_fh)	
 
-	config_dict = extend_config_dict(config_yaml, config_dict)
+	config_dict = extend_config_dict(config_yaml, config_dict, use_heldout)
 
 	if stage in ["dataprep", "all"]:
 		print("Running data preparation")
@@ -141,7 +146,9 @@ if __name__ == '__main__':
 	parser.add_argument('--config', dest='config_yaml',  help='Path .yaml config file for experiment', default=None)
 	parser.add_argument('--stage', dest='stage',  help='Stage to run (dataprep, align, train, scores, evaluate), or \'all\' to run all stages', default=None)
 	parser.add_argument('--device', dest='device_name', help='Device name to use, such as cpu or cuda', default=None)
+	parser.add_argument('heldout', nargs='?', help='Use this option to test on heldout set')
 
 	args = parser.parse_args()
+	use_heldout = args.heldout == 'heldout'
 
-	run_all(args.config_yaml, args.stage, args.device_name)
+	run_all(args.config_yaml, args.stage, args.device_name, use_heldout)
