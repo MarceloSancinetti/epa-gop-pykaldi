@@ -352,19 +352,20 @@ def test(model, testloader):
 
     global phone_weights, phone_count, phone_int2sym, device
 
-    dataiter = iter(testloader)
-    batch = dataiter.next()
-    features = unpack_features_from_batch(batch).to(device)
-    #pos_labels = unpack_pos_labels_from_batch(batch)
-    #neg_labels = unpack_neg_labels_from_batch(batch)
-    labels   = unpack_labels_from_batch(batch).to(device)
+    total_loss = 0
+    for i, batch in enumerate(testloader, 0):  
+        features = unpack_features_from_batch(batch).to(device)
+        #pos_labels = unpack_pos_labels_from_batch(batch)
+        #neg_labels = unpack_neg_labels_from_batch(batch)
+        labels   = unpack_labels_from_batch(batch).to(device)
 
-    outputs = model(features)
-    loss_dict = {}
-    loss, loss_dict = criterion_fast(outputs, labels, weights=phone_weights, log_per_phone_and_class_loss=True, phone_int2sym=phone_int2sym)    
-    #loss = criterion_simple(outputs, labels)
+        outputs = model(features)
+        loss_dict = {}
+        loss, loss_dict = criterion_fast(outputs, labels, weights=phone_weights, log_per_phone_and_class_loss=True, phone_int2sym=phone_int2sym)    
+        #loss = criterion_simple(outputs, labels)
 
-    loss = loss.item()
+        loss = loss.item()
+        total_loss += loss
 
     return loss, loss_dict
 
@@ -399,7 +400,8 @@ def main():
     parser.add_argument('--labels-dir', dest='labels_dir', help='Directory with labels used in training', default=None)
     parser.add_argument('--model-path', dest='model_path', help='Path to .pth/pt file with model to finetune', default=None)
     parser.add_argument('--phone-weights-path', dest='phone_weights_path', help='Path to .yaml containing weights for phone-level loss', default=None)
-    parser.add_argument('--epa-root-path', dest='epa_root_path', help='EpaDB root path', default=None)
+    parser.add_argument('--train-root-path', dest='train_root_path', help='EpaDB root path', default=None)
+    parser.add_argument('--test-root-path', dest='test_root_path', help='EpaDB root path', default=None)
     parser.add_argument('--features-path', dest='features_path', help='Path to features directory', default=None)
     parser.add_argument('--conf-path', dest='conf_path', help='Path to config directory used in feature extraction', default=None)
     parser.add_argument('--test-sample-list-dir', dest='test_sample_list_dir', help='Path to output directory to save test sample lists', default=None)
@@ -421,9 +423,11 @@ def main():
     wandb.init(project="gop-finetuning", entity="pronscoring-liaa")
     wandb.run.name = run_name
 
-    epa_root_path = args.epa_root_path
-    trainset = EpaDB(epa_root_path, args.trainset_list, args.phones_file, args.labels_dir, args.features_path, args.conf_path)
-    testset  = EpaDB(epa_root_path, args.testset_list , args.phones_file, args.labels_dir, args.features_path, args.conf_path)
+    train_root_path = args.train_root_path
+    test_root_path = args.test_root_path
+
+    trainset = EpaDB(train_root_path, args.trainset_list, args.phones_file, args.labels_dir, args.features_path, args.conf_path)
+    testset  = EpaDB(test_root_path, args.testset_list , args.phones_file, args.labels_dir, args.features_path, args.conf_path)
 
     global phone_int2sym, phone_weights, phone_count, device
     phone_int2sym = trainset.phone_int2sym_dict

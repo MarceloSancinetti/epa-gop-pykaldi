@@ -1,6 +1,7 @@
 import yaml
 import argparse
 import os
+from IPython import embed
 
 def generate_arguments(args_dict):
 	res = ""
@@ -51,9 +52,12 @@ def run_data_prep(config_dict, setup):
 	
 	if setup == 'exp':
 		phone_count = get_phone_count(config_dict["phones-list-path"])
-		args_dict.update({"finetune-model-path":     config_dict["finetune-model-path"],
+		args_dict.update({"heldout":                 config_dict["held-out"],
+						  "heldout-root-path":       config_dict["heldout-root-path"],
+						  "heldout-list-path":       config_dict["test-list-path"],
+						  "finetune-model-path":     config_dict["finetune-model-path"],
 			   			  "phone-count":             phone_count,
-		 				  "batchnorm":     			config_dict["batchnorm"],
+		 				  "batchnorm":     			 config_dict["batchnorm"],
          				  "seed":                    42})
 
 	run_script("src/prepare_data.py", args_dict)
@@ -93,6 +97,13 @@ def run_align(config_dict):
 
 	run_script("src/align_using_pytorch_am.py", args_dict)
 
+	if config_dict.get("held-out"):
+		args_dict['epadb-root-path']               = config_dict['heldout-root-path']
+		args_dict['utterance-list']                = config_dict['test-list-path']
+		args_dict['align-path']                    = config_dict['heldout-align-path']
+
+		run_script("src/align_using_pytorch_am.py", args_dict)
+
 def run_evaluate(config_dict, epoch=''):
 
 	args_dict = {"transcription-file": config_dict["transcription-file"],
@@ -118,8 +129,15 @@ def run_create_kaldi_labels(config_dict, setup):
 				 	  	  'phone-weights-path': 		  config_dict["phone-weights-path"],
 				 	      'phone-count':                  phone_count
 						 })
-
+	
 	run_script("src/create_kaldi_labels.py", args_dict)
+	
+	if config_dict.get("held-out"):
+		args_dict['reference-transcriptions-path'] = config_dict["heldout-root-path"] + "/reference_transcriptions.txt"
+		args_dict['utterance-list-path']           = config_dict['test-list-path']
+		args_dict['labels-dir-path']               = config_dict['heldout-root-path']
+		args_dict['alignments-path']               = config_dict['heldout-align-path']
+		run_script("src/create_kaldi_labels.py", args_dict)
 
 def run_generate_scores(config_dict, epoch=None):
 	if "held-out" in config_dict and config_dict["held-out"]:

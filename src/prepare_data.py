@@ -2,6 +2,7 @@ import glob
 import os
 import argparse
 from FeatureManager import FeatureManager
+from IPython import embed
 
 def generate_arguments(args_dict):
     res = ""
@@ -120,15 +121,20 @@ if __name__ == '__main__':
     parser.add_argument('--phone-count', dest='phone_count', help='Size of the phone set for the current system', default=None)
     parser.add_argument('--experiment-dir-path', dest='experiment_dir_path', help='Path where the directory for the current expriment\'s files will be created', default=None)
     parser.add_argument('--setup', dest='setup', help='The setup you want to run (either exp or gop)', default=None)
+    parser.add_argument('--heldout', dest='heldout', help='Whether to test on heldout set or not', default="false")
+    parser.add_argument('--heldout-root-path', dest='heldout_root_path', help='EpaDB heldout set root path', default=None)
+    parser.add_argument('--heldout-list-path', dest='heldout_list_path', help='Path where heldout utterance list will be created', default=None)
     parser.add_argument('--finetune-model-path', dest='finetune_model_path', help='Path where the model to finetune will be created', default=None)
     parser.add_argument('--batchnorm', dest='batchnorm', help='Batchnorm mode (first, last, all, etc)', default=None)
     parser.add_argument('--seed', dest='seed', help='Random seed', default=None)
     args = parser.parse_args()
 
-    features_path   = args.features_path
-    conf_path       = args.conf_path
-    epadb_root_path = args.epa_root_path
-    setup           = args.setup
+    features_path     = args.features_path
+    conf_path         = args.conf_path
+    epadb_root_path   = args.epa_root_path
+    heldout_root_path = args.heldout_root_path
+    setup             = args.setup
+    use_heldout       = args.heldout == "True"
 
     if setup != "exp" and setup != "gop":
         raise Exception("Error: setup argument must be either gop or exp")
@@ -144,16 +150,18 @@ if __name__ == '__main__':
                            args.acoustic_model_path, setup, args.batchnorm, args.seed, args.finetune_model_path, args.phone_count)
 
     #Extract features
-    feature_manager = FeatureManager(epadb_root_path, features_path, conf_path)
+    feature_manager = FeatureManager(epadb_root_path, features_path, conf_path, heldout_root_path=heldout_root_path)
     feature_manager.extract_features_using_kaldi()
-    
-    
+
     #Create symlinks
     create_ref_labels_symlinks(epadb_root_path, args.labels_path)
 
     
     #Create full EpaDB sample list
     create_epadb_full_sample_list(epadb_root_path, args.utterance_list_path)
+    
+    if use_heldout:
+        create_epadb_full_sample_list(heldout_root_path, args.heldout_list_path)
 
 
 

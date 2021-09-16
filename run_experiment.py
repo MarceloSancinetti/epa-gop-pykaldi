@@ -14,6 +14,7 @@ def extend_config_dict(config_yaml, config_dict, use_heldout):
 	config_dict["full-gop-score-path"] 	 = config_dict["gop-scores-dir"] 	 	 + "gop-all-folds.txt"
 	config_dict["eval-dir"] 			 = config_dict["experiment-dir-path"] 	 + "eval/"
 	config_dict["alignments-path"]       = config_dict["experiment-dir-path"] 	 + "align_output"
+	config_dict["heldout-align-path"]    = config_dict["experiment-dir-path"]    + "align_output_heldout"	
 	config_dict["loglikes-path"]         = config_dict["experiment-dir-path"] 	 + "loglikes.ark"
 	config_dict["transcription-file"]    = config_dict["epa-ref-labels-dir-path"] + "reference_transcriptions.txt"
 	config_dict["finetune-model-path"]   = config_dict["experiment-dir-path"]     + "/model_finetuning_kaldi.pt"
@@ -65,7 +66,8 @@ def run_train_kfold(config_dict, device_name):
 					 "labels-dir": 			 	 config_dict["labels-dir"],
 					 "model-path": 			 	 config_dict["finetune-model-path"],
 					 "phone-weights-path":   	 config_dict["phone-weights-path"],
-					 "epa-root-path": 		 	 config_dict["epadb-root-path"],
+					 "train-root-path": 		 config_dict["epadb-root-path"],
+					 "test-root-path": 		     config_dict["heldout-root-path"],
 					 "features-path": 		 	 config_dict["features-path"],
 					 "conf-path": 			 	 config_dict["features-conf-path"],
 					 "test-sample-list-dir": 	 config_dict["test-sample-list-dir"],
@@ -93,7 +95,8 @@ def run_train_heldout(config_dict, device_name):
 				 "labels-dir": 			 	 config_dict["labels-dir"],
 				 "model-path": 			 	 config_dict["finetune-model-path"],
 				 "phone-weights-path":   	 config_dict["phone-weights-path"],
-				 "epa-root-path": 		 	 config_dict["epadb-root-path"],
+				 "train-root-path": 		 config_dict["epadb-root-path"],
+				 "test-root-path": 		     config_dict["heldout-root-path"],
 				 "features-path": 		 	 config_dict["features-path"],
 				 "conf-path": 			 	 config_dict["features-conf-path"],
 				 "test-sample-list-dir": 	 config_dict["test-sample-list-dir"],
@@ -119,7 +122,6 @@ def run_all(config_yaml, stage, device_name, use_heldout):
 	if stage in ["dataprep", "all"]:
 		print("Running data preparation")
 		run_data_prep(config_dict, 'exp')
-
 
 	if stage in ["align", "all"]:
 		print("Running aligner")

@@ -3,20 +3,22 @@ import os
 from kaldi.util.table import RandomAccessMatrixReader
 import numpy as np
 import torch
+from IPython import embed
 
 
 class FeatureManager:
-	def __init__(self, epadb_root_path, features_path, conf_path):
+	def __init__(self, epadb_root_path, features_path, conf_path, heldout_root_path=''):
 		self.epadb_root_path = epadb_root_path
-		self.features_path = features_path
-		self.mfcc_path = features_path + '/mfccs.ark'
-		self.ivectors_path = features_path + '/ivectors.ark'
-		self.wav_scp_path = features_path + '/wav.scp'
-		self.spk2utt_path = features_path + '/spk2utt'
-		self.feats_scp_path = features_path + '/feats.scp'
-		self.conf_path = conf_path
-		self.cache = dict()
-		self.ivector_period = None
+		self.features_path   = features_path
+		self.mfcc_path       = features_path + '/mfccs.ark'
+		self.ivectors_path   = features_path + '/ivectors.ark'
+		self.wav_scp_path    = features_path + '/wav.scp'
+		self.spk2utt_path    = features_path + '/spk2utt'
+		self.feats_scp_path  = features_path + '/feats.scp'
+		self.conf_path       = conf_path
+		self.cache           = dict()
+		self.ivector_period  = None
+		self.heldout_root_path = heldout_root_path
 
 
 
@@ -30,7 +32,12 @@ class FeatureManager:
 
 		#Iterate over waveforms and write their names in wav.scp and spk2utt
 		#Also, create text file with transcriptions of all phrases
-		for file in glob.glob(self.epadb_root_path + '/*/waveforms/*'):
+		epadb_glob = glob.glob(self.epadb_root_path + '/*/waveforms/*')
+		heldout_glob = []
+		if self.heldout_root_path != '':
+			heldout_glob = glob.glob(self.heldout_root_path + '/*/waveforms/*')
+		
+		for file in epadb_glob + heldout_glob:
 			fullpath = os.path.abspath(file)
 			logid = os.path.splitext(os.path.basename(file))[0]
 			wav_scp_file.write(logid + ' ' + fullpath + '\n')
