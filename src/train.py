@@ -361,13 +361,14 @@ def test(model, testloader):
 
         outputs = model(features)
         loss_dict = {}
-        loss, loss_dict = criterion_fast(outputs, labels, weights=phone_weights, log_per_phone_and_class_loss=True, phone_int2sym=phone_int2sym)    
+        loss, loss_dict = criterion_fast(outputs, labels, weights=phone_weights, 
+                                         log_per_phone_and_class_loss=True, phone_int2sym=phone_int2sym)
         #loss = criterion_simple(outputs, labels)
 
         loss = loss.item()
         total_loss += loss
 
-    return loss, loss_dict
+    return total_loss / i, loss_dict
 
 def parse_bool_arg(arg):
     if arg not in ["true", "false"]:
@@ -441,7 +442,7 @@ def main():
 
 
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size,
-                                 num_workers=0, collate_fn=collate_fn_padd)
+                                 num_workers=0, collate_fn=collate_fn_padd, shuffle=True)
 
     testloader = torch.utils.data.DataLoader(testset, batch_size=args.batch_size, 
                                  num_workers=0, collate_fn=collate_fn_padd)

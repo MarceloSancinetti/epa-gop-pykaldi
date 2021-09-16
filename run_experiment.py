@@ -67,7 +67,7 @@ def run_train_kfold(config_dict, device_name):
 					 "model-path": 			 	 config_dict["finetune-model-path"],
 					 "phone-weights-path":   	 config_dict["phone-weights-path"],
 					 "train-root-path": 		 config_dict["epadb-root-path"],
-					 "test-root-path": 		     config_dict["heldout-root-path"],
+					 "test-root-path": 		     config_dict["epadb-root-path"],
 					 "features-path": 		 	 config_dict["features-path"],
 					 "conf-path": 			 	 config_dict["features-conf-path"],
 					 "test-sample-list-dir": 	 config_dict["test-sample-list-dir"],
