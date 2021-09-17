@@ -3,33 +3,7 @@ import argparse
 import os
 from utils import *
 from IPython import embed
-
-def extend_config_dict(config_yaml, config_dict, use_heldout):
-	config_dict["experiment-dir-path"] 	 = get_experiment_directory(config_yaml)
-	config_dict["run-name"] 			 = get_run_name(config_yaml)
-	config_dict["test-sample-list-dir"]  = config_dict["experiment-dir-path"] 	 + "test_sample_lists/"
-	config_dict["train-sample-list-dir"] = config_dict["experiment-dir-path"] 	 + "train_sample_lists/"
-	config_dict["state-dict-dir"] 		 = config_dict["experiment-dir-path"] 	 + "state_dicts/"
-	config_dict["gop-scores-dir"] 		 = config_dict["experiment-dir-path"] 	 + "gop_scores/"
-	config_dict["full-gop-score-path"] 	 = config_dict["gop-scores-dir"] 	 	 + "gop-all-folds.txt"
-	config_dict["eval-dir"] 			 = config_dict["experiment-dir-path"] 	 + "eval/"
-	config_dict["alignments-path"]       = config_dict["experiment-dir-path"] 	 + "align_output"
-	config_dict["heldout-align-path"]    = config_dict["experiment-dir-path"]    + "align_output_heldout"	
-	config_dict["loglikes-path"]         = config_dict["experiment-dir-path"] 	 + "loglikes.ark"
-	config_dict["transcription-file"]    = config_dict["epa-ref-labels-dir-path"] + "reference_transcriptions.txt"
-	config_dict["finetune-model-path"]   = config_dict["experiment-dir-path"]     + "/model_finetuning_kaldi.pt"
-	config_dict["held-out"]   = use_heldout
-
-	#Choose labels dir
-	if config_dict["use-kaldi-labels"]:
-		config_dict["labels-dir"] = config_dict["kaldi-labels-path"]
-	else:
-		config_dict["labels-dir"] = config_dict["epa-ref-labels-dir-path"]
-
-	if "utterance-list-path" not in config_dict:
-		config_dict["utterance-list-path"] = config_dict["train-list-path"]
-
-	return config_dict
+from evaluate_many_epochs import generate_scores_and_evaluate_epochs
 
 def run_train(config_dict, device_name):
 	if "held-out" in config_dict and config_dict["held-out"]:
@@ -107,7 +81,7 @@ def run_train_heldout(config_dict, device_name):
 	run_script("src/train.py", args_dict)
 
 
-def run_evaluate_many_epochs(config_yaml, step=50):
+def run_evaluate_many_epochs(config_yaml, step=25):
 	args_dict = {"config": config_yaml,
 	             "step":   step
 	            }
@@ -133,14 +107,10 @@ def run_all(config_yaml, stage, device_name, use_heldout):
 			run_create_kaldi_labels(config_dict, 'exp')
 		print("Running training")
 		run_train(config_dict, device_name)
-	
-	if stage in ["train+","scores", "all"]:
-		print("Generating GOP scores")
-		run_generate_scores(config_dict)
 
 	if stage in ["train+","evaluate", "all"]:
 		print("Evaluating results")
-		run_evaluate_many_epochs(config_yaml, step=50)
+		generate_scores_and_evaluate_epochs(config_dict, 25)
 
 
 if __name__ == '__main__':
@@ -148,9 +118,9 @@ if __name__ == '__main__':
 	parser.add_argument('--config', dest='config_yaml',  help='Path .yaml config file for experiment', default=None)
 	parser.add_argument('--stage', dest='stage',  help='Stage to run (dataprep, align, train, scores, evaluate), or \'all\' to run all stages', default=None)
 	parser.add_argument('--device', dest='device_name', help='Device name to use, such as cpu or cuda', default=None)
-	parser.add_argument('heldout', nargs='?', help='Use this option to test on heldout set')
+	parser.add_argument('--heldout', action='store_true', help='Use this option to test on heldout set', default=False)
 
 	args = parser.parse_args()
-	use_heldout = args.heldout == 'heldout'
+	use_heldout = args.heldout
 
 	run_all(args.config_yaml, args.stage, args.device_name, use_heldout)

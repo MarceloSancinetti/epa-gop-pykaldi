@@ -40,7 +40,11 @@ def get_phone_weights_as_torch(phone_weights_path):
     return torch.tensor(phone_weights, device=device)
 
 def get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch):
-    return state_dict_dir + run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) + '.pth'
+    if "heldout" in run_name:
+        fold_identifier = ''
+    else:
+        fold_identifier = '-fold-' + str(fold)
+    return state_dict_dir + run_name + fold_identifier + '-epoch-' + str(epoch) + '.pth'
 
 #Logs loss for each phone in the loss dict to wandb 
 def get_log_dict_for_wandb_from_loss_dict(fold, loss_dict, tag):
@@ -353,7 +357,7 @@ def test(model, testloader):
     global phone_weights, phone_count, phone_int2sym, device
 
     total_loss = 0
-    for i, batch in enumerate(testloader, 0):  
+    for i, batch in enumerate(testloader, 0):
         features = unpack_features_from_batch(batch).to(device)
         #pos_labels = unpack_pos_labels_from_batch(batch)
         #neg_labels = unpack_neg_labels_from_batch(batch)
@@ -368,7 +372,7 @@ def test(model, testloader):
         loss = loss.item()
         total_loss += loss
 
-    return total_loss / i, loss_dict
+    return total_loss / (i + 1), loss_dict
 
 def parse_bool_arg(arg):
     if arg not in ["true", "false"]:

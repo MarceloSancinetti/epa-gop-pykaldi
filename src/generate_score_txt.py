@@ -97,6 +97,7 @@ def main():
     parser.add_argument('--phone-list', dest='phone_list_path', help='Path to phone list', default=None)
     parser.add_argument('--labels-dir', dest='labels_dir', help='Directory where labels are found', default=None)     
     parser.add_argument('--gop-txt-dir', dest='gop_txt_dir', help='Directory to save generated scores', default=None)
+    parser.add_argument('--gop-txt-name', dest='gop_txt_name', help='Name of the output .txt file containing scores', default=None)
     parser.add_argument('--features-path', dest='features_path', help='Path to features directory', default=None)
     parser.add_argument('--conf-path', dest='conf_path', help='Path to config directory used in feature extraction', default=None)
     parser.add_argument('--device', dest='device_name', help='Device name to use, such as cpu or cuda', default=None)
@@ -110,6 +111,7 @@ def main():
     phone_list_path     = args.phone_list_path
     labels_dir          = args.labels_dir
     gop_txt_dir         = args.gop_txt_dir
+    gop_txt_name        = args.gop_txt_name
     features_path       = args.features_path
     conf_path           = args.conf_path
     device_name         = args.device_name
@@ -129,7 +131,7 @@ def main():
     phone_dict = testset._pure_phone_dict
 
     scores = generate_scores_for_testset(model, testloader)
-    score_log_fh = open(gop_txt_dir+ '/' +'gop-'+model_name+'.txt', 'w+')
+    score_log_fh = open(gop_txt_dir+ '/' + gop_txt_name, 'w+')
     log_testset_scores_to_txt(scores, score_log_fh, phone_dict)
 
 if __name__ == '__main__':

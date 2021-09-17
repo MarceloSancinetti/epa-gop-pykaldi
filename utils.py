@@ -16,17 +16,26 @@ def run_script(script, args_dict):
 def get_phone_count(phone_list_path):
 	return len(open(phone_list_path).readlines())
 
-def get_run_name(config_yaml):
-	return os.path.basename(config_yaml).split('.')[0]
+def get_run_name(config_yaml, use_heldout=False):
+	heldout_suffix = ''
+	if use_heldout:
+		heldout_suffix = '_heldout'
+	return os.path.basename(config_yaml).split('.')[0] + heldout_suffix
 
-def get_experiment_directory(config_yaml):
-	return "experiments/" + get_run_name(config_yaml) + '/'
+def get_experiment_directory(config_yaml, use_heldout=False):
+	return "experiments/" + get_run_name(config_yaml, use_heldout) + '/'
 
-def get_model_name(config_dict, fold, epoch=None):
+def get_model_name(config_dict, fold, epoch=None, use_heldout=False):
 	if epoch == None:
 		epoch  = config_dict["epochs"]
 	run_name   = config_dict["run-name"]
-	return run_name + '-fold-' + str(fold) + '-epoch-' + str(epoch) #Aca hay codigo repetido entre el PATH de train y esto
+	
+	if use_heldout:
+		fold_identifier = ''
+	else:
+		fold_identifier = '-fold-' + str(fold)
+	
+	return run_name +  fold_identifier + '-epoch-' + str(epoch) #Aca hay codigo repetido entre el PATH de train y esto
 
 def get_test_sample_list_path_for_fold(test_sample_list_dir, fold):
 	return test_sample_list_dir + "/test_sample_list_fold_" + str(fold) #Aca tmb codigo repetido
@@ -105,12 +114,31 @@ def run_align(config_dict):
 		run_script("src/align_using_pytorch_am.py", args_dict)
 
 def run_evaluate(config_dict, epoch=''):
+	if config_dict.get("held-out"):
+		run_evaluate_heldout(config_dict, epoch=epoch)
+	else:
+		run_evaluate_kfold(config_dict, epoch=epoch)
+
+def run_evaluate_kfold(config_dict, epoch=''):
 
 	args_dict = {"transcription-file": config_dict["transcription-file"],
 				 "utterance-list": 	   config_dict["utterance-list-path"],
 				 "output-dir": 		   config_dict["eval-dir"],
 				 "output-filename":    "data_for_eval_epoch" + str(epoch) + ".pickle",
 				 "gop-file": 		   config_dict["full-gop-score-path"],
+				 "phones-pure-file":   config_dict["kaldi-phones-pure-path"],
+				 "labels": 	   		   config_dict["labels-dir"]
+				}
+	run_script("src/evaluate/generate_data_for_eval.py", args_dict)
+
+def run_evaluate_heldout(config_dict, epoch=''):
+	model_name = get_model_name(config_dict, 0, epoch=epoch, use_heldout=True)
+
+	args_dict = {"transcription-file": config_dict["transcription-file"],
+				 "utterance-list": 	   config_dict["test-list-path"],
+				 "output-dir": 		   config_dict["eval-dir"],
+				 "output-filename":    "data_for_eval_epoch" + str(epoch) + ".pickle",
+				 "gop-file": 		   config_dict["gop-scores-dir"] + 'gop-'+model_name+'.txt',
 				 "phones-pure-file":   config_dict["kaldi-phones-pure-path"],
 				 "labels": 	   		   config_dict["labels-dir"]
 				}
@@ -140,7 +168,7 @@ def run_create_kaldi_labels(config_dict, setup):
 		run_script("src/create_kaldi_labels.py", args_dict)
 
 def run_generate_scores(config_dict, epoch=None):
-	if "held-out" in config_dict and config_dict["held-out"]:
+	if config_dict.get("held-out"):
 		run_generate_scores_heldout(config_dict, epoch=epoch)
 	else:
 		run_generate_scores_kfold(config_dict, epoch=epoch)
@@ -148,13 +176,15 @@ def run_generate_scores(config_dict, epoch=None):
 def run_generate_scores_kfold(config_dict, epoch=None):
 	cat_file_names = ""
 	for fold in range(config_dict["folds"]):
+		model_name = get_model_name(config_dict, fold, epoch=epoch, use_heldout=False)
 		args_dict = {"state-dict-dir":  config_dict["state-dict-dir"],
-					 "model-name": 	    get_model_name(config_dict, fold, epoch=epoch),
+					 "model-name": 	    model_name,
 					 "epa-root": 	    config_dict["epadb-root-path"],
 					 "sample-list":     get_test_sample_list_path_for_fold(config_dict["test-sample-list-dir"], fold),
 					 "phone-list":      config_dict["phones-list-path"],
 					 "labels-dir":      config_dict["labels-dir"],
 					 "gop-txt-dir":     config_dict["gop-scores-dir"],
+	 				 "gop-txt-name":    'gop-'+model_name+'.txt',
 					 "features-path":   config_dict["features-path"],
 					 "conf-path":       config_dict["features-conf-path"],
 			         "device":          "cpu",
@@ -166,16 +196,51 @@ def run_generate_scores_kfold(config_dict, epoch=None):
 	os.system("cat " + cat_file_names + " > " + config_dict["full-gop-score-path"])
 
 def run_generate_scores_heldout(config_dict, epoch=None):
+	model_name = get_model_name(config_dict, 0, epoch=epoch, use_heldout=True)
 	args_dict = {"state-dict-dir":  config_dict["state-dict-dir"],
-				 "model-name": 	    get_model_name(config_dict, 0, epoch=epoch),
-				 "epa-root": 	    config_dict["epadb-root-path"],
+				 "model-name": 	    model_name,
+				 "epa-root": 	    config_dict["heldout-root-path"],
 				 "sample-list":     config_dict["test-list-path"],
 				 "phone-list":      config_dict["phones-list-path"],
 				 "labels-dir":      config_dict["labels-dir"],
 				 "gop-txt-dir":     config_dict["gop-scores-dir"],
+				 "gop-txt-name":    'gop-'+model_name+'.txt',
 				 "features-path":   config_dict["features-path"],
 				 "conf-path":       config_dict["features-conf-path"],
 		         "device":          "cpu",
                  "batchnorm":       config_dict["batchnorm"]
 				}
 	run_script("src/generate_score_txt.py", args_dict)
+
+def extend_config_dict(config_yaml, config_dict, use_heldout):
+	config_dict["experiment-dir-path"] 	 = get_experiment_directory(config_yaml, use_heldout=use_heldout)
+	config_dict["run-name"] 			 = get_run_name(config_yaml, use_heldout=use_heldout)
+	config_dict["test-sample-list-dir"]  = config_dict["experiment-dir-path"] 	 + "test_sample_lists/"
+	config_dict["train-sample-list-dir"] = config_dict["experiment-dir-path"] 	 + "train_sample_lists/"
+	config_dict["state-dict-dir"] 		 = config_dict["experiment-dir-path"] 	 + "state_dicts/"
+	config_dict["gop-scores-dir"] 		 = config_dict["experiment-dir-path"] 	 + "gop_scores/"
+	config_dict["eval-dir"] 			 = config_dict["experiment-dir-path"] 	 + "eval/"
+	config_dict["alignments-path"]       = config_dict["experiment-dir-path"] 	 + "align_output"
+	config_dict["heldout-align-path"]    = config_dict["experiment-dir-path"]    + "align_output_heldout"	
+	config_dict["loglikes-path"]         = config_dict["experiment-dir-path"] 	 + "loglikes.ark"
+	config_dict["transcription-file"]    = config_dict["epa-ref-labels-dir-path"] + "reference_transcriptions.txt"
+	config_dict["finetune-model-path"]   = config_dict["experiment-dir-path"]     + "/model_finetuning_kaldi.pt"
+	config_dict["held-out"]              = use_heldout
+
+	#Choose labels dir
+	if config_dict["use-kaldi-labels"]:
+		config_dict["labels-dir"] = config_dict["kaldi-labels-path"]
+	else:
+		config_dict["labels-dir"] = config_dict["epa-ref-labels-dir-path"]
+
+	if "utterance-list-path" not in config_dict:
+		config_dict["utterance-list-path"] = config_dict["train-list-path"]
+	if "train-list-path" not in config_dict:
+		config_dict["train-list-path"] = config_dict["utterance-list-path"]
+
+	if not use_heldout:
+		config_dict["full-gop-score-path"] 	 = config_dict["gop-scores-dir"] + "gop-all-folds.txt"
+
+
+
+	return config_dict
