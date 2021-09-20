@@ -110,7 +110,7 @@ def run_all(config_yaml, stage, device_name, use_heldout):
 
 	if stage in ["train+","evaluate", "all"]:
 		print("Evaluating results")
-		generate_scores_and_evaluate_epochs(config_dict, 25)
+		generate_scores_and_evaluate_epochs(config_dict, 50)
 
 
 if __name__ == '__main__':

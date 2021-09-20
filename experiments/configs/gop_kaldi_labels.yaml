@@ -1,10 +1,10 @@
 ---
-  utterance-list-path:           "experiments/sample_lists/epadb_full_path_list.txt"
-  epa-ref-labels-dir-path:       "epa_ref_labels/"
+  utterance-list-path:           "experiments/sample_lists/heldout_full_path_list.txt"
+  epa-ref-labels-dir-path:       "EpaDB_heldout/"
   alignments-path:               "align_output"
   kaldi-labels-path:             "kaldi_labels/"
   use-kaldi-labels:              true
-  epadb-root-path:               "EpaDB/"
+  epadb-root-path:               "EpaDB_heldout/"
   features-path:                 "features/data/"
   features-conf-path:            "features/conf/"
   acoustic-model-path:           "pytorch_models/acoustic_model.pt"

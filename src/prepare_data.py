@@ -122,7 +122,7 @@ if __name__ == '__main__':
     parser.add_argument('--experiment-dir-path', dest='experiment_dir_path', help='Path where the directory for the current expriment\'s files will be created', default=None)
     parser.add_argument('--setup', dest='setup', help='The setup you want to run (either exp or gop)', default=None)
     parser.add_argument('--heldout', dest='heldout', help='Whether to test on heldout set or not', default="false")
-    parser.add_argument('--heldout-root-path', dest='heldout_root_path', help='EpaDB heldout set root path', default=None)
+    parser.add_argument('--heldout-root-path', dest='heldout_root_path', help='EpaDB heldout set root path', default='')
     parser.add_argument('--heldout-list-path', dest='heldout_list_path', help='Path where heldout utterance list will be created', default=None)
     parser.add_argument('--finetune-model-path', dest='finetune_model_path', help='Path where the model to finetune will be created', default=None)
     parser.add_argument('--batchnorm', dest='batchnorm', help='Batchnorm mode (first, last, all, etc)', default=None)
