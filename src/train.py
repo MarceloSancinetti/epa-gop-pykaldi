@@ -8,6 +8,7 @@ import time
 import torchaudio
 import torch
 import torch.optim as optim
+from torch.optim.swa_utils import AveragedModel, SWALR
 import torch.multiprocessing as mp
 
 from finetuning_utils import *
@@ -39,12 +40,12 @@ def get_phone_weights_as_torch(phone_weights_path):
     phone_weights = weights_list
     return torch.tensor(phone_weights, device=device)
 
-def get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch):
+def get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch, suffix=''):
     if "heldout" in run_name:
         fold_identifier = ''
     else:
         fold_identifier = '-fold-' + str(fold)
-    return state_dict_dir + run_name + fold_identifier + '-epoch-' + str(epoch) + '.pth'
+    return state_dict_dir + run_name + fold_identifier + '-epoch-' + str(epoch) + suffix + '.pth'
 
 #Logs loss for each phone in the loss dict to wandb 
 def get_log_dict_for_wandb_from_loss_dict(fold, loss_dict, tag):
@@ -78,15 +79,7 @@ def log_and_reset_every_n_batches(fold, epoch, i, running_loss, step, n):
         wandb.log(log_dict)
         step += 1
         running_loss = 0.0
-    return running_loss, step#, loss_dict
-
-
-def start_from_checkpoint(PATH, model, optimizer):
-    checkpoint = torch.load(PATH)
-    model.load_state_dict(checkpoint['model_state_dict'])
-    optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-    step = checkpoint['step']
-    return model, optimizer, step        
+    return running_loss, step#, loss_dict      
 
 def freeze_layers_for_finetuning(model, layer_amount, use_dropout, batchnorm):
     #Generate layer names for layers that should be trained
@@ -223,32 +216,32 @@ def criterion_fast(batch_outputs, batch_labels, weights=None, norm_per_phone_and
         return total_loss
 
 
-
 def criterion_simple(batch_outputs, batch_labels):
     '''
     Calculates loss
     '''
-    #embed()
     loss_fn = torch.nn.BCEWithLogitsLoss()
-    #embed()
     batch_outputs, batch_labels = get_outputs_and_labels_for_loss(batch_outputs, batch_labels)
-    #Calculate loss
     loss = loss_fn(batch_outputs, batch_labels)
-    #embed()
     return loss
 
+def start_from_checkpoint(PATH, model, optimizer):
+    checkpoint = torch.load(PATH)
+    model.load_state_dict(checkpoint['model_state_dict'])
+    optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+    step = checkpoint['step']
+    return model, optimizer, step
 
-def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name, layer_amount, use_dropout, lr, use_clipping, batchnorm, norm_per_phone_and_class):
-    global phone_weights, phone_count, device
+def save_state_dict(state_dict_dir, run_name, fold, epoch, step, model, optimizer, suffix=''):
+    PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch, suffix=suffix) 
+    torch.save({
+        'model_state_dict': model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'step': step
+    }, PATH)
 
-    print("Started training fold " + str(fold))
-
-    step = 0
-
-    freeze_layers_for_finetuning(model, layer_amount, use_dropout, batchnorm)
-
-    optimizer = optim.Adam(model.parameters(), lr=lr)#, weight_decay=1e-5)
-
+def choose_starting_epoch(epochs, state_dict_dir, run_name, fold, model, optimizer):
+    step = 0 #wandb step
     # Look in the output dir for any existing check points, from last to first.
     start_from_epoch = 0
     for epoch in range(epochs, 0, -1):
@@ -261,96 +254,94 @@ def train(model, trainloader, testloader, fold, epochs, state_dict_dir, run_name
 
     if start_from_epoch == 0:
         # Save the initial model
-        PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, 0) 
-        torch.save({
-            'model_state_dict': model.state_dict(),
-            'optimizer_state_dict': optimizer.state_dict(),
-            'step': step
-        }, PATH)
+        save_state_dict(state_dict_dir, run_name, fold, 0, step, model, optimizer)
 
+
+    return model, optimizer, step, start_from_epoch
+
+def foward_backward_pass(data, model, optimizer, phone_weights, phone_int2sym, norm_per_phone_and_class):
+    logids       = unpack_logids_from_batch(data)
+    inputs       = unpack_features_from_batch(data).to(device)
+    batch_labels = unpack_labels_from_batch(data).to(device)
+    
+    # zero the parameter gradients
+    optimizer.zero_grad()
+    
+    outputs = model(inputs)
+    
+    loss = criterion_fast(outputs, batch_labels, weights=phone_weights, phone_int2sym=phone_int2sym, norm_per_phone_and_class=norm_per_phone_and_class, min_frame_count=0)
+
+    loss.backward()
+
+    return loss
+
+def log_loss_if_first_batch(epoch, i, fold, loss, model, testloader, step):
+    if epoch == 0 and i == 0:
+        wandb.log({'train_loss_fold_' + str(fold): loss,
+                  'step' : step})
+        test_loss, test_loss_dict = test(model, testloader)
+        step = log_test_loss(fold, test_loss, step, test_loss_dict)
+
+    return step
+
+def train_one_epoch(trainloader, testloader, model, optimizer, running_loss, fold, epoch, step, use_clipping, phone_weights, phone_int2sym, norm_per_phone_and_class):
+
+    for i, data in enumerate(trainloader, 0):
+
+        loss = foward_backward_pass(data, model, optimizer, phone_weights, phone_int2sym, norm_per_phone_and_class)
+
+        step = log_loss_if_first_batch(epoch, i, fold, loss, model, testloader, step)
+
+        if use_clipping:
+            nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0, error_if_nonfinite=True, norm_type=2)
+        
+        optimizer.step()
+
+        running_loss += loss.item()
+
+        running_loss, step = log_and_reset_every_n_batches(fold, epoch, i, running_loss, step, 10)
+
+    return running_loss, step, model, optimizer
+
+def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_dir, run_name, layer_amount, use_dropout, lr, swa_lr, use_clipping, batchnorm, norm_per_phone_and_class):
+    global phone_weights, phone_count, device
+
+    print("Started training fold " + str(fold))
+
+    freeze_layers_for_finetuning(model, layer_amount, use_dropout, batchnorm)
+
+    optimizer = optim.Adam(model.parameters(), lr=lr)
+
+    #Find the most advanced state dict to start from
+    model, optimizer, step, start_from_epoch = choose_starting_epoch(epochs, state_dict_dir, run_name, 
+                                                                     fold, model, optimizer)
+
+    swa_model  = AveragedModel(model)
+    swa_start  = epochs - swa_epochs
+    if swa_epochs > 0:
+        swa_scheduler = SWALR(optimizer, swa_lr=swa_lr)
 
     for epoch in range(start_from_epoch, epochs):  # loop over the dataset multiple times
 
         running_loss = 0.0
-        #loss_dict = {}
-
-        time0 = time.time()
-        time_load = 0.0
-        time_loop1 = 0.0
-        time_loop2 = 0.0
-        time_loop3 = 0.0
-        time_loop4 = 0.0
-        lengths = []
         
-        for i, data in enumerate(trainloader, 0):
+        running_loss, step, model, optimizer = train_one_epoch(trainloader, testloader, model, optimizer, running_loss, fold, epoch,
+                                                        step, use_clipping, phone_weights, phone_int2sym, norm_per_phone_and_class)
 
-            time1 = time.time()
-            time_load += time1 - time0 
-            time1 = time.time()
-            #print("Batch " + str(i))
-            logids = unpack_logids_from_batch(data)
-            inputs = unpack_features_from_batch(data).to(device)
-            batch_labels = unpack_labels_from_batch(data).to(device)
-
-            lengths.append(inputs.shape[1])
-            
-            # zero the parameter gradients
-            optimizer.zero_grad()
-
-            time2 = time.time()
-            time_loop1 += time2 - time1
-            
-            outputs = model(inputs)
-
-            time3 = time.time()
-            time_loop2 += time3 - time2
-            
-            loss = criterion_fast(outputs, batch_labels, weights=phone_weights, phone_int2sym=phone_int2sym, norm_per_phone_and_class=norm_per_phone_and_class, min_frame_count=0)
-
-            #loss = criterion_simple(outputs, batch_labels)
-
-            if epoch == 0 and i == 0:
-                wandb.log({'train_loss_fold_' + str(fold): loss,
-                          'step' : step})
-                test_loss, test_loss_dict = test(model, testloader)
-                step = log_test_loss(fold, test_loss, step, test_loss_dict)
-
-            time4 = time.time()
-            time_loop3 += time4 - time3
-
-            loss.backward()
-            if use_clipping:
-                nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0, error_if_nonfinite=True, norm_type=2)
-            optimizer.step()
-
-            #print statistics
-            running_loss += loss.item()
-
-            running_loss, step = log_and_reset_every_n_batches(fold, epoch, i, running_loss, step, 10)
-
-            time0 = time.time()
-            time_loop4 += time0 - time4
-            
-        print("--- Train loop1  %s seconds ---" % time_loop1)
-        print("--- Train loop2  %s seconds ---" % time_loop2)
-        print("--- Train loop3  %s seconds ---" % time_loop3)
-        print("--- Train loop4  %s seconds ---" % time_loop4)
-        print("--- Data loading %s seconds %d batches ---" % (time_load,i))
-        print("--- Average sequence length %f, min %f, max %f, median %f"% (np.mean(lengths), np.min(lengths), np.max(lengths), np.median(lengths)), flush=True)
-        
         test_loss, test_loss_dict = test(model, testloader)
         step = log_test_loss(fold, test_loss, step, test_loss_dict)
 
+        if epoch >= swa_start:
+            swa_model.update_parameters(model)
+            swa_scheduler.step()
+            embed()
+            if epoch % 25 == 24:
+                save_state_dict(state_dict_dir, run_name, fold, epoch+1, step, swa_model, optimizer, suffix='_swa')
+
+
         if epoch % 25 == 24:
-            PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch+1) 
-            torch.save({
-                'model_state_dict': model.state_dict(),
-                'optimizer_state_dict': optimizer.state_dict(),
-                'step': step
-            }, PATH)
+            save_state_dict(state_dict_dir, run_name, fold, epoch+1, step, model, optimizer)
 
-
-    return model
 
 def test(model, testloader):
 
@@ -393,8 +384,10 @@ def main():
     parser.add_argument('--testset-list', dest='testset_list', help='File with testset utt list', default=None)
     parser.add_argument('--fold', dest='fold', help='Fold number', type=int, default=None)
     parser.add_argument('--epochs', dest='epoch_amount', help='Amount of epochs to use in training', type=int, default=None)
+    parser.add_argument('--swa-epochs', dest='swa_epochs', help='Amount of SWA epochs to use in training', type=int, default=0)
     parser.add_argument('--layers', dest='layer_amount', help='Amount of layers to train starting from the last (if layers=1 train only the last layer)', type=int, default=None)
     parser.add_argument('--learning-rate', dest='learning_rate', help='Learning rate to use during training', type=float, default=None)
+    parser.add_argument('--swa-learning-rate', dest='swa_lr', help='Learning rate to use during SWA training', type=float, default=None)
     parser.add_argument('--batch-size', dest='batch_size', help='Batch size for training', type=int, default=None)
     parser.add_argument('--norm-per-phone-and-class', dest='norm_per_phone_and_class', help='Whether to normalize phone level loss by frame count or not', default=None)
     parser.add_argument('--use-clipping', dest='use_clipping', help='Whether to use gradient clipping or not', default=None)
@@ -419,6 +412,7 @@ def main():
     device_name              = args.device_name
     layer_amount             = args.layer_amount
     epochs                   = args.epoch_amount
+    swa_epochs               = args.swa_epochs
     fold                     = args.fold
     use_dropout              = parse_bool_arg(args.use_dropout)
     use_clipping             = parse_bool_arg(args.use_clipping)
@@ -432,7 +426,7 @@ def main():
     test_root_path = args.test_root_path
 
     trainset = EpaDB(train_root_path, args.trainset_list, args.phones_file, args.labels_dir, args.features_path, args.conf_path)
-    testset  = EpaDB(test_root_path, args.testset_list , args.phones_file, args.labels_dir, args.features_path, args.conf_path)
+    testset  = EpaDB(test_root_path,  args.testset_list , args.phones_file, args.labels_dir, args.features_path, args.conf_path)
 
     global phone_int2sym, phone_weights, phone_count, device
     phone_int2sym = trainset.phone_int2sym_dict
@@ -461,8 +455,8 @@ def main():
 
     #Train the model
     wandb.watch(model, log_freq=100)
-    train(model, trainloader, testloader, fold, epochs, args.state_dict_dir,
-          run_name, layer_amount, use_dropout, args.learning_rate, use_clipping, args.batchnorm, norm_per_phone_and_class)
+    train(model, trainloader, testloader, fold, epochs, swa_epochs, args.state_dict_dir, run_name, layer_amount, 
+          use_dropout, args.learning_rate, args.swa_lr, use_clipping, args.batchnorm, norm_per_phone_and_class)
 
 if __name__ == '__main__':
     main()

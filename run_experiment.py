@@ -28,10 +28,12 @@ def run_train_kfold(config_dict, device_name):
  					 "testset-list": 		 	 config_dict["test-sample-list-dir"]  + 'test_sample_list_fold_'  + str(fold),
 					 "fold": 				 	 fold,
 	 				 "epochs": 				 	 config_dict["epochs"],
+	 				 "swa-epochs":			 	 config_dict["swa-epochs"],	 				 
 					 "layers": 		 		 	 config_dict["layers"],
 					 "use-dropout": 		 	 config_dict["use-dropout"],
 					 "dropout-p": 		     	 config_dict["dropout-p"],
 					 "learning-rate":        	 config_dict["learning-rate"],
+                     "swa-learning-rate":        config_dict["swa-learning-rate"],
 					 "batch-size":           	 config_dict["batch-size"],
 					 "norm-per-phone-and-class": config_dict["norm-per-phone-and-class"],
 	                 "use-clipping":         	 config_dict["use-clipping"],
@@ -57,10 +59,12 @@ def run_train_heldout(config_dict, device_name):
 				 "testset-list": 		 	 config_dict["test-list-path"],
 				 "fold": 				 	 0,
  				 "epochs": 				 	 config_dict["epochs"],
+				 "swa-epochs":			 	 config_dict["swa-epochs"],
 				 "layers": 		 		 	 config_dict["layers"],
 				 "use-dropout": 		 	 config_dict["use-dropout"],
 				 "dropout-p": 		     	 config_dict["dropout-p"],
 				 "learning-rate":        	 config_dict["learning-rate"],
+				 "swa-learning-rate":        config_dict["swa-learning-rate"],
 				 "batch-size":           	 config_dict["batch-size"],
 				 "norm-per-phone-and-class": config_dict["norm-per-phone-and-class"],
                  "use-clipping":         	 config_dict["use-clipping"],
@@ -110,7 +114,7 @@ def run_all(config_yaml, stage, device_name, use_heldout):
 
 	if stage in ["train+","evaluate", "all"]:
 		print("Evaluating results")
-		generate_scores_and_evaluate_epochs(config_dict, 50)
+		generate_scores_and_evaluate_epochs(config_dict, 25)
 
 
 if __name__ == '__main__':

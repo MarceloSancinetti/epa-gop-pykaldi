@@ -224,7 +224,6 @@ def extend_config_dict(config_yaml, config_dict, use_heldout):
 	config_dict["heldout-align-path"]    = config_dict["experiment-dir-path"]    + "align_output_heldout"	
 	config_dict["loglikes-path"]         = config_dict["experiment-dir-path"] 	 + "loglikes.ark"
 	config_dict["transcription-file"]    = config_dict["epa-ref-labels-dir-path"] + "reference_transcriptions.txt"
-	config_dict["finetune-model-path"]   = config_dict["experiment-dir-path"]     + "/model_finetuning_kaldi.pt"
 	config_dict["held-out"]              = use_heldout
 
 	#Choose labels dir
@@ -241,6 +240,9 @@ def extend_config_dict(config_yaml, config_dict, use_heldout):
 	if not use_heldout:
 		config_dict["full-gop-score-path"] 	 = config_dict["gop-scores-dir"] + "gop-all-folds.txt"
 
+	#If only one layer will be trained or finetune model path is not defined, make finetune model path relative to experiment dir
+	if config_dict["layers"] == 1 or "finetune-model-path" not in config_dict:
+		config_dict["finetune-model-path"]   = config_dict["experiment-dir-path"] + "/model_finetuning_kaldi.pt"
 
 
 	return config_dict
