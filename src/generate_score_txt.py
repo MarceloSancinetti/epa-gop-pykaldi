@@ -10,6 +10,8 @@ from finetuning_utils import *
 from utils import *
 from dataset import *
 
+from torch.optim.swa_utils import AveragedModel
+
 from pytorch_models import *
 
 from IPython import embed
@@ -124,6 +126,8 @@ def main():
 
     #Get acoustic model to test
     model = FTDNN(out_dim=phone_count, device_name=device_name, batchnorm=args.batchnorm)
+    if "swa" in model_name:
+        model = AveragedModel(model)
     model.eval()
     state_dict = torch.load(state_dict_dir + '/' + model_name + '.pth')
     model.load_state_dict(state_dict['model_state_dict'])
