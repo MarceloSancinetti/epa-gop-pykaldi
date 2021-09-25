@@ -174,6 +174,7 @@ def get_gop_alignments(path_filename, phone_pure_dic):
 # Note that whenever a phone is missing in the gop alignment a "?" is added to discard the corresponding label
 # and, whenever a '0' (deletion) is present in the manual annotation, the gop score is discarded.
 
+
 def match_labels2gop(logid, trans_zero, trans_manual, trans_auto, labels, gop_scores):
 
     output_ = []
@@ -181,6 +182,7 @@ def match_labels2gop(logid, trans_zero, trans_manual, trans_auto, labels, gop_sc
     j = 0
     position = 1
 
+    # Agarra la transcripción manual que levanta de
     for i in range(0, len(trans_manual)):
 
         label = 0
@@ -190,15 +192,24 @@ def match_labels2gop(logid, trans_zero, trans_manual, trans_auto, labels, gop_sc
         phone_manual = trans_manual[i]
         phone_zero = trans_zero[i]
 
-        if phone_zero != '0':
-            if j > len(trans_auto)-1:
-                raise Exception("Index out of range")
+        if j > len(trans_auto)-1:
+            raise Exception("Index out of range")
+        
+        phone_automatic = trans_auto[j]
+        rows.append([logid, phone_automatic, label, gop_scores[j], phone_manual, position])
+        position += 1
+        
+        j = j + 1
 
-            phone_automatic = trans_auto[j]
-            rows.append([logid, phone_automatic, label, gop_scores[j], phone_manual, position])
-            position += 1
+        # if phone_zero != '0':
+        #     if j > len(trans_auto)-1:
+        #         raise Exception("Index out of range")
 
-            j = j + 1
+        #     phone_automatic = trans_auto[j]
+        #     rows.append([logid, phone_automatic, label, gop_scores[j], phone_manual, position])
+        #     position += 1
+
+        #     j = j + 1
 
     columns = ['logid', 'phone_automatic', 'label', 'gop_scores', 'phone_manual', 'position']
     df = pd.DataFrame(rows, columns=columns)
