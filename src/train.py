@@ -189,11 +189,11 @@ def calculate_loss(outputs, mask, labels, phone_weights=None, norm_per_phone_and
 
 
 def criterion_fast(batch_outputs, batch_labels, weights=None, norm_per_phone_and_class=False, log_per_phone_and_class_loss=False, phone_int2sym=None, min_frame_count=0):
-
+    
     batch_labels_for_loss = torch.abs((batch_labels-1)/2)
 
-    loss_pos, sum_weights_pos = calculate_loss(batch_outputs, batch_labels ==  1, batch_labels_for_loss, phone_weights=weights[1],  norm_per_phone_and_class=norm_per_phone_and_class, min_frame_count=min_frame_count)
-    loss_neg, sum_weights_neg = calculate_loss(batch_outputs, batch_labels == -1, batch_labels_for_loss, phone_weights=weights[-1], norm_per_phone_and_class=norm_per_phone_and_class, min_frame_count=min_frame_count)
+    loss_pos, sum_weights_pos = calculate_loss(batch_outputs, batch_labels ==  1, batch_labels_for_loss, phone_weights=weights,  norm_per_phone_and_class=norm_per_phone_and_class, min_frame_count=min_frame_count)
+    loss_neg, sum_weights_neg = calculate_loss(batch_outputs, batch_labels == -1, batch_labels_for_loss, phone_weights=weights, norm_per_phone_and_class=norm_per_phone_and_class, min_frame_count=min_frame_count)
 
     total_loss = (loss_pos + loss_neg).sum()
 
@@ -207,14 +207,13 @@ def criterion_fast(batch_outputs, batch_labels, weights=None, norm_per_phone_and
         neg_phone_loss = torch.sum(loss_neg,dim=[0,1])
         loss_dict = {}
         for phone, phone_sym in phone_int2sym.items():
-            loss_dict[phone_sym+'+'] = pos_phone_loss[phone]/phone_weights[phone]/sum_weights_pos
-            loss_dict[phone_sym+'-'] = neg_phone_loss[phone]/phone_weights[phone]/sum_weights_neg
+            loss_dict[phone_sym+'+'] = pos_phone_loss[phone]/weights[phone]/sum_weights_pos
+            loss_dict[phone_sym+'-'] = neg_phone_loss[phone]/weights[phone]/sum_weights_neg
 
         return total_loss, loss_dict
 
     else:
         return total_loss
-
 
 def criterion_simple(batch_outputs, batch_labels):
     '''
