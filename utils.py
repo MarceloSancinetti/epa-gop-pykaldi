@@ -33,11 +33,11 @@ def swa_identifier(is_swa):
 
 	return swa_identifier
 
-def fold_identifier(use_heldout, fold_numer):
+def fold_identifier(use_heldout, fold_number):
 	if use_heldout:
 		fold_identifier = ''
 	else:
-		fold_identifier = '-fold-' + str(fold)
+		fold_identifier = '-fold-' + str(fold_number)
 		
 	return fold_identifier
 
