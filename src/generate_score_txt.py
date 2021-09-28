@@ -126,7 +126,7 @@ def main():
 
     #Get acoustic model to test
     model = FTDNN(out_dim=phone_count, device_name=device_name, batchnorm=args.batchnorm)
-    if "swa" in model_name:
+    if model_name.split("_")[-1] == "swa":
         model = AveragedModel(model)
     model.eval()
     state_dict = torch.load(state_dict_dir + '/' + model_name + '.pth')
