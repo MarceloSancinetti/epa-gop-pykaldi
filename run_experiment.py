@@ -33,7 +33,8 @@ def run_train_kfold(config_dict, device_name):
 					 "use-dropout": 		 	 config_dict["use-dropout"],
 					 "dropout-p": 		     	 config_dict["dropout-p"],
 					 "learning-rate":        	 config_dict["learning-rate"],
-				     "swa-learning-rate":        config_dict.get("swa-learning-rate", 0),\
+					 "scheduler":                config_dict.get("scheduler", "None"),
+				     "swa-learning-rate":        config_dict.get("swa-learning-rate", 0),
  					 "batch-size":           	 config_dict["batch-size"],
 					 "norm-per-phone-and-class": config_dict["norm-per-phone-and-class"],
 	                 "use-clipping":         	 config_dict["use-clipping"],
@@ -64,6 +65,7 @@ def run_train_heldout(config_dict, device_name):
 				 "use-dropout": 		 	 config_dict["use-dropout"],
 				 "dropout-p": 		     	 config_dict["dropout-p"],
 				 "learning-rate":        	 config_dict["learning-rate"],
+				 "scheduler":                config_dict.get("scheduler", "None"),
 				 "swa-learning-rate":        config_dict.get("swa-learning-rate", 0),
 				 "batch-size":           	 config_dict["batch-size"],
 				 "norm-per-phone-and-class": config_dict["norm-per-phone-and-class"],

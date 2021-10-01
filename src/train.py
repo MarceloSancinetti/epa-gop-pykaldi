@@ -8,6 +8,7 @@ import time
 import torchaudio
 import torch
 import torch.optim as optim
+from torch.optim.lr_scheduler import *
 from torch.optim.swa_utils import AveragedModel, SWALR
 import torch.multiprocessing as mp
 
@@ -302,7 +303,10 @@ def train_one_epoch(trainloader, testloader, model, optimizer, running_loss, fol
 
     return running_loss, step, model, optimizer
 
-def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_dir, run_name, layer_amount, use_dropout, lr, swa_lr, use_clipping, batchnorm, norm_per_phone_and_class):
+def define_scheduler_from_config(scheduler_config, optimizer):
+    return eval(scheduler_config)
+
+def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_dir, run_name, layer_amount, use_dropout, lr, scheduler_config, swa_lr, use_clipping, batchnorm, norm_per_phone_and_class):
     global phone_weights, phone_count, device
 
     print("Started training fold " + str(fold))
@@ -314,7 +318,8 @@ def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_d
     #Find the most advanced state dict to start from
     model, optimizer, step, start_from_epoch = choose_starting_epoch(epochs, state_dict_dir, run_name, 
                                                                      fold, model, optimizer)
-
+    
+    scheduler = define_scheduler_from_config(scheduler_config, optimizer)
     swa_model  = AveragedModel(model)
     swa_start  = epochs - swa_epochs
     if swa_epochs > 0:
@@ -329,6 +334,9 @@ def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_d
 
         test_loss, test_loss_dict = test(model, testloader)
         step = log_test_loss(fold, test_loss, step, test_loss_dict)
+
+        if scheduler is not None:
+            scheduler.step()
 
         if epoch >= swa_start:
             swa_model.update_parameters(model)
@@ -385,6 +393,7 @@ def main():
     parser.add_argument('--swa-epochs', dest='swa_epochs', help='Amount of SWA epochs to use in training', type=int, default=0)
     parser.add_argument('--layers', dest='layer_amount', help='Amount of layers to train starting from the last (if layers=1 train only the last layer)', type=int, default=None)
     parser.add_argument('--learning-rate', dest='learning_rate', help='Learning rate to use during training', type=float, default=None)
+    parser.add_argument('--scheduler', dest='scheduler_config', help='Definition code for LR scheduler', default="None")
     parser.add_argument('--swa-learning-rate', dest='swa_lr', help='Learning rate to use during SWA training', type=float, default=None)
     parser.add_argument('--batch-size', dest='batch_size', help='Batch size for training', type=int, default=None)
     parser.add_argument('--norm-per-phone-and-class', dest='norm_per_phone_and_class', help='Whether to normalize phone level loss by frame count or not', default=None)
@@ -411,6 +420,7 @@ def main():
     layer_amount             = args.layer_amount
     epochs                   = args.epoch_amount
     swa_epochs               = args.swa_epochs
+    scheduler_config         = args.scheduler_config
     fold                     = args.fold
     use_dropout              = parse_bool_arg(args.use_dropout)
     use_clipping             = parse_bool_arg(args.use_clipping)
@@ -454,7 +464,8 @@ def main():
     #Train the model
     wandb.watch(model, log_freq=100)
     train(model, trainloader, testloader, fold, epochs, swa_epochs, args.state_dict_dir, run_name, layer_amount, 
-          use_dropout, args.learning_rate, args.swa_lr, use_clipping, args.batchnorm, norm_per_phone_and_class)
+          use_dropout, args.learning_rate, scheduler_config, args.swa_lr, use_clipping, args.batchnorm, 
+          norm_per_phone_and_class)
 
 if __name__ == '__main__':
     main()
