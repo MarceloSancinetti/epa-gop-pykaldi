@@ -225,39 +225,44 @@ def criterion_simple(batch_outputs, batch_labels):
     loss = loss_fn(batch_outputs, batch_labels)
     return loss
 
-def start_from_checkpoint(PATH, model, optimizer):
+def start_from_checkpoint(PATH, model, optimizer, scheduler):
     checkpoint = torch.load(PATH)
     model.load_state_dict(checkpoint['model_state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+    if 'scheduler_state_dict' in checkpoint:
+        scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
     step = checkpoint['step']
-    return model, optimizer, step
+    return model, optimizer, scheduler, step
 
-def save_state_dict(state_dict_dir, run_name, fold, epoch, step, model, optimizer, suffix=''):
+def save_state_dict(state_dict_dir, run_name, fold, epoch, step, model, optimizer, scheduler, suffix=''):
     PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch, suffix=suffix) 
-    torch.save({
+    state_dict = {
         'model_state_dict': model.state_dict(),
         'optimizer_state_dict': optimizer.state_dict(),
         'step': step
-    }, PATH)
+    }
+    if scheduler:
+        state_dict['scheduler_state_dict'] = scheduler.state_dict()
+    torch.save(state_dict, PATH)
 
-def choose_starting_epoch(epochs, state_dict_dir, run_name, fold, model, optimizer):
+def choose_starting_epoch(epochs, state_dict_dir, run_name, fold, model, optimizer, scheduler):
     step = 0 #wandb step
     # Look in the output dir for any existing check points, from last to first.
     start_from_epoch = 0
     for epoch in range(epochs, 0, -1):
         PATH = get_path_for_checkpoint(state_dict_dir, run_name, fold, epoch) 
         if os.path.isfile(PATH):
-            model, optimizer, step = start_from_checkpoint(PATH, model, optimizer)
+            model, optimizer, scheduler, step = start_from_checkpoint(PATH, model, optimizer, scheduler)
             start_from_epoch = epoch+1
             print("Loaded pre-existing checkpoint for epoch %d (%s)"% (epoch, PATH))            
             break
 
     if start_from_epoch == 0:
         # Save the initial model
-        save_state_dict(state_dict_dir, run_name, fold, 0, step, model, optimizer)
+        save_state_dict(state_dict_dir, run_name, fold, 0, step, model, optimizer, scheduler)
 
 
-    return model, optimizer, step, start_from_epoch
+    return model, optimizer, scheduler, step, start_from_epoch
 
 def foward_backward_pass(data, model, optimizer, phone_weights, phone_int2sym, norm_per_phone_and_class):
     logids       = unpack_logids_from_batch(data)
@@ -314,12 +319,12 @@ def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_d
     freeze_layers_for_finetuning(model, layer_amount, use_dropout, batchnorm)
 
     optimizer = optim.Adam(model.parameters(), lr=lr)
+    scheduler = define_scheduler_from_config(scheduler_config, optimizer)
 
     #Find the most advanced state dict to start from
-    model, optimizer, step, start_from_epoch = choose_starting_epoch(epochs, state_dict_dir, run_name, 
-                                                                     fold, model, optimizer)
+    model, optimizer, scheduler, step, start_from_epoch = choose_starting_epoch(epochs, state_dict_dir, run_name, 
+                                                                     fold, model, optimizer, scheduler)
     
-    scheduler = define_scheduler_from_config(scheduler_config, optimizer)
     swa_model  = AveragedModel(model)
     swa_start  = epochs - swa_epochs
     if swa_epochs > 0:
@@ -341,12 +346,12 @@ def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_d
         if epoch >= swa_start:
             swa_model.update_parameters(model)
             swa_scheduler.step()
-            if epoch % 25 == 24:
-                save_state_dict(state_dict_dir, run_name, fold, epoch+1, step, swa_model, optimizer, suffix='_swa')
+            if epoch % 5 == 4:
+                save_state_dict(state_dict_dir, run_name, fold, epoch+1, step, swa_model, optimizer, scheduler, suffix='_swa')
 
 
-        if epoch % 25 == 24:
-            save_state_dict(state_dict_dir, run_name, fold, epoch+1, step, model, optimizer)
+        if epoch % 5 == 4:
+            save_state_dict(state_dict_dir, run_name, fold, epoch+1, step, model, optimizer, scheduler)
 
 
 def test(model, testloader):
