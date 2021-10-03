@@ -14,7 +14,7 @@ def generate_scores_and_evaluate_epochs(config_dict, step):
 		run_generate_scores(config_dict, epoch=epoch)
 		run_evaluate(config_dict, epoch=epoch)
 
-		if epoch >= swa_start:
+		if epoch >= swa_start and swa_epochs != 0:
 			run_generate_scores(config_dict, epoch=epoch, swa=True)
 			run_evaluate(config_dict, epoch=epoch, swa=True)
 
