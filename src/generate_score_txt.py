@@ -90,42 +90,29 @@ def log_testset_scores_to_txt(scores, score_log_fh, phone_dict):
     for logid, sample_score in scores.items():
         log_sample_scores_to_txt(logid, sample_score, score_log_fh, phone_dict)
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--state-dict-dir', dest='state_dict_dir', help='Directory to saved state dicts in .pth', default=None)
-    parser.add_argument('--model-name', dest='model_name', help='Model name (usually the name of the wandb run that generated the .pth file)', default=None)
-    parser.add_argument('--epa-root', dest='epa_root_path', help='EpaDB root directory', default=None)
-    parser.add_argument('--sample-list', dest='sample_list_path', help='Path to list of samples to test on', default=None)
-    parser.add_argument('--phone-list', dest='phone_list_path', help='Path to phone list', default=None)
-    parser.add_argument('--labels-dir', dest='labels_dir', help='Directory where labels are found', default=None)     
-    parser.add_argument('--gop-txt-dir', dest='gop_txt_dir', help='Directory to save generated scores', default=None)
-    parser.add_argument('--gop-txt-name', dest='gop_txt_name', help='Name of the output .txt file containing scores', default=None)
-    parser.add_argument('--features-path', dest='features_path', help='Path to features directory', default=None)
-    parser.add_argument('--conf-path', dest='conf_path', help='Path to config directory used in feature extraction', default=None)
-    parser.add_argument('--device', dest='device_name', help='Device name to use, such as cpu or cuda', default=None)
-    parser.add_argument('--batchnorm', dest='batchnorm', help='Batchnorm mode', default=None)
-    args = parser.parse_args()
+def main(config_dict):
 
-    state_dict_dir      = args.state_dict_dir
-    model_name          = args.model_name
-    epa_root_path       = args.epa_root_path
-    sample_list         = args.sample_list_path
-    phone_list_path     = args.phone_list_path
-    labels_dir          = args.labels_dir
-    gop_txt_dir         = args.gop_txt_dir
-    gop_txt_name        = args.gop_txt_name
-    features_path       = args.features_path
-    conf_path           = args.conf_path
-    device_name         = args.device_name
+    state_dict_dir      = config_dict['state-dict-dir']
+    model_name          = config_dict['model-name']
+    epa_root_path       = config_dict['epadb-root-path']
+    sample_list         = config_dict['utterance-list-path']
+    phone_list_path     = config_dict['phones-list-path']
+    labels_dir          = config_dict['labels-dir-path']
+    gop_txt_dir         = config_dict['gop-scores-dir']
+    gop_txt_name        = config_dict['gop-txt-name']
+    features_path       = config_dict['features-path']
+    conf_path           = config_dict['features-conf-path']
+    device_name         = config_dict['device-name']
+    batchnorm           = config_dict['batchnorm']
 
     testset = EpaDB(epa_root_path, sample_list, phone_list_path, labels_dir, features_path, conf_path)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=16,
+    testloader = torch.utils.data.DataLoader(testset, batch_size=2,
                                           shuffle=False, num_workers=0, collate_fn=collate_fn_padd)
 
     phone_count = testset.phone_count()
 
     #Get acoustic model to test
-    model = FTDNN(out_dim=phone_count, device_name=device_name, batchnorm=args.batchnorm)
+    model = FTDNN(out_dim=phone_count, device_name=device_name, batchnorm=batchnorm)
     if model_name.split("_")[-1] == "swa":
         model = AveragedModel(model)
     model.eval()
@@ -138,5 +125,3 @@ def main():
     score_log_fh = open(gop_txt_dir+ '/' + gop_txt_name, 'w+')
     log_testset_scores_to_txt(scores, score_log_fh, phone_dict)
 
-if __name__ == '__main__':
-    main()

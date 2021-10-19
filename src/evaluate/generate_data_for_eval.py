@@ -11,6 +11,8 @@ import shutil
 import argparse
 import glob
 
+from reference_utils import *
+
 def phonelist2str(phones):
     return " ".join(["%3s"%p for p in phones])
 
@@ -57,76 +59,10 @@ def generate_trans_SAE(trans_complete):
 
     return pruned_text
 
-
-# Function that reads transcriptions files and loads them to
-# a series of useful dictionaries
-
-def generate_dict_from_transcripctions(transcriptions):
-
-    trans_dict = dict()
-    trans_dict_clean = dict()
-    sent_dict = dict()
-
-    # Read transcription file
-    for line in open(transcriptions,'r'):
-
-        fields = line.strip().split()
-
-        if len(fields) <= 2:
-            continue
-
-        sent = fields[1].strip(":")
-
-        if fields[0] == "TEXT":
-            sent_dict[sent] = fields[2:]
-
-        if fields[0] != "TRANSCRIPTION":
-            continue
-
-        if sent not in trans_dict_clean:
-
-            # Before loading the first transcription for a sentence,
-            # create an entry for it in the dict. The entry will be a
-            # list of lists. One list for each possible transcription
-            # for that sentence.
-
-            trans_dict[sent] = list()
-            trans_dict_clean[sent] = list()
-
-        trans = [[]]
-        for i in range(2, len(fields)):
-            phones = fields[i].split("/")
-
-            # Reproduce the transcriptions up to now as many times as
-            # the number of phone variations in this slot. Then, append
-            # one variation to each copy.
-
-            trans_new = []
-            for p in phones:
-                for t in trans:
-                    t_tmp = t + [p.strip()]
-                    trans_new.append(t_tmp)
-            trans = trans_new
-
-        trans_dict[sent] += trans
-
-    for sent, trans in trans_dict.items():
-        trans_clean_new = []
-        for t in trans:
-            trans_clean_new.append([x for x in t if x != '0'])
-
-        if sent not in trans_dict_clean:
-            trans_dict_clean[sent] = list()
-
-        trans_dict_clean[sent] += trans_clean_new
-
-    return trans_dict, trans_dict_clean, sent_dict
-
-
 # Function that reads the output of gop-dnn and returns the
 # phone alignments
 
-def get_gop_alignments(path_filename, phone_pure_dic):
+def get_gop_alignments(path_filename, phone_pure_dict):
 
     output = []
     print(path_filename)
@@ -159,8 +95,7 @@ def get_gop_alignments(path_filename, phone_pure_dic):
                     i = i + 4
 
             output.append({'logid': str(logid),
-                           'phones': phones,
-                           'phones_name':phones_name,
+                           'phones':phones_name,
                            'gops':gops})
 
     df_phones = pd.DataFrame(output).set_index("logid")
@@ -177,7 +112,6 @@ def get_gop_alignments(path_filename, phone_pure_dic):
 
 def match_labels2gop(logid, trans_zero, trans_manual, trans_auto, labels, gop_scores):
 
-    output_ = []
     rows = []
     j = 0
     position = 1
@@ -201,16 +135,6 @@ def match_labels2gop(logid, trans_zero, trans_manual, trans_auto, labels, gop_sc
         
         j = j + 1
 
-        # if phone_zero != '0':
-        #     if j > len(trans_auto)-1:
-        #         raise Exception("Index out of range")
-
-        #     phone_automatic = trans_auto[j]
-        #     rows.append([logid, phone_automatic, label, gop_scores[j], phone_manual, position])
-        #     position += 1
-
-        #     j = j + 1
-
     columns = ['logid', 'phone_automatic', 'label', 'gop_scores', 'phone_manual', 'position']
     df = pd.DataFrame(rows, columns=columns)
     return df
@@ -233,123 +157,43 @@ def get_reference(file):
 
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--transcription-file', dest='transcriptions', help='File with reference phonetic transcriptions of each of the phrases', default=None)
-    parser.add_argument('--utterance-list', dest='utterance_list', help='File with utt list', default=None)
-    parser.add_argument('--output-dir', dest='output_dir', help='Output dir', default=None)
-    parser.add_argument('--output-filename', dest='output_filename', help='Name of the output file', default=None)
-    parser.add_argument('--gop-file', dest='gop_path', help='File with gop results', default=None)
-    parser.add_argument('--phones-pure-file', dest='phones_pure_path', help='file that matches phone ints to phone symbols', default=None)
-    parser.add_argument('--labels', dest='labels_dir_path', help='', default=None)
-
-    args = parser.parse_args()
+def main(config_dict):
+    reference_transcriptions_path = config_dict['reference-trans-path']
+    utterance_list_path           = config_dict['eval-utt-list-path']
+    output_dir                    = config_dict['eval-dir']
+    output_filename               = config_dict['eval-filename']
+    gop_path                      = config_dict['full-gop-score-path']
+    phones_pure_path              = config_dict['kaldi-phones-pure-path']
+    labels_dir_path               = config_dict['labels-dir-path']
 
     # Code that generates a pickle with useful data to analyze.
     # The outpul will be used to compute ROCs, AUCs and EERs.
 
-    output = []
-    output_tmp  = []
+    phone_pure_dict = phones2dic(phones_pure_path)
+    gop_alignments = get_gop_alignments(gop_path, phone_pure_dict)
 
-    trans_dict_complete, trans_dict_clean_complete, sent_dict_complete = generate_dict_from_transcripctions(args.transcriptions)
-    generate_trans_SAE(args.transcriptions)
-    #trans_dict, trans_dict_clean, sent_dict = generate_dict_from_transcripctions('transcriptionsSAE.txt')
-
-    phone_pure_dict = phones2dic(args.phones_pure_path)
-    gop_alignments = get_gop_alignments(args.gop_path, phone_pure_dict)
-
-    utterance_list = []
-    utt_list_fh = open(args.utterance_list, 'r')
-    for line in utt_list_fh.readlines():
-        logid = line.split(' ')[0]
-        utterance_list.append(logid)
-
-    #utterance_list = [re.sub('.txt','', re.sub('.*\/','',s)) for s in glob.glob("%s/*/*"%args.labels_dir)]
+    utterance_list = generate_utterance_list_from_path(utterance_list_path) 
+    trans_dict = get_reference_from_system_alignments(reference_transcriptions_path, labels_dir_path, gop_alignments, utterance_list)
 
     # Now, iterate over utterances
+    output = []
     for utterance in utterance_list:
+        gop_scores = gop_alignments.loc[utterance].gops
 
-        spk, sent = utterance.split("_")
+        annot_manual        = trans_dict[utterance]["trans_manual"]
+        annot_kaldi         = trans_dict[utterance]["trans_auto"]
+        trans_reff_complete = trans_dict[utterance]["best_ref_auto"]
+        labels              = trans_dict[utterance]["labels"]
+        trans_zero          = trans_dict[utterance]["best_ref_auto_zero"]
 
-        file = "%s/%s/%s/%s.txt"%(args.labels_dir_path, spk, "labels", utterance) #TextGrid file for current utterance
-        print("----------------------------------------------------------------------------------------")
-        print("Speaker %s, sentence %s: %s (File: %s)"%(spk, sent, " ".join(sent_dict_complete[sent]), file))
-        
-        #Get phone list from manual annotation 
-        trans_reff_complete, annot_manual, labels = get_reference(file)
-
-
-        if utterance in gop_alignments.index.values:
-            phone_idxs = gop_alignments.loc[utterance].phones
-            gop_scores = gop_alignments.loc[utterance].gops
-            annot_kaldi = []
-            for phone_idx in phone_idxs:
-                print(phone_idx)
- #               embed()
-                phone = phone_pure_dict[phone_idx]
-                if phone not in ['sil', '[key]', 'sp', '', 'SIL', '[KEY]', 'SP']:
-                    if phone[-1] not in ['1', '0', '2']:
-                        annot_kaldi += [phone]
-                    else:
-
-                        # If it has an int at the end, delete it, except for AH0
-
-                        annot_kaldi += [phone] if(phone == 'AH0') else [phone[:-1]]
-        else:
-
-            raise Exception("WARNING: Missing score for "+ utterance)
-
-
-
-        # Find the transcription for this sentence that best matches the annotation
-
-        best_trans = -1
-        best_trans_corr = 0
-
-        print(trans_dict_clean_complete[sent])
-        for trans_idx, trans in enumerate(trans_dict_clean_complete[sent]):
-            if(len(trans) == len(annot_kaldi)):
-                num_correct = np.sum([t==a for t, a in np.c_[trans,annot_kaldi]])
-                if num_correct > best_trans_corr:
-                    best_trans_corr = num_correct
-                    best_trans = trans_idx
-        print(annot_kaldi)
-
-
-        if best_trans != -1:
-
-
-            trans      = trans_dict_clean_complete[sent][best_trans]
-            trans_zero = trans_dict_complete[sent][best_trans]
-
-
-            print("TRANS_REFF:           %s (chosen out of %d transcriptions)"%(phonelist2str(trans), len(trans_dict_clean_complete[sent])))
-            print("TRANS_KALDI:          "+phonelist2str(annot_kaldi))
-            print("LABEL:                "+phonelist2str(labels))
-            print("TRANS_ZERO:           "+phonelist2str(trans_zero))
-            print("TRANS_MANUAL:         "+phonelist2str(annot_manual))
-            print("TRANS_REFF_COMPLETE:  "+phonelist2str(trans_reff_complete))
-            print("TRANS_WITHOUT_ZERO:   "+phonelist2str(trans))
-
-            outdir  = "%s/labels/%s" % (args.output_dir, spk)
-            outfile = "%s/%s.txt" % (outdir, utterance)
-            mkdirs(outdir)
-            np.savetxt(outfile, np.c_[np.arange(len(annot_manual)), trans_reff_complete, annot_manual, labels], fmt=utterance+"_%s %s %s %s")
-
-            df = match_labels2gop(utterance, trans_zero, annot_manual, annot_kaldi, labels, gop_scores)
-            output.append(df)
-
-
-        else:
-
-            raise Exception("WARNING: %s does not match with transcription"%(spk))
-
+        df = match_labels2gop(utterance, trans_zero, annot_manual, annot_kaldi, labels, gop_scores)
+        output.append(df)
 
 
     df_trans_match = pd.concat(output).set_index('logid')
 
     #Export file containing data for evaluation
 
-    joblib.dump(df_trans_match, args.output_dir + args.output_filename)
+    joblib.dump(df_trans_match, output_dir + output_filename)
 
 

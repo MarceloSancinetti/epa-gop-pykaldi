@@ -193,8 +193,10 @@ def criterion_fast(batch_outputs, batch_labels, weights=None, norm_per_phone_and
     
     batch_labels_for_loss = torch.abs((batch_labels-1)/2)
 
-    loss_pos, sum_weights_pos = calculate_loss(batch_outputs, batch_labels ==  1, batch_labels_for_loss, phone_weights=weights,  norm_per_phone_and_class=norm_per_phone_and_class, min_frame_count=min_frame_count)
-    loss_neg, sum_weights_neg = calculate_loss(batch_outputs, batch_labels == -1, batch_labels_for_loss, phone_weights=weights, norm_per_phone_and_class=norm_per_phone_and_class, min_frame_count=min_frame_count)
+    loss_pos, sum_weights_pos = calculate_loss(batch_outputs, batch_labels ==  1, batch_labels_for_loss, 
+        phone_weights=weights, norm_per_phone_and_class=norm_per_phone_and_class, min_frame_count=min_frame_count)
+    loss_neg, sum_weights_neg = calculate_loss(batch_outputs, batch_labels == -1, batch_labels_for_loss, 
+        phone_weights=weights, norm_per_phone_and_class=norm_per_phone_and_class, min_frame_count=min_frame_count)
 
     total_loss = (loss_pos + loss_neg).sum()
 
@@ -272,6 +274,8 @@ def foward_backward_pass(data, model, optimizer, phone_weights, phone_int2sym, n
     # zero the parameter gradients
     optimizer.zero_grad()
     
+    phone_per_frame_selector = torch.abs((batch_labels-1)/2)
+
     outputs = model(inputs)
     
     loss = criterion_fast(outputs, batch_labels, weights=phone_weights, phone_int2sym=phone_int2sym, norm_per_phone_and_class=norm_per_phone_and_class, min_frame_count=0)
@@ -346,11 +350,11 @@ def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_d
         if epoch >= swa_start:
             swa_model.update_parameters(model)
             swa_scheduler.step()
-            if epoch % 5 == 4:
+            if epoch % 2 == 1:
                 save_state_dict(state_dict_dir, run_name, fold, epoch+1, step, swa_model, optimizer, scheduler, suffix='_swa')
 
 
-        if epoch % 5 == 4:
+        if epoch % 2 == 1:
             save_state_dict(state_dict_dir, run_name, fold, epoch+1, step, model, optimizer, scheduler)
 
 
@@ -387,59 +391,40 @@ def parse_bool_arg(arg):
 
     return arg
 
-def main():
+def main(config_dict):
+    run_name                 = config_dict["run-name"]
+    trainset_list            = config_dict["trainset-list"]
+    testset_list             = config_dict["testset-list"]
+    fold                     = config_dict["fold"]
+    epochs                   = config_dict["epochs"]
+    swa_epochs               = config_dict["swa-epochs"]
+    layer_amount             = config_dict["layers"]
+    use_dropout              = config_dict["use-dropout"]
+    dropout_p                = config_dict["dropout-p"]
+    learning_rate            = config_dict["learning-rate"]
+    scheduler_config         = config_dict.get("scheduler", None)
+    swa_lr                   = config_dict.get("swa-learning-rate", None)
+    batch_size               = config_dict["batch-size"]
+    norm_per_phone_and_class = config_dict["norm-per-phone-and-class"]
+    use_clipping             = config_dict["use-clipping"]
+    batchnorm                = config_dict["batchnorm"]
+    phones_file              = config_dict["phones-file"]
+    labels_dir               = config_dict["labels-dir"]
+    model_path               = config_dict["model-path"]
+    phone_weights_path       = config_dict["phone-weights-path"]
+    train_root_path          = config_dict["train-root-path"]
+    test_root_path           = config_dict["test-root-path"]
+    features_path            = config_dict["features-path"]
+    conf_path                = config_dict["conf-path"]
+    state_dict_dir           = config_dict["state-dict-dir"]
+    device_name              = config_dict["device"]
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--run-name', dest='run_name', help='Run name', default=None)
-    parser.add_argument('--trainset-list', dest='trainset_list', help='File with trainset utt list', default=None)
-    parser.add_argument('--testset-list', dest='testset_list', help='File with testset utt list', default=None)
-    parser.add_argument('--fold', dest='fold', help='Fold number', type=int, default=None)
-    parser.add_argument('--epochs', dest='epoch_amount', help='Amount of epochs to use in training', type=int, default=None)
-    parser.add_argument('--swa-epochs', dest='swa_epochs', help='Amount of SWA epochs to use in training', type=int, default=0)
-    parser.add_argument('--layers', dest='layer_amount', help='Amount of layers to train starting from the last (if layers=1 train only the last layer)', type=int, default=None)
-    parser.add_argument('--learning-rate', dest='learning_rate', help='Learning rate to use during training', type=float, default=None)
-    parser.add_argument('--scheduler', dest='scheduler_config', help='Definition code for LR scheduler', default="None")
-    parser.add_argument('--swa-learning-rate', dest='swa_lr', help='Learning rate to use during SWA training', type=float, default=None)
-    parser.add_argument('--batch-size', dest='batch_size', help='Batch size for training', type=int, default=None)
-    parser.add_argument('--norm-per-phone-and-class', dest='norm_per_phone_and_class', help='Whether to normalize phone level loss by frame count or not', default=None)
-    parser.add_argument('--use-clipping', dest='use_clipping', help='Whether to use gradient clipping or not', default=None)
-    parser.add_argument('--use-dropout', dest='use_dropout', help='Whether to unfreeze dropout components or not', default=None)
-    parser.add_argument('--dropout-p', dest='dropout_p', help='Dropout probability', type=float, default=None)
-    parser.add_argument('--batchnorm', dest='batchnorm', help='Batchnorm option (first, final, all)', default=None)
-    parser.add_argument('--phones-file', dest='phones_file', help='File with list of phones', default=None)
-    parser.add_argument('--labels-dir', dest='labels_dir', help='Directory with labels used in training', default=None)
-    parser.add_argument('--model-path', dest='model_path', help='Path to .pth/pt file with model to finetune', default=None)
-    parser.add_argument('--phone-weights-path', dest='phone_weights_path', help='Path to .yaml containing weights for phone-level loss', default=None)
-    parser.add_argument('--train-root-path', dest='train_root_path', help='EpaDB root path', default=None)
-    parser.add_argument('--test-root-path', dest='test_root_path', help='EpaDB root path', default=None)
-    parser.add_argument('--features-path', dest='features_path', help='Path to features directory', default=None)
-    parser.add_argument('--conf-path', dest='conf_path', help='Path to config directory used in feature extraction', default=None)
-    parser.add_argument('--test-sample-list-dir', dest='test_sample_list_dir', help='Path to output directory to save test sample lists', default=None)
-    parser.add_argument('--state-dict-dir', dest='state_dict_dir', help='Path to output directory to save state dicts', default=None)
-    parser.add_argument('--use-multi-process', dest='use_multi_process', help='Whether to use multiple processes or not', default=None)
-    parser.add_argument('--device', dest='device_name', help='Device name to use, such as cpu or cuda', default=None)
-
-    args                     = parser.parse_args()
-    run_name                 = args.run_name
-    device_name              = args.device_name
-    layer_amount             = args.layer_amount
-    epochs                   = args.epoch_amount
-    swa_epochs               = args.swa_epochs
-    scheduler_config         = args.scheduler_config
-    fold                     = args.fold
-    use_dropout              = parse_bool_arg(args.use_dropout)
-    use_clipping             = parse_bool_arg(args.use_clipping)
-    use_multi_process        = parse_bool_arg(args.use_multi_process)
-    norm_per_phone_and_class = parse_bool_arg(args.norm_per_phone_and_class)
 
     wandb.init(project="gop-finetuning", entity="pronscoring-liaa")
     wandb.run.name = run_name
 
-    train_root_path = args.train_root_path
-    test_root_path = args.test_root_path
-
-    trainset = EpaDB(train_root_path, args.trainset_list, args.phones_file, args.labels_dir, args.features_path, args.conf_path)
-    testset  = EpaDB(test_root_path,  args.testset_list , args.phones_file, args.labels_dir, args.features_path, args.conf_path)
+    trainset = EpaDB(train_root_path, trainset_list, phones_file, labels_dir, features_path, conf_path)
+    testset  = EpaDB(test_root_path,  testset_list , phones_file, labels_dir, features_path, conf_path)
 
     global phone_int2sym, phone_weights, phone_count, device
     phone_int2sym = trainset.phone_int2sym_dict
@@ -449,28 +434,25 @@ def main():
     seed = 42
     torch.manual_seed(seed)
 
-    phone_weights = get_phone_weights_as_torch(args.phone_weights_path)
+    phone_weights = get_phone_weights_as_torch(phone_weights_path)
 
 
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size,
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size,
                                  num_workers=0, collate_fn=collate_fn_padd, shuffle=True)
 
-    testloader = torch.utils.data.DataLoader(testset, batch_size=args.batch_size, 
+    testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, 
                                  num_workers=0, collate_fn=collate_fn_padd)
 
     phone_count = trainset.phone_count()
 
     #Get acoustic model to train
-    model = FTDNN(out_dim=phone_count, batchnorm=args.batchnorm, dropout_p=args.dropout_p, device_name=device_name) 
+    model = FTDNN(out_dim=phone_count, batchnorm=batchnorm, dropout_p=dropout_p, device_name=device_name) 
     model.to(device)
-    state_dict = torch.load(get_model_path_for_fold(args.model_path, fold, layer_amount))
+    state_dict = torch.load(get_model_path_for_fold(model_path, fold, layer_amount))
     model.load_state_dict(state_dict['model_state_dict'])
 
     #Train the model
     wandb.watch(model, log_freq=100)
-    train(model, trainloader, testloader, fold, epochs, swa_epochs, args.state_dict_dir, run_name, layer_amount, 
-          use_dropout, args.learning_rate, scheduler_config, args.swa_lr, use_clipping, args.batchnorm, 
+    train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_dir, run_name, layer_amount, 
+          use_dropout, learning_rate, scheduler_config, swa_lr, use_clipping, batchnorm, 
           norm_per_phone_and_class)
-
-if __name__ == '__main__':
-    main()

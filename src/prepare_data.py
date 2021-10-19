@@ -106,62 +106,53 @@ def make_experiment_directory(experiment_dir_path, setup):
         os.makedirs(eval_dir)
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--epa-root-path', dest='epa_root_path', help='EpaDB root path', default=None)
-    parser.add_argument('--features-path', dest='features_path', help='Path to features directory', default=None)
-    parser.add_argument('--conf-path', dest='conf_path', help='Path to config directory used in feature extraction', default=None)
-    parser.add_argument('--labels-path', dest='labels_path', help='Path to create symlinks to EpaDB ref labels', default=None)
-    parser.add_argument('--librispeech-models-path', dest='librispeech_models_path', help='Path to directory where Librispeech models will be found', default=None)
-    parser.add_argument('--pytorch-models-path', dest='pytorch_models_path', help='Path to directory where Pytorch models will be found', default=None)
-    parser.add_argument('--libri-chain-mdl-path', dest='libri_chain_mdl_path', help='Path to Librispeech chain acoustic model .mdl', default=None)
-    parser.add_argument('--libri-chain-txt-path', dest='libri_chain_txt_path', help='Path where .txt version of final.mdl will be created', default=None)
-    parser.add_argument('--acoustic-model-path', dest='acoustic_model_path', help='Path where Pytorch acoustic model will be created', default=None)
-    parser.add_argument('--utterance-list-path', dest='utterance_list_path', help='Path where utterance list will be created', default=None)
-    parser.add_argument('--phone-count', dest='phone_count', help='Size of the phone set for the current system', default=None)
-    parser.add_argument('--experiment-dir-path', dest='experiment_dir_path', help='Path where the directory for the current expriment\'s files will be created', default=None)
-    parser.add_argument('--setup', dest='setup', help='The setup you want to run (either exp or gop)', default=None)
-    parser.add_argument('--heldout', dest='heldout', help='Whether to test on heldout set or not', default="false")
-    parser.add_argument('--heldout-root-path', dest='heldout_root_path', help='EpaDB heldout set root path', default='')
-    parser.add_argument('--heldout-list-path', dest='heldout_list_path', help='Path where heldout utterance list will be created', default=None)
-    parser.add_argument('--finetune-model-path', dest='finetune_model_path', help='Path where the model to finetune will be created', default=None)
-    parser.add_argument('--batchnorm', dest='batchnorm', help='Batchnorm mode (first, last, all, etc)', default=None)
-    parser.add_argument('--seed', dest='seed', help='Random seed', default=None)
-    args = parser.parse_args()
-
-    features_path     = args.features_path
-    conf_path         = args.conf_path
-    epadb_root_path   = args.epa_root_path
-    heldout_root_path = args.heldout_root_path
-    setup             = args.setup
-    use_heldout       = args.heldout == "True"
+def main(config_dict):
+    epadb_root_path         = config_dict['epadb-root-path']
+    features_path           = config_dict['features-path']
+    conf_path               = config_dict['features-conf-path']
+    labels_path = config_dict['epa-ref-labels-dir-path']
+    librispeech_models_path = config_dict['librispeech-models-path']
+    pytorch_models_path     = config_dict['pytorch-models-path']
+    libri_chain_mdl_path    = config_dict['libri-chain-mdl-path']
+    libri_chain_txt_path    = config_dict['libri-chain-txt-path']
+    acoustic_model_path     = config_dict['acoustic-model-path']
+    utterance_list_path     = config_dict['utterance-list-path']
+    phone_count             = config_dict['phone-count']
+    experiment_dir_path     = config_dict['experiment-dir-path']
+    setup                   = config_dict['setup']
+    use_heldout             = config_dict['held-out']
+    heldout_root_path       = config_dict['heldout-root-path']
+    heldout_list_path       = config_dict['test-list-path']
+    finetune_model_path     = config_dict['finetune-model-path']
+    batchnorm               = config_dict['batchnorm']
+    seed                    = config_dict['seed']
 
     if setup != "exp" and setup != "gop":
         raise Exception("Error: setup argument must be either gop or exp")
         exit()
 
-    make_experiment_directory(args.experiment_dir_path, setup)
+    make_experiment_directory(experiment_dir_path, setup)
 
     #Download librispeech models and extract them into librispeech-models-path
-    download_librispeech_models(args.librispeech_models_path)
+    download_librispeech_models(librispeech_models_path)
 
     #Prepare pytorch models
-    prepare_pytorch_models(args.pytorch_models_path, args.libri_chain_mdl_path, args.libri_chain_txt_path, 
-                           args.acoustic_model_path, setup, args.batchnorm, args.seed, args.finetune_model_path, args.phone_count)
+    prepare_pytorch_models(pytorch_models_path, libri_chain_mdl_path, libri_chain_txt_path, 
+                           acoustic_model_path, setup, batchnorm, seed, finetune_model_path, phone_count)
 
     #Extract features
     feature_manager = FeatureManager(epadb_root_path, features_path, conf_path, heldout_root_path=heldout_root_path)
     feature_manager.extract_features_using_kaldi()
 
     #Create symlinks
-    create_ref_labels_symlinks(epadb_root_path, args.labels_path)
+    create_ref_labels_symlinks(epadb_root_path, labels_path)
 
     
     #Create full EpaDB sample list
-    create_epadb_full_sample_list(epadb_root_path, args.utterance_list_path)
+    create_epadb_full_sample_list(epadb_root_path, utterance_list_path)
     
     if use_heldout:
-        create_epadb_full_sample_list(heldout_root_path, args.heldout_list_path)
+        create_epadb_full_sample_list(heldout_root_path, heldout_list_path)
 
 
 

@@ -1,9 +1,26 @@
 import yaml
 import argparse
 import os
-from utils import *
+from run_utils import *
 from IPython import embed
-from evaluate_many_epochs import generate_scores_and_evaluate_epochs
+
+import train
+import prepare_data
+
+def generate_scores_and_evaluate_epochs(config_dict, step):
+	epochs = config_dict['epochs']
+
+	swa_epochs = config_dict.get('swa_epochs', 0)
+	swa_start  = epochs - swa_epochs
+	
+	for epoch in range(0, epochs+1, step):
+		print("Evaluating epoch %d/%d" % (int(epoch/step), int(epochs/step)))
+		run_generate_scores(config_dict, epoch=epoch)
+		run_evaluate(config_dict, epoch=epoch)
+
+		if epoch >= swa_start and swa_epochs != 0:
+			run_generate_scores(config_dict, epoch=epoch, swa=True)
+			run_evaluate(config_dict, epoch=epoch, swa=True)
 
 def run_train(config_dict, device_name):
 	if "held-out" in config_dict and config_dict["held-out"]:
@@ -47,12 +64,10 @@ def run_train_kfold(config_dict, device_name):
 					 "test-root-path": 		     config_dict["epadb-root-path"],
 					 "features-path": 		 	 config_dict["features-path"],
 					 "conf-path": 			 	 config_dict["features-conf-path"],
-					 "test-sample-list-dir": 	 config_dict["test-sample-list-dir"],
 					 "state-dict-dir": 		 	 config_dict["state-dict-dir"],
-					 "use-multi-process":    	 config_dict["use-multi-process"],
 					 "device":               	 device_name				 
 					}
-		run_script("src/train.py", args_dict)
+		train.main(args_dict)
 
 def run_train_heldout(config_dict, device_name):
 	args_dict = {"run-name": 			 	 config_dict["run-name"],
@@ -81,10 +96,9 @@ def run_train_heldout(config_dict, device_name):
 				 "conf-path": 			 	 config_dict["features-conf-path"],
 				 "test-sample-list-dir": 	 config_dict["test-sample-list-dir"],
 				 "state-dict-dir": 		 	 config_dict["state-dict-dir"],
-				 "use-multi-process":    	 config_dict["use-multi-process"],
 				 "device":               	 device_name				 
 				}
-	run_script("src/train.py", args_dict)
+	train.main(args_dict)
 
 
 def run_evaluate_many_epochs(config_yaml, step=25):
@@ -97,20 +111,21 @@ def run_all(config_yaml, stage, device_name, use_heldout):
 	config_fh = open(config_yaml, "r")
 	config_dict = yaml.safe_load(config_fh)	
 
-	config_dict = extend_config_dict(config_yaml, config_dict, use_heldout)
+	config_dict = extend_config_dict(config_yaml, config_dict, "exp", use_heldout)
 
 	if stage in ["dataprep", "all"]:
 		print("Running data preparation")
-		run_data_prep(config_dict, 'exp')
+		run_data_prep(config_dict)
 
 	if stage in ["align", "all"]:
 		print("Running aligner")
 		run_align(config_dict)
 	
+	if stage in ["labels", "all"] and config_dict['use-kaldi-labels']:
+		print("Creating Kaldi labels")
+		run_create_kaldi_labels(config_dict, 'exp')
+
 	if stage in ["train+", "train", "all"]:
-		if config_dict['use-kaldi-labels']:
-			print("Creating Kaldi labels")
-			run_create_kaldi_labels(config_dict, 'exp')
 		print("Running training")
 		run_train(config_dict, device_name)
 

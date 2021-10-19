@@ -160,33 +160,28 @@ def create_phone_class_count_list(class_count_dict):
         occurrences = class_count_dict[phone]
         class_counts_fh.write("  " + str(phone) + ":    " + str(occurrences) + "\n")
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--reference-transcriptions-path', dest='reference_transcriptions_path', help='Path to file with reference phonetic transcriptions of each of the phrases', default=None)
-    parser.add_argument('--utterance-list-path', dest='utterance_list_path', help='File with utt list', default=None)
-    parser.add_argument('--labels-dir-path', dest='labels_dir_path', help='Path to EpaDB labels directory', default=None)
-    parser.add_argument('--alignments-path', dest='align_path', help='Path to alignment output file', default=None)
-    parser.add_argument('--output-dir-path', dest='output_dir_path', help='Path to output directory for labels', default=None)
-    parser.add_argument('--phones-list-path', dest='phone_list_path', help='Path to phone list', default=None)
-    parser.add_argument('--phone-weights-path', dest='phone_weights_path', help='Path to .yaml containing weights for phone-level loss', default=None)
-    parser.add_argument('--phone-count', dest='phone_count', help='Amount of phones in the phone set', type=int, default=0)
-
-    args = parser.parse_args()
+def main(config_dict):
     global phone_count
+    
+    reference_transcriptions_path = config_dict['reference-trans-path']
+    utterance_list_path           = config_dict['utterance-list-path']
+    labels_dir_path               = config_dict['labels-dir-path']
+    align_path                    = config_dict['alignments-path']
+    output_dir_path               = config_dict['kaldi-labels-path']
 
-    reference_transcriptions_path = args.reference_transcriptions_path
-    utterance_list_path           = args.utterance_list_path
-    labels_dir_path               = args.labels_dir_path
-    phone_count                   = args.phone_count
+    phone_list_path               = config_dict.get('phones-list-path')
+    phone_weights_path            = config_dict.get('phone-weights-path')
+    phone_count                   = config_dict.get('phone-count')
+
     create_phone_count_yamls      = False
 
-    kaldi_alignments = get_kaldi_alignments(args.align_path)
+    kaldi_alignments = get_kaldi_alignments(align_path)
     utterance_list = generate_utterance_list_from_path(utterance_list_path) 
-    trans_dict = get_reference_for_system_alignments(reference_transcriptions_path, labels_dir_path, kaldi_alignments, utterance_list)
+    trans_dict = get_reference_from_system_alignments(reference_transcriptions_path, labels_dir_path, kaldi_alignments, utterance_list)
 
     if create_phone_count_yamls:
-        phone_sym2int = get_phone_symbol_to_int_dict(args.phone_list_path)
-        phone_int2sym = get_phone_int_to_symbol_dict(args.phone_list_path)
+        phone_sym2int = get_phone_symbol_to_int_dict(phone_list_path)
+        phone_int2sym = get_phone_int_to_symbol_dict(phone_list_path)
 
         phone_int_count_dict = {phone:0 for phone in range(phone_count)}
         phone_sym_count_dict = {phone_int2sym[phone_int]+'+':0 for phone_int in range(phone_count)}
@@ -205,7 +200,7 @@ if __name__ == '__main__':
 
 
         #outdir  = "%s/labels_with_kaldi_phones/%s/labels" % (args.output_dir_path, spk)
-        outdir  = "%s/%s/labels" % (args.output_dir_path, spk)
+        outdir  = "%s/%s/labels" % (output_dir_path, spk)
         outfile = "%s/%s.txt" % (outdir, utterance)
         
         if not os.path.exists(outdir):

@@ -1,7 +1,7 @@
 import yaml
 import argparse
 import os
-from utils import *
+from run_utils import *
 
 def generate_scores_and_evaluate_epochs(config_dict, step):
 	epochs = config_dict['epochs']
