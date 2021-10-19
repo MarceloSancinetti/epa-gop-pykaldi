@@ -350,11 +350,16 @@ def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_d
         if epoch >= swa_start:
             swa_model.update_parameters(model)
             swa_scheduler.step()
-            if epoch % 2 == 1:
+            if epoch % 25 == 24:
                 save_state_dict(state_dict_dir, run_name, fold, epoch+1, step, swa_model, optimizer, scheduler, suffix='_swa')
 
 
-        if epoch % 2 == 1:
+        if epoch % 25 == 24:
+            if epoch % 25 == 24:
+                save_state_dict(state_dict_dir, run_name, fold, epoch+1, step, swa_model, optimizer, scheduler, suffix='_swa')
+
+
+        if epoch % 25 == 24:
             save_state_dict(state_dict_dir, run_name, fold, epoch+1, step, model, optimizer, scheduler)
 
 
