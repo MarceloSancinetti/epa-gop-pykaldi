@@ -1,43 +1,33 @@
+import sys
+sys.path.append("src")
+sys.path.append("src/gop")
+sys.path.append("src/evaluate")
 import yaml
 import argparse
 import os
 from run_utils import *
 
-def extend_config_dict(config_yaml, config_dict):
-	config_dict["experiment-dir-path"] 	= get_experiment_directory(config_yaml)
-	#config_dict["gop-dir"] 			= config_dict["experiment-dir-path"] 	 	 + "gop_scores/"
-	config_dict["eval-dir"] 			= config_dict["experiment-dir-path"] 	 + "eval/"
-	config_dict["alignments-path"]      = config_dict["experiment-dir-path"] 	 + "align_output"
-	config_dict["loglikes-path"]        = config_dict["experiment-dir-path"] 	 + "loglikes.ark"
-	config_dict["transcription-file"]   = config_dict["epa-ref-labels-dir-path"] + "reference_transcriptions.txt"
-	config_dict["full-gop-score-path"]  = config_dict["experiment-dir-path"] 	 + "gop.txt"
+import calculate_gop
 
-	#Choose labels dir
-	if config_dict["use-kaldi-labels"]:
-		config_dict["labels-dir"] = config_dict["kaldi-labels-path"]
-	else:
-		config_dict["labels-dir"] = config_dict["epa-ref-labels-dir-path"]
-
-	return config_dict
+#def extend_config_dict(config_yaml, config_dict):
+	#config_dict["experiment-dir-path"] 	= get_experiment_directory(config_yaml)
+	#config_dict["eval-dir"] 			= config_dict["experiment-dir-path"] 	 + "eval/"
+	#config_dict["alignments-path"]      = config_dict["experiment-dir-path"] 	 + "align_output"
+	#config_dict["loglikes-path"]        = config_dict["experiment-dir-path"] 	 + "loglikes.ark"
+	#config_dict["transcription-file"]   = config_dict["epa-ref-labels-dir-path"] + "reference_transcriptions.txt"
+	#config_dict["full-gop-score-path"]  = config_dict["experiment-dir-path"] 	 + "gop.txt"
+	#config_dict["gop-scores-dir"]       = config_dict["experiment-dir-path"]
+#
+	##Choose labels dir
+	#if config_dict["use-kaldi-labels"]:
+		#config_dict["labels-dir"] = config_dict["kaldi-labels-path"]
+	#else:
+		#config_dict["labels-dir"] = config_dict["epa-ref-labels-dir-path"]
+#
+	#return config_dict
 
 def run_gop(config_dict):
-	args_dict = {'libri-phones-path': 			  config_dict["librispeech-models-path"] 
-												  + config_dict['libri-phones-path'],
-												  
-				 'utterance-list-path': 		  config_dict["utterance-list-path"],
-
-				 'libri-phones-to-pure-int-path': config_dict['libri-phones-to-pure-int-path'],
-
-				 'libri-phones-pure-path': 		  config_dict['libri-phones-pure-path'],
-
-				 'transition-model-path': 		  config_dict["librispeech-models-path"] 
-												  + config_dict['transition-model-path'],
-
-				 'gop-dir': 					  config_dict['experiment-dir-path'],
-				 'loglikes-path': 				  config_dict['loglikes-path'],
-				 'alignments-dir-path':			  config_dict['experiment-dir-path']
-				}
-	run_script("src/gop/calculate_gop.py", args_dict)
+	calculate_gop.main(config_dict)
 
 
 def run_all(config_yaml, stage, use_heldout):

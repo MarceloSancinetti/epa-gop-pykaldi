@@ -1,7 +1,7 @@
 import pandas as pd
 import pickle
 import os
-from utils import *
+from gop_utils import *
 from gop import *
 from scipy.special import softmax
 from kaldiio import ReadHelper
@@ -95,28 +95,19 @@ def validate_gop_samples_with_utterance_list(gop_dict, utterance_list_path):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--libri-phones-path', dest='libri_phones_path', help='Path to Librispeech phones.txt file', default=None)
-    parser.add_argument('--libri-phones-to-pure-int-path', dest='libri_phones_to_pure_int_path', help='Path to Librispeech phones-to-pure-phone.int', default=None)
-    parser.add_argument('--libri-phones-pure-path', dest='libri_phones_pure_path', help='Path to Librispeech phones-pure.txt', default=None)
-    parser.add_argument('--transition-model-path', dest='libri_final_mdl_path', help='Path to Librispeech final.mdl transition model', default=None)
-    parser.add_argument('--gop-dir', dest='gop_dir', help='Path GOP directory', default=None)
-    parser.add_argument('--alignments-dir-path', dest='alignments_dir_path', help='Path to directory where align_output will be found', default=None)
-    parser.add_argument('--loglikes-path', dest='loglikes_path', help='Path to loglikes.ark', default=None)     
-    parser.add_argument('--utterance-list-path', dest='utterance_list_path', help='Path EpaDB samples list', default=None)     
-    args = parser.parse_args()
 
-    libri_phones_path             = args.libri_phones_path
-    libri_phones_to_pure_int_path = args.libri_phones_to_pure_int_path
-    libri_phones_pure_path        = args.libri_phones_pure_path 
-    libri_final_mdl_path          = args.libri_final_mdl_path 
-    gop_dir                       = args.gop_dir
-    loglikes_path                 = args.loglikes_path
-    alignments_dir_path           = args.alignments_dir_path
+    utterance_list_path           = config_dict["utterance-list-path"]
+    libri_phones_path             = config_dict["libri-phones-path"]
+    libri_phones_to_pure_int_path = config_dict["libri-phones-to-pure-int-path"]
+    libri_phones_pure_path        = config_dict["libri-phones-pure-path"] 
+    libri_final_mdl_path          = config_dict["libri-final-mdl-path"] 
+    gop_dir                       = config_dict["gop-dir-path"]
+    loglikes_path                 = config_dict["loglikes-path"]
+    alignments_dir_path           = config_dict["alignments-dir-path"]
 
     df_phones_pure, df_alignments = prepare_dataframes(libri_phones_path, libri_phones_to_pure_int_path, libri_phones_pure_path,
                                                        libri_final_mdl_path, gop_dir, alignments_dir_path)
 
-    compute_gop(gop_dir, df_phones_pure, df_alignments, loglikes_path, args.utterance_list_path, 128)
+    compute_gop(gop_dir, df_phones_pure, df_alignments, loglikes_path, utterance_list_path, 1)
 
     save_gop_as_text(gop_dir)

@@ -1,3 +1,7 @@
+import sys
+sys.path.append("src")
+sys.path.append("src/gop")
+sys.path.append("src/evaluate")
 import yaml
 import argparse
 import os
@@ -6,11 +10,12 @@ from IPython import embed
 
 import train
 import prepare_data
+import generate_kfold_utt_lists
 
 def generate_scores_and_evaluate_epochs(config_dict, step):
 	epochs = config_dict['epochs']
 
-	swa_epochs = config_dict.get('swa_epochs', 0)
+	swa_epochs = config_dict.get('swa-epochs', 0)
 	swa_start  = epochs - swa_epochs
 	
 	for epoch in range(0, epochs+1, step):
@@ -29,83 +34,24 @@ def run_train(config_dict, device_name):
 		run_train_kfold(config_dict, device_name)
 
 def run_train_kfold(config_dict, device_name):
-	fold_amount = config_dict["folds"]
-	args_dict = {"utterance-list-path":       config_dict["utterance-list-path"], 
-	             "folds":                     fold_amount,
-	             "epadb-root-path":           config_dict["epadb-root-path"],
-				 "train-sample-list-dir":     config_dict["train-sample-list-dir"],
-				 "test-sample-list-dir":      config_dict["test-sample-list-dir"]
-	            }
-	run_script("src/generate_kfold_utt_lists.py", args_dict)
-
+	generate_kfold_utt_list.main()
 
 	for fold in range(fold_amount):
-		args_dict = {"run-name": 			 	 config_dict["run-name"],
-					 "trainset-list": 		 	 config_dict["train-sample-list-dir"] + 'train_sample_list_fold_' + str(fold),
- 					 "testset-list": 		 	 config_dict["test-sample-list-dir"]  + 'test_sample_list_fold_'  + str(fold),
-					 "fold": 				 	 fold,
-	 				 "epochs": 				 	 config_dict["epochs"],
-	 				 "swa-epochs":			 	 config_dict.get("swa-epochs", 0),	 				 
-					 "layers": 		 		 	 config_dict["layers"],
-					 "use-dropout": 		 	 config_dict["use-dropout"],
-					 "dropout-p": 		     	 config_dict["dropout-p"],
-					 "learning-rate":        	 config_dict["learning-rate"],
-					 "scheduler":                config_dict.get("scheduler", "None"),
-				     "swa-learning-rate":        config_dict.get("swa-learning-rate", 0),
- 					 "batch-size":           	 config_dict["batch-size"],
-					 "norm-per-phone-and-class": config_dict["norm-per-phone-and-class"],
-	                 "use-clipping":         	 config_dict["use-clipping"],
-	                 "batchnorm":            	 config_dict["batchnorm"],
-					 "phones-file": 		 	 config_dict["phones-list-path"],
-					 "labels-dir": 			 	 config_dict["labels-dir"],
-					 "model-path": 			 	 config_dict["finetune-model-path"],
-					 "phone-weights-path":   	 config_dict["phone-weights-path"],
-					 "train-root-path": 		 config_dict["epadb-root-path"],
-					 "test-root-path": 		     config_dict["epadb-root-path"],
-					 "features-path": 		 	 config_dict["features-path"],
-					 "conf-path": 			 	 config_dict["features-conf-path"],
-					 "state-dict-dir": 		 	 config_dict["state-dict-dir"],
-					 "device":               	 device_name				 
-					}
-		train.main(args_dict)
+		config_dict["fold"]            = fold
+		config_dict["train-list-path"] = config_dict["train-sample-list-dir"] + 'train_sample_list_fold_' + str(fold)
+		config_dict["test-list-path"]  = config_dict["test-sample-list-dir"]  + 'test_sample_list_fold_'  + str(fold)
+		config_dict["train-root-path"] = config_dict["epadb-root-path"]
+		config_dict["test-root-path"]  = config_dict["epadb-root-path"]
+		config_dict["device"]          = device_name				 
+		train.main(config_dict)
 
 def run_train_heldout(config_dict, device_name):
-	args_dict = {"run-name": 			 	 config_dict["run-name"],
-				 "trainset-list": 		 	 config_dict["train-list-path"],
-				 "testset-list": 		 	 config_dict["test-list-path"],
-				 "fold": 				 	 0,
- 				 "epochs": 				 	 config_dict["epochs"],
- 				 "swa-epochs":			 	 config_dict.get("swa-epochs", 0),
-				 "layers": 		 		 	 config_dict["layers"],
-				 "use-dropout": 		 	 config_dict["use-dropout"],
-				 "dropout-p": 		     	 config_dict["dropout-p"],
-				 "learning-rate":        	 config_dict["learning-rate"],
-				 "scheduler":                config_dict.get("scheduler", "None"),
-				 "swa-learning-rate":        config_dict.get("swa-learning-rate", 0),
-				 "batch-size":           	 config_dict["batch-size"],
-				 "norm-per-phone-and-class": config_dict["norm-per-phone-and-class"],
-                 "use-clipping":         	 config_dict["use-clipping"],
-                 "batchnorm":            	 config_dict["batchnorm"],
-				 "phones-file": 		 	 config_dict["phones-list-path"],
-				 "labels-dir": 			 	 config_dict["labels-dir"],
-				 "model-path": 			 	 config_dict["finetune-model-path"],
-				 "phone-weights-path":   	 config_dict["phone-weights-path"],
-				 "train-root-path": 		 config_dict["epadb-root-path"],
-				 "test-root-path": 		     config_dict["heldout-root-path"],
-				 "features-path": 		 	 config_dict["features-path"],
-				 "conf-path": 			 	 config_dict["features-conf-path"],
-				 "test-sample-list-dir": 	 config_dict["test-sample-list-dir"],
-				 "state-dict-dir": 		 	 config_dict["state-dict-dir"],
-				 "device":               	 device_name				 
-				}
-	train.main(args_dict)
 
-
-def run_evaluate_many_epochs(config_yaml, step=25):
-	args_dict = {"config": config_yaml,
-	             "step":   step
-	            }
-	run_script("evaluate_many_epochs.py", args_dict)
+	config_dict["fold"]            = 0
+	config_dict["train-root-path"] = config_dict["epadb-root-path"]
+	config_dict["test-root-path"]  = config_dict["heldout-root-path"]
+	config_dict["device"]          = device_name
+	train.main(config_dict)
 
 def run_all(config_yaml, stage, device_name, use_heldout):
 	config_fh = open(config_yaml, "r")

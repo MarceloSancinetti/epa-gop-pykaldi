@@ -110,21 +110,21 @@ def main(config_dict):
     epadb_root_path         = config_dict['epadb-root-path']
     features_path           = config_dict['features-path']
     conf_path               = config_dict['features-conf-path']
-    labels_path = config_dict['epa-ref-labels-dir-path']
+    labels_path             = config_dict['epa-ref-labels-dir-path']
     librispeech_models_path = config_dict['librispeech-models-path']
     pytorch_models_path     = config_dict['pytorch-models-path']
     libri_chain_mdl_path    = config_dict['libri-chain-mdl-path']
     libri_chain_txt_path    = config_dict['libri-chain-txt-path']
     acoustic_model_path     = config_dict['acoustic-model-path']
     utterance_list_path     = config_dict['utterance-list-path']
-    phone_count             = config_dict['phone-count']
+    phone_count             = config_dict.get('phone-count', None)
     experiment_dir_path     = config_dict['experiment-dir-path']
     setup                   = config_dict['setup']
     use_heldout             = config_dict['held-out']
     heldout_root_path       = config_dict['heldout-root-path']
     heldout_list_path       = config_dict['test-list-path']
     finetune_model_path     = config_dict['finetune-model-path']
-    batchnorm               = config_dict['batchnorm']
+    batchnorm               = config_dict.get('batchnorm', None)
     seed                    = config_dict['seed']
 
     if setup != "exp" and setup != "gop":
@@ -138,7 +138,7 @@ def main(config_dict):
 
     #Prepare pytorch models
     prepare_pytorch_models(pytorch_models_path, libri_chain_mdl_path, libri_chain_txt_path, 
-                           acoustic_model_path, setup, batchnorm, seed, finetune_model_path, phone_count)
+                           acoustic_model_path, setup, batchnorm, seed, finetune_model_path, phone_count=phone_count)
 
     #Extract features
     feature_manager = FeatureManager(epadb_root_path, features_path, conf_path, heldout_root_path=heldout_root_path)

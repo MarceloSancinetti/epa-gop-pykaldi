@@ -398,29 +398,29 @@ def parse_bool_arg(arg):
 
 def main(config_dict):
     run_name                 = config_dict["run-name"]
-    trainset_list            = config_dict["trainset-list"]
-    testset_list             = config_dict["testset-list"]
+    trainset_list            = config_dict["train-list-path"]
+    testset_list             = config_dict["test-list-path"]
     fold                     = config_dict["fold"]
     epochs                   = config_dict["epochs"]
-    swa_epochs               = config_dict["swa-epochs"]
+    swa_epochs               = config_dict.get("swa-epochs", 0)
     layer_amount             = config_dict["layers"]
     use_dropout              = config_dict["use-dropout"]
     dropout_p                = config_dict["dropout-p"]
     learning_rate            = config_dict["learning-rate"]
-    scheduler_config         = config_dict.get("scheduler", None)
+    scheduler_config         = config_dict.get("scheduler", "None")
     swa_lr                   = config_dict.get("swa-learning-rate", None)
     batch_size               = config_dict["batch-size"]
     norm_per_phone_and_class = config_dict["norm-per-phone-and-class"]
     use_clipping             = config_dict["use-clipping"]
     batchnorm                = config_dict["batchnorm"]
-    phones_file              = config_dict["phones-file"]
-    labels_dir               = config_dict["labels-dir"]
-    model_path               = config_dict["model-path"]
+    phones_file              = config_dict["phones-list-path"]
+    labels_dir               = config_dict["labels-dir-path"]
+    model_path               = config_dict["finetune-model-path"]
     phone_weights_path       = config_dict["phone-weights-path"]
     train_root_path          = config_dict["train-root-path"]
     test_root_path           = config_dict["test-root-path"]
     features_path            = config_dict["features-path"]
-    conf_path                = config_dict["conf-path"]
+    conf_path                = config_dict["features-conf-path"]
     state_dict_dir           = config_dict["state-dict-dir"]
     device_name              = config_dict["device"]
 
