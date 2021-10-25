@@ -10,6 +10,26 @@ import generate_data_for_eval
 import create_kaldi_labels
 import generate_score_txt
 
+def make_experiment_directory(experiment_dir_path, setup):
+    #This will create the experiment directory and the test sample list, 
+    #state dict, and gop scores directories inside of it
+    test_sample_lists_dir  = experiment_dir_path + "/test_sample_lists/"
+    train_sample_lists_dir = experiment_dir_path + "/train_sample_lists/"
+    state_dicts_dir        = experiment_dir_path + "/state_dicts/"
+    gop_scores_dir         = experiment_dir_path + "/gop_scores/"
+    eval_dir               = experiment_dir_path + "/eval/"
+    
+    if not os.path.exists(test_sample_lists_dir) and setup == "exp":
+        os.makedirs(test_sample_lists_dir)
+    if not os.path.exists(train_sample_lists_dir) and setup == "exp":
+        os.makedirs(train_sample_lists_dir)
+    if not os.path.exists(state_dicts_dir) and setup == "exp":
+        os.makedirs(state_dicts_dir)
+    if not os.path.exists(gop_scores_dir):
+        os.makedirs(gop_scores_dir)
+    if not os.path.exists(eval_dir):
+        os.makedirs(eval_dir)
+
 def generate_arguments(args_dict):
 	res = ""
 	for arg_name, value in args_dict.items():
@@ -103,7 +123,7 @@ def run_create_kaldi_labels(config_dict, setup):
 	create_kaldi_labels.main(config_dict)
 	
 	if config_dict.get("held-out"):
-		config_dict['reference-trans-path']           = config_dict["heldout-root-path"] + "/reference_transcriptions.txt"
+		config_dict['reference-trans-path']          = config_dict["heldout-root-path"] + "/reference_transcriptions.txt"
 		config_dict['utterance-list-path']           = config_dict['test-list-path']
 		config_dict['labels-dir-path']               = config_dict['heldout-root-path']
 		config_dict['alignments-path']               = config_dict['heldout-align-path']
@@ -124,7 +144,6 @@ def run_generate_scores_kfold(config_dict, epoch=None, swa=False, device='cpu'):
 		config_dict["model-name"]           = model_name
 		config_dict["utterance-list-path"]  = utterance_list_path
 		config_dict["gop-txt-name"]         = 'gop-'+model_name+'.txt'
-		config_dict["device-name"]          = device
 		generate_score_txt.main(config_dict)
 		cat_file_names += config_dict['gop-scores-dir'] + '/' +'gop-'+config_dict['model-name']+'.txt ' #Codigo repetido con generate_score_txt
 	#Concatenate gop scores for all folds
@@ -135,25 +154,25 @@ def run_generate_scores_heldout(config_dict, epoch=None, swa=False, device='cpu'
 	config_dict["model-name"]           = model_name
 	config_dict["utterance-list-path"]  = config_dict["test-list-path"]
 	config_dict["gop-txt-name"]         = 'gop-'+model_name+'.txt'
-	config_dict["device-name"]          = device
 	config_dict["epadb-root-path"]      = config_dict["heldout-root-path"]
 
 	generate_score_txt.main(config_dict)
 
-def extend_config_dict(config_yaml, config_dict, setup, use_heldout):
+def extend_config_dict(config_yaml, config_dict, setup, use_heldout, device_name):
 	config_dict["experiment-dir-path"] 	 = get_experiment_directory(config_yaml, use_heldout=use_heldout)
 	config_dict["run-name"] 			 = get_run_name(config_yaml, use_heldout=use_heldout)
 	config_dict["gop-scores-dir"] 		 = config_dict["experiment-dir-path"] 	  + "gop_scores/"
 	config_dict["heldout-align-path"]    = config_dict["experiment-dir-path"]     + "align_output_heldout"	
 	config_dict["eval-dir"] 			 = config_dict["experiment-dir-path"] 	  + "eval/"
-	config_dict["alignments-path"]       = config_dict["experiment-dir-path"] 	  + "align_output"
-	config_dict["loglikes-path"]         = config_dict["experiment-dir-path"] 	  + "loglikes.ark"
+	config_dict["alignments-path"]       = "align_output"
+	config_dict["loglikes-path"]         = "loglikes.ark"
 	config_dict["reference-trans-path"]  = config_dict["epa-ref-labels-dir-path"] + "reference_transcriptions.txt"
 	config_dict["held-out"]              = use_heldout
 	config_dict["libri-chain-mdl-path"]  = config_dict["libri-chain-mdl-path"]
 	config_dict["libri-chain-txt-path"]  = config_dict["libri-chain-txt-path"]
 	config_dict["setup"]                 = setup
 	config_dict["seed"]                  = 42
+	config_dict["device"]                = device_name
 
 	if setup == "exp":
 		config_dict["phone-count"]           = get_phone_count(config_dict["phones-list-path"])
@@ -186,3 +205,10 @@ def extend_config_dict(config_yaml, config_dict, setup, use_heldout):
 
 
 	return config_dict
+
+
+def load_extended_config_dict(config_yaml, device_name, use_heldout):
+    config_fh   = open(config_yaml, "r")
+    config_dict = yaml.safe_load(config_fh)
+    config_dict = extend_config_dict(config_yaml, config_dict, "exp", use_heldout, device_name)
+    return config_dict

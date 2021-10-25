@@ -102,7 +102,7 @@ def main(config_dict):
     gop_txt_name        = config_dict['gop-txt-name']
     features_path       = config_dict['features-path']
     conf_path           = config_dict['features-conf-path']
-    device_name         = config_dict['device-name']
+    device_name         = config_dict['device']
     batchnorm           = config_dict['batchnorm']
 
     testset = EpaDB(epa_root_path, sample_list, phone_list_path, labels_dir, features_path, conf_path)

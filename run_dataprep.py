@@ -1,0 +1,31 @@
+import sys
+import yaml
+sys.path.append("src")
+sys.path.append("src/gop")
+sys.path.append("src/evaluate")
+from run_utils import *
+from src.DataprepStages import *
+from IPython import embed
+
+def run_all(config_yaml):
+
+    config_dict = load_extended_config_dict(config_yaml, "cpu", True)
+
+    prep_stage   = PrepareFeaturesAndModelsStage(config_dict)
+    align_stage  = ComplexStage([AlignCrossValStage(config_dict), AlignHeldoutStage(config_dict)], config_dict, "align")
+    labels_stage = ComplexStage([CreateLabelsCrossValStage(config_dict), CreateLabelsHeldoutStage(config_dict)], config_dict, "labels")
+    
+    dataprep_stages = [prep_stage, align_stage, labels_stage]
+
+    dataprep = ComplexStage(dataprep_stages, config_dict, "dataprep")
+
+    dataprep.run()
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', dest='config_yaml',  help='Path .yaml config file for experiment', default=None)
+
+    args = parser.parse_args()
+
+    run_all(args.config_yaml)

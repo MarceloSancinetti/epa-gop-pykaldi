@@ -88,14 +88,14 @@ def read_relu_component(file, layer_number, is_tdnnf=True):
 	return params_dict
 
 
-if __name__ == '__main__':
-	parser = argparse.ArgumentParser()
-	parser.add_argument('--chain-model-path', dest='chain_file',  help='Path to Kaldi chain model (FTDNN) in text form (final.txt)', default=None)
-	parser.add_argument('--output-path', dest='output_path', help='Path to save the torch model', default=None)
+def main(config_dict):
+	global line
+	global chain_file
 
-	args = parser.parse_args()
+	chain_file  = config_dict["libri-chain-txt-path"]
+	output_path = config_dict["acoustic-model-path"]
 
-	chain_file = open(args.chain_file, 'r') 
+	chain_file = open(chain_file, 'r') 
 	 
 	components = {}
 	finished = False  
@@ -209,4 +209,4 @@ if __name__ == '__main__':
 
 	ftdnn.load_state_dict(state_dict)
 
-	torch.save(ftdnn.state_dict(), args.output_path)
+	torch.save(ftdnn.state_dict(), output_path)

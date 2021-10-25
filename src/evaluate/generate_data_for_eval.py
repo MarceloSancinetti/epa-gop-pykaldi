@@ -159,7 +159,7 @@ def get_reference(file):
 
 def main(config_dict):
     reference_transcriptions_path = config_dict['reference-trans-path']
-    utterance_list_path           = config_dict['eval-utt-list-path']
+    utterance_list_path           = config_dict['utterance-list-path']
     output_dir                    = config_dict['eval-dir']
     output_filename               = config_dict['eval-filename']
     gop_path                      = config_dict['full-gop-score-path']

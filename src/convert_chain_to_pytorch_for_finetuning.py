@@ -84,20 +84,21 @@ def read_relu_component(file, layer_number, is_tdnnf=True):
 	return params_dict
 
 
-if __name__ == '__main__':
-	parser = argparse.ArgumentParser()
-	parser.add_argument('--chain-model-path', dest='chain_file',  help='Path to Kaldi chain model (FTDNN) in text form (final.txt)', default=None)
-	parser.add_argument('--output-path', dest='output_path', help='Path to save the torch model', default=None)
-	parser.add_argument('--phone-count', dest='phone_count', help='Size of the phone set for the current system', default=None)
-	parser.add_argument('--batchnorm', dest='batchnorm', help='Batchnorm mode (first, last, all, etc)', default=None)
-	parser.add_argument('--seed', dest='seed', help='Random seed', type=int, default=None)
+def main(config_dict):
+	global line
+	global chain_file
 
-	args = parser.parse_args()
+	chain_file  = config_dict["libri-chain-txt-path"]
+	output_path = config_dict["finetune-model-path"]
+	phone_count = config_dict["phone-count"]
+	batchnorm   = config_dict["batchnorm"] 
+	seed        = config_dict["seed"]
 
-	chain_file = open(args.chain_file, 'r') 
+	chain_file = open(chain_file, 'r') 
 	 
 	components = {}
-	finished = False  
+	finished = False
+
 	while not finished: 
 	  
 		line = chain_file.readline() 
@@ -149,9 +150,9 @@ if __name__ == '__main__':
 		# The code used to parse the chain head parameters has been removed because a new layer will be used instead.
 
 
-	phone_count = int(args.phone_count)
+	phone_count = int(phone_count)
 
-	ftdnn = FTDNN(out_dim=phone_count, batchnorm=args.batchnorm)
+	ftdnn = FTDNN(out_dim=phone_count, batchnorm=batchnorm)
 
 	model_state_dict = {}
 
@@ -176,10 +177,10 @@ if __name__ == '__main__':
 
 	
 	#Add layer to finetune 
-	torch.manual_seed(args.seed)
+	torch.manual_seed(seed)
 	model_state_dict['layer19.linear.weight']   = torch.randn([phone_count, 256])
 	model_state_dict['layer19.linear.bias']     = torch.randn([phone_count])
-	if args.batchnorm in ["final", "last", "firstlast"]:
+	if batchnorm in ["final", "last", "firstlast"]:
 		model_state_dict['layer19.bn.running_mean'] = torch.zeros(256)
 		model_state_dict['layer19.bn.running_var']  = torch.ones(256)
 
@@ -195,4 +196,4 @@ if __name__ == '__main__':
 
 	ftdnn.load_state_dict(model_state_dict)
 
-	torch.save(state_dict, args.output_path)
+	torch.save(state_dict, output_path)

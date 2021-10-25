@@ -17,8 +17,8 @@ def main(config_dict):
     utterance_list_path   = config_dict["utterance-list-path"]
     folds                 = config_dict["folds"]
     epadb_root_path       = config_dict["epadb-root-path"]
-    train_sample_list_dir = config_dict["train_sample_list_dir"]
-    test_sample_list_dir  = config_dict["test_sample_list_dir"]
+    train_sample_list_dir = config_dict["train-sample-list-dir"]
+    test_sample_list_dir  = config_dict["test-sample-list-dir"]
     seed = 42
 
     kfold = KFold(n_splits=folds, shuffle=True, random_state = seed)

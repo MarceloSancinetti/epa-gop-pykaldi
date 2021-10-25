@@ -1,93 +1,81 @@
 import sys
+import yaml
 sys.path.append("src")
 sys.path.append("src/gop")
 sys.path.append("src/evaluate")
-import yaml
-import argparse
-import os
 from run_utils import *
+from src.ExperimentStages import *
 from IPython import embed
 
-import train
-import prepare_data
-import generate_kfold_utt_lists
+def get_prep_stage(config_dict):
+    prep_dir_stage   = CreateExperimentDirectoryStage(config_dict)
+    prep_model_stage = CreateFinetuneModelStage(config_dict)
+    return ComplexStage([prep_dir_stage, prep_model_stage], config_dict, "prep")
 
-def generate_scores_and_evaluate_epochs(config_dict, step):
-	epochs = config_dict['epochs']
+def get_train_stage(config_dict):
+    if config_dict.get("held-out"):
+        return TrainHeldoutStage(config_dict)
+    else:
+        return TrainCrossValStage(config_dict)
 
-	swa_epochs = config_dict.get('swa-epochs', 0)
-	swa_start  = epochs - swa_epochs
-	
-	for epoch in range(0, epochs+1, step):
-		print("Evaluating epoch %d/%d" % (int(epoch/step), int(epochs/step)))
-		run_generate_scores(config_dict, epoch=epoch)
-		run_evaluate(config_dict, epoch=epoch)
+def get_scores_stage(config_dict, epoch, is_swa=False):
+    if config_dict.get("held-out"):
+        return GenerateScoresHeldoutStage(config_dict, epoch=epoch, is_swa=is_swa)
+    else:
+        return GenerateScoresCrossValStage(config_dict, epoch=epoch, is_swa=is_swa)
 
-		if epoch >= swa_start and swa_epochs != 0:
-			run_generate_scores(config_dict, epoch=epoch, swa=True)
-			run_evaluate(config_dict, epoch=epoch, swa=True)
+def get_eval_stage(config_dict, epoch, is_swa=False):
+    if config_dict.get("held-out"):
+        return EvaluateScoresHeldoutStage(config_dict, epoch=epoch, is_swa=is_swa)
+    else:
+        return EvaluateScoresCrossValStage(config_dict, epoch=epoch, is_swa=is_swa)
 
-def run_train(config_dict, device_name):
-	if "held-out" in config_dict and config_dict["held-out"]:
-		run_train_heldout(config_dict, device_name)
-	else:
-		run_train_kfold(config_dict, device_name)
+def get_scores_and_eval_stages_for_many_epochs(config_dict, step):
+    scores_stages = [] 
+    eval_stages   = []
 
-def run_train_kfold(config_dict, device_name):
-	generate_kfold_utt_list.main()
+    epochs = config_dict['epochs']
 
-	for fold in range(fold_amount):
-		config_dict["fold"]            = fold
-		config_dict["train-list-path"] = config_dict["train-sample-list-dir"] + 'train_sample_list_fold_' + str(fold)
-		config_dict["test-list-path"]  = config_dict["test-sample-list-dir"]  + 'test_sample_list_fold_'  + str(fold)
-		config_dict["train-root-path"] = config_dict["epadb-root-path"]
-		config_dict["test-root-path"]  = config_dict["epadb-root-path"]
-		config_dict["device"]          = device_name				 
-		train.main(config_dict)
+    swa_epochs = config_dict.get('swa-epochs', 0)
+    swa_start  = epochs - swa_epochs
 
-def run_train_heldout(config_dict, device_name):
+    for epoch in range(0, epochs+1, step):
+        scores_stages.append(get_scores_stage(config_dict, epoch))
+        eval_stages.append(get_eval_stage(config_dict, epoch))
 
-	config_dict["fold"]            = 0
-	config_dict["train-root-path"] = config_dict["epadb-root-path"]
-	config_dict["test-root-path"]  = config_dict["heldout-root-path"]
-	config_dict["device"]          = device_name
-	train.main(config_dict)
+        if epoch >= swa_start and swa_epochs != 0:
+            scores_stages.append(get_scores_stage(config_dict, epoch, is_swa=True))
+            eval_stages.append(get_eval_stage(config_dict, epoch, is_swa=True))
 
-def run_all(config_yaml, stage, device_name, use_heldout):
-	config_fh = open(config_yaml, "r")
-	config_dict = yaml.safe_load(config_fh)	
+    scores_stage = ComplexStage(scores_stages, config_dict, "scores")
+    eval_stage   = ComplexStage(eval_stages, config_dict, "evaluate")
 
-	config_dict = extend_config_dict(config_yaml, config_dict, "exp", use_heldout)
+    return scores_stage, eval_stage
 
-	if stage in ["dataprep", "all"]:
-		print("Running data preparation")
-		run_data_prep(config_dict)
+def run_all(config_yaml, from_stage, to_stage, device_name, use_heldout):
 
-	if stage in ["align", "all"]:
-		print("Running aligner")
-		run_align(config_dict)
-	
-	if stage in ["labels", "all"] and config_dict['use-kaldi-labels']:
-		print("Creating Kaldi labels")
-		run_create_kaldi_labels(config_dict, 'exp')
+    config_dict = load_extended_config_dict(config_yaml, device_name, use_heldout)
 
-	if stage in ["train+", "train", "all"]:
-		print("Running training")
-		run_train(config_dict, device_name)
+    prep_stage  = get_prep_stage(config_dict)
+    train_stage = get_train_stage(config_dict)
+    scores_stage, eval_stage = get_scores_and_eval_stages_for_many_epochs(config_dict, 4)
 
-	if stage in ["train+","evaluate", "all"]:
-		print("Evaluating results")
-		generate_scores_and_evaluate_epochs(config_dict, 25)
+    experiment_stages = [prep_stage, train_stage, scores_stage, eval_stage]
+
+    experiment = ComplexStage(experiment_stages, config_dict, "experiment")
+
+    experiment.run(from_stage, to_stage)
 
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser()
-	parser.add_argument('--config', dest='config_yaml',  help='Path .yaml config file for experiment', default=None)
-	parser.add_argument('--stage', dest='stage',  help='Stage to run (dataprep, align, train, scores, evaluate), or \'all\' to run all stages', default=None)
-	parser.add_argument('--device', dest='device_name', help='Device name to use, such as cpu or cuda', default=None)
-	parser.add_argument('--heldout', action='store_true', help='Use this option to test on heldout set', default=False)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', dest='config_yaml',  help='Path .yaml config file for experiment', default=None)
+    parser.add_argument('--from', dest='from_stage',  help='First stage to run (prep, train, scores, evaluate)', default=None)
+    parser.add_argument('--to', dest='to_stage',  help='Last stage to run (prep, train, scores, evaluate)', default=None)
+    parser.add_argument('--device', dest='device_name', help='Device name to use, such as cpu or cuda', default=None)
+    parser.add_argument('--heldout', action='store_true', help='Use this option to test on heldout set', default=False)
 
-	args = parser.parse_args()
-	use_heldout = args.heldout
+    args = parser.parse_args()
+    use_heldout = args.heldout
 
-	run_all(args.config_yaml, args.stage, args.device_name, use_heldout)
+    run_all(args.config_yaml, args.from_stage, args.to_stage, args.device_name, use_heldout)
