@@ -3,14 +3,14 @@ import yaml
 sys.path.append("src")
 sys.path.append("src/gop")
 sys.path.append("src/evaluate")
-from run_utils import *
+from run_utils import load_extended_config_dict
 from src.ExperimentStages import *
 from IPython import embed
 
 def get_prep_stage(config_dict):
     prep_dir_stage   = CreateExperimentDirectoryStage(config_dict)
     prep_model_stage = CreateFinetuneModelStage(config_dict)
-    return ComplexStage([prep_dir_stage, prep_model_stage], config_dict, "prep")
+    return ComplexStage([prep_dir_stage, prep_model_stage], "prep")
 
 def get_train_stage(config_dict):
     if config_dict.get("held-out"):
@@ -23,12 +23,6 @@ def get_scores_stage(config_dict, epoch, is_swa=False):
         return GenerateScoresHeldoutStage(config_dict, epoch=epoch, is_swa=is_swa)
     else:
         return GenerateScoresCrossValStage(config_dict, epoch=epoch, is_swa=is_swa)
-
-def get_eval_stage(config_dict, epoch, is_swa=False):
-    if config_dict.get("held-out"):
-        return EvaluateScoresHeldoutStage(config_dict, epoch=epoch, is_swa=is_swa)
-    else:
-        return EvaluateScoresCrossValStage(config_dict, epoch=epoch, is_swa=is_swa)
 
 def get_scores_and_eval_stages_for_many_epochs(config_dict, step):
     scores_stages = [] 
@@ -47,8 +41,8 @@ def get_scores_and_eval_stages_for_many_epochs(config_dict, step):
             scores_stages.append(get_scores_stage(config_dict, epoch, is_swa=True))
             eval_stages.append(get_eval_stage(config_dict, epoch, is_swa=True))
 
-    scores_stage = ComplexStage(scores_stages, config_dict, "scores")
-    eval_stage   = ComplexStage(eval_stages, config_dict, "evaluate")
+    scores_stage = ComplexStage(scores_stages, "scores")
+    eval_stage   = ComplexStage(eval_stages, "evaluate")
 
     return scores_stage, eval_stage
 
@@ -62,7 +56,7 @@ def run_all(config_yaml, from_stage, to_stage, device_name, use_heldout):
 
     experiment_stages = [prep_stage, train_stage, scores_stage, eval_stage]
 
-    experiment = ComplexStage(experiment_stages, config_dict, "experiment")
+    experiment = ComplexStage(experiment_stages, "experiment")
 
     experiment.run(from_stage, to_stage)
 

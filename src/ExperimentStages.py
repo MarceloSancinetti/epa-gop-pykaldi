@@ -6,7 +6,27 @@ import generate_score_txt
 import generate_data_for_eval
 import convert_chain_to_pytorch_for_finetuning
 from Stages import *
-from run_utils import *
+
+
+def make_experiment_directory(experiment_dir_path, setup):
+    #This will create the experiment directory and the test sample list, 
+    #state dict, and gop scores directories inside of it
+    test_sample_lists_dir  = experiment_dir_path + "/test_sample_lists/"
+    train_sample_lists_dir = experiment_dir_path + "/train_sample_lists/"
+    state_dicts_dir        = experiment_dir_path + "/state_dicts/"
+    gop_scores_dir         = experiment_dir_path + "/gop_scores/"
+    eval_dir               = experiment_dir_path + "/eval/"
+    
+    if not os.path.exists(test_sample_lists_dir) and setup == "exp":
+        os.makedirs(test_sample_lists_dir)
+    if not os.path.exists(train_sample_lists_dir) and setup == "exp":
+        os.makedirs(train_sample_lists_dir)
+    if not os.path.exists(state_dicts_dir) and setup == "exp":
+        os.makedirs(state_dicts_dir)
+    if not os.path.exists(gop_scores_dir):
+        os.makedirs(gop_scores_dir)
+    if not os.path.exists(eval_dir):
+        os.makedirs(eval_dir)
 
 def check_if_config_exists(config_path):
     if not os.path.exists(config_path):

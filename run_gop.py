@@ -1,67 +1,34 @@
 import sys
+import yaml
 sys.path.append("src")
 sys.path.append("src/gop")
 sys.path.append("src/evaluate")
-import yaml
-import argparse
-import os
 from run_utils import *
+from src.GopStages import *
+from src.ExperimentStages import EvaluateScoresCrossValStage
+from IPython import embed
 
-import calculate_gop
+def run_all(config_yaml, from_stage, to_stage, use_heldout):
 
-#def extend_config_dict(config_yaml, config_dict):
-	#config_dict["experiment-dir-path"] 	= get_experiment_directory(config_yaml)
-	#config_dict["eval-dir"] 			= config_dict["experiment-dir-path"] 	 + "eval/"
-	#config_dict["alignments-path"]      = config_dict["experiment-dir-path"] 	 + "align_output"
-	#config_dict["loglikes-path"]        = config_dict["experiment-dir-path"] 	 + "loglikes.ark"
-	#config_dict["transcription-file"]   = config_dict["epa-ref-labels-dir-path"] + "reference_transcriptions.txt"
-	#config_dict["full-gop-score-path"]  = config_dict["experiment-dir-path"] 	 + "gop.txt"
-	#config_dict["gop-scores-dir"]       = config_dict["experiment-dir-path"]
-#
-	##Choose labels dir
-	#if config_dict["use-kaldi-labels"]:
-		#config_dict["labels-dir"] = config_dict["kaldi-labels-path"]
-	#else:
-		#config_dict["labels-dir"] = config_dict["epa-ref-labels-dir-path"]
-#
-	#return config_dict
+    config_dict = load_extended_config_dict(config_yaml, "gop", "cpu", use_heldout)
 
-def run_gop(config_dict):
-	calculate_gop.main(config_dict)
+    prepdir_stage = CreateExperimentDirectoryStage(config_dict)
+    gop_stage     = GopStage(config_dict)
+    eval_stage    = get_eval_stage(config_dict)
 
+    gop_pipeline  = ComplexStage([prepdir_stage, gop_stage, eval_stage], "gop-pipeline")
 
-def run_all(config_yaml, stage, use_heldout):
-	config_fh = open(config_yaml, "r")
-	config_dict = yaml.safe_load(config_fh)	
-
-	config_dict = extend_config_dict(config_yaml, config_dict, "gop", use_heldout)
-
-	if stage in ["dataprep", "all"]:
-		print("Running data preparation")
-		run_data_prep(config_dict)
-
-	if stage in ["align", "all"]:
-		print("Running aligner")
-		run_align(config_dict)
-	
-	if stage in ["gop", "all"]:
-		if config_dict['use-kaldi-labels']:
-			print("Creating Kaldi labels")
-			run_create_kaldi_labels(config_dict, 'gop')
-		print("Running GOP")
-		run_gop(config_dict)
-			
-	if stage in ["evaluate", "all"]:
-		print("Evaluating results")
-		run_evaluate(config_dict)
+    gop_pipeline.run()
 
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser()
-	parser.add_argument('--config', dest='config_yaml',  help='Path .yaml config file for experiment', default=None)
-	parser.add_argument('--stage', dest='stage',  help='Stage to run (dataprep, align, train, scores, evaluate), or \'all\' to run all stages', default=None)
-	parser.add_argument('--heldout', action='store_true', help='Use this option to test on heldout set', default=False)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', dest='config_yaml',  help='Path .yaml config file for experiment', default=None)
+    parser.add_argument('--from', dest='from_stage',  help='First stage to run (prepdir, gop, evaluate)', default=None)
+    parser.add_argument('--to', dest='to_stage',  help='Last stage to run (prepdir, gop, evaluate)', default=None)
+    parser.add_argument('--heldout', action='store_true', help='Use this option to test on heldout set', default=False)
 
-	args = parser.parse_args()
+    args = parser.parse_args()
+    use_heldout = args.heldout
 
-	run_all(args.config_yaml, args.stage, args.heldout)
+    run_all(args.config_yaml, args.from_stage, args.to_stage, use_heldout)

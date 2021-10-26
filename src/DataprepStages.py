@@ -4,7 +4,6 @@ import align
 import create_kaldi_labels
 import prepare_data
 from Stages import *
-from run_utils import *
 
 class PrepareFeaturesAndModelsStage(AtomicStage):
     _name = "features"
@@ -33,10 +32,7 @@ class CreateLabelsCrossValStage(AtomicStage):
     _name = "labels"
 
     def run(self):
-        config_dict = self._config_dict
-
-        config_dict['labels-dir-path'] = config_dict['kaldi-labels-path']
-        create_kaldi_labels.main(config_dict)
+        create_kaldi_labels.main(self._config_dict)
 
 class CreateLabelsHeldoutStage(AtomicStage):
     _name = "labels"

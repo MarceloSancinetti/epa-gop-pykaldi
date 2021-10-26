@@ -3,7 +3,7 @@ import os
 
 class ComplexStage():
 
-    def __init__(self, substages, config_dict, name):
+    def __init__(self, substages, name):
 
         if len(substages) < 2:
             raise Exception('Must provide at least two substages for a complex stage')
@@ -11,7 +11,7 @@ class ComplexStage():
         self._substages      = substages
         self._substage_names = [substage.name() for substage in substages]
         self._name           = name
-        self._config_dict    = config_dict.copy()   
+        #self._config_dict    = config_dict.copy()   
     
     def run(self, from_stage=None, to_stage=None):
         #Run substages from_stage:to_stage 
