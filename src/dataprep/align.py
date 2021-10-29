@@ -3,14 +3,14 @@ from kaldi.util.table import DoubleMatrixWriter
 from kaldi.alignment import MappedAligner
 from kaldi.fstext import SymbolTable
 from kaldi.lat.align import WordBoundaryInfoNewOpts, WordBoundaryInfo
-from pytorch_models_old import *
 import torch
 import numpy as np
 import pickle
 import tqdm
 import argparse
 import os
-from FeatureManager import FeatureManager
+from src.utils.FeatureManager import FeatureManager
+from src.pytorch_models.pytorch_models_old import *
 from IPython import embed
 
 def log_alignments(aligner, phones, alignment, logid, align_output_fh):

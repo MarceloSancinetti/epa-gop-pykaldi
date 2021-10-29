@@ -4,13 +4,7 @@ import argparse
 import os
 from IPython import embed
 
-import prepare_data
-import align
-import generate_data_for_eval
-import create_kaldi_labels
-import generate_score_txt
-
-from ExperimentStages import *
+from src.ExperimentStages import *
 
 def generate_arguments(args_dict):
 	res = ""
@@ -77,11 +71,12 @@ def get_eval_stage(config_dict, epoch, is_swa=False):
 def extend_config_dict(config_yaml, config_dict, setup, use_heldout, device_name):
 	config_dict["experiment-dir-path"] 	 = get_experiment_directory(config_yaml, use_heldout=use_heldout)
 	config_dict["run-name"] 			 = get_run_name(config_yaml, use_heldout=use_heldout)
-	config_dict["gop-scores-dir"] 		 = config_dict["experiment-dir-path"] 	  + "gop_scores/"
-	config_dict["heldout-align-path"]    = config_dict["experiment-dir-path"]     + "align_output_heldout"	
+	config_dict["gop-scores-dir"] 		 = config_dict["experiment-dir-path"] 	  + "gop_scores/"	
 	config_dict["eval-dir"] 			 = config_dict["experiment-dir-path"] 	  + "eval/"
-	config_dict["alignments-path"]       = "align_output"
-	config_dict["loglikes-path"]         = "loglikes.ark"
+	config_dict["alignments-dir-path"]   = "alignments/"
+	config_dict["alignments-path"]       = config_dict["alignments-dir-path"] + "align_output"
+	config_dict["heldout-align-path"]    = config_dict["alignments-dir-path"] + "align_output_heldout"
+	config_dict["loglikes-path"]         = config_dict["alignments-dir-path"] + "loglikes.ark"
 	config_dict["reference-trans-path"]  = config_dict["epa-ref-labels-dir-path"] + "reference_transcriptions.txt"
 	config_dict["held-out"]              = use_heldout
 	config_dict["libri-chain-mdl-path"]  = config_dict["libri-chain-mdl-path"]
@@ -128,7 +123,7 @@ def get_eval_stage(config_dict, epoch="", is_swa=False):
     else:
         return EvaluateScoresCrossValStage(config_dict, epoch=epoch, is_swa=is_swa)
 
-def load_extended_config_dict(config_yaml, device_name, setup, use_heldout):
+def load_extended_config_dict(config_yaml, setup, use_heldout, device_name):
     config_fh   = open(config_yaml, "r")
     config_dict = yaml.safe_load(config_fh)
     config_dict = extend_config_dict(config_yaml, config_dict, setup, use_heldout, device_name)

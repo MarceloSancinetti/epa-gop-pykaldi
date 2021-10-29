@@ -1,9 +1,7 @@
 import sys
 import yaml
-sys.path.append("src")
-sys.path.append("src/gop")
-sys.path.append("src/evaluate")
-from run_utils import load_extended_config_dict
+import argparse 
+from src.utils.run_utils import load_extended_config_dict, get_eval_stage
 from src.ExperimentStages import *
 from IPython import embed
 
@@ -48,7 +46,7 @@ def get_scores_and_eval_stages_for_many_epochs(config_dict, step):
 
 def run_all(config_yaml, from_stage, to_stage, device_name, use_heldout):
 
-    config_dict = load_extended_config_dict(config_yaml, device_name, use_heldout)
+    config_dict = load_extended_config_dict(config_yaml, "exp", use_heldout, device_name)
 
     prep_stage  = get_prep_stage(config_dict)
     train_stage = get_train_stage(config_dict)

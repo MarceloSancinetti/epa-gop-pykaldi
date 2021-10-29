@@ -13,9 +13,9 @@ from torchaudio.datasets.utils import (
 )
 from typing import List
 
-from utils import *
-from finetuning_utils import *
-from FeatureManager import FeatureManager
+#from src.utils.utils import *
+from src.utils.finetuning_utils import *
+from src.utils.FeatureManager import FeatureManager
 
 
 from IPython import embed

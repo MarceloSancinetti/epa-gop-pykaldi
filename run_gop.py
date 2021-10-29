@@ -1,16 +1,13 @@
 import sys
 import yaml
-sys.path.append("src")
-sys.path.append("src/gop")
-sys.path.append("src/evaluate")
-from run_utils import *
+from src.utils.run_utils import *
 from src.GopStages import *
 from src.ExperimentStages import EvaluateScoresCrossValStage
 from IPython import embed
 
 def run_all(config_yaml, from_stage, to_stage, use_heldout):
 
-    config_dict = load_extended_config_dict(config_yaml, "gop", "cpu", use_heldout)
+    config_dict = load_extended_config_dict(config_yaml, "gop", use_heldout, "cpu")
 
     prepdir_stage = CreateExperimentDirectoryStage(config_dict)
     gop_stage     = GopStage(config_dict)

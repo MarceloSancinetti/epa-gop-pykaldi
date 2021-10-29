@@ -1,9 +1,10 @@
-from pytorch_models_old import *
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 import argparse
+
+from src.pytorch_models.pytorch_models_old import *
 
 def get_layer_type(is_tdnnf):
 	layer_type = 'tdnn'

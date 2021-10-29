@@ -1,7 +1,7 @@
 import argparse
 from sklearn.model_selection import KFold
-from dataset import EpaDB
-from finetuning_utils import generate_fileid_list_and_spkr2logid_dict
+from src.train.dataset import EpaDB
+from src.utils.finetuning_utils import generate_fileid_list_and_spkr2logid_dict
 
 def write_sample_list(epadb_root_path, sample_list_path, speaker_indexes, spkr_list, logids_by_speaker):
     sample_list_fh = open(sample_list_path, "w+")

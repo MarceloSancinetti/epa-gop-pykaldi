@@ -1,8 +1,8 @@
 import glob
 import os
 import argparse
-from FeatureManager import FeatureManager
-import convert_chain_to_pytorch
+from src.utils.FeatureManager import FeatureManager
+import src.dataprep.convert_chain_to_pytorch
 from IPython import embed
 
 def generate_arguments(args_dict):

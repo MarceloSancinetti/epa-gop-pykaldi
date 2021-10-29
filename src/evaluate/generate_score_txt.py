@@ -6,9 +6,9 @@ import torchaudio
 import torch
 import torch.optim as optim
 
-from finetuning_utils import *
-from utils import *
-from dataset import *
+from src.utils.finetuning_utils import *
+#from utils import *
+from src.train.dataset import *
 
 from torch.optim.swa_utils import AveragedModel
 

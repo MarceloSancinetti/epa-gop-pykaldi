@@ -12,9 +12,9 @@ from torch.optim.lr_scheduler import *
 from torch.optim.swa_utils import AveragedModel, SWALR
 import torch.multiprocessing as mp
 
-from finetuning_utils import *
-from utils import *
-from dataset import *
+from src.utils.finetuning_utils import *
+#from src.utils.utils import *
+from src.train.dataset import *
 
 from torch.utils.data import DataLoader, ConcatDataset
 

@@ -9,8 +9,8 @@ import joblib
 import shutil
 import argparse
 import glob
-from reference_utils import *
-from finetuning_utils import *
+from src.utils.reference_utils import *
+from src.utils.finetuning_utils import *
 
 def log_problematic_utterance(utterance):
     pu_fh = open("problematic_utterances", "a+")
@@ -165,7 +165,7 @@ def main(config_dict):
     
     reference_transcriptions_path = config_dict['reference-trans-path']
     utterance_list_path           = config_dict['utterance-list-path']
-    labels_dir_path               = config_dict['epa-ref-labels-dir-path']
+    labels_dir_path               = config_dict['labels-dir-path']
     align_path                    = config_dict['alignments-path']
     output_dir_path               = config_dict['kaldi-labels-path']
 

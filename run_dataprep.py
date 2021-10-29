@@ -1,16 +1,13 @@
 import sys
 import yaml
 import argparse
-sys.path.append("src")
-sys.path.append("src/gop")
-sys.path.append("src/evaluate")
-from run_utils import load_extended_config_dict
+from src.utils.run_utils import load_extended_config_dict
 from src.DataprepStages import *
 from IPython import embed
 
 def run_all(config_yaml):
 
-    config_dict = load_extended_config_dict(config_yaml, "exp", "cpu", True)
+    config_dict = load_extended_config_dict(config_yaml, "exp", True, "cpu")
 
     prep_stage   = PrepareFeaturesAndModelsStage(config_dict)
     align_stage  = ComplexStage([AlignCrossValStage(config_dict), AlignHeldoutStage(config_dict)], "align")

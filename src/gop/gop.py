@@ -55,7 +55,6 @@ def gop_robust_with_matrix(df_scores, df_phones_pure, number_senones, batch_size
         logid = logids[j]
 
         ti = 0
-        gops_r_max = []
         gops_r = []
         phones_pure = []
         
@@ -66,8 +65,9 @@ def gop_robust_with_matrix(df_scores, df_phones_pure, number_senones, batch_size
             try:
                 np.seterr(all = "raise") 
                 lpp = (sum(np.log(scores_phone_pure[j][ti:tf+1])))/(tf-ti+1)
-            except ZeroDivisionError as e:
+            except FloatingPointError as e:
                 embed()    
+           # embed()
 
             phone_pure = df_phones_pure.loc[(df_phones_pure['phone_name'] == str(phones[i]) )].phone_pure.unique()[0]
             gop_r = lpp[int(phone_pure)-1]

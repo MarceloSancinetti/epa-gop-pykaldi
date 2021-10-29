@@ -6,10 +6,10 @@ import torchaudio
 import torch
 import torch.optim as optim
 
-from utils import *
+#from utils import *
 #from dataset import *
 
-from pytorch_models import *
+from src.pytorch_models.pytorch_models import *
 
 import wandb
 
