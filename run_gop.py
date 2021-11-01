@@ -2,7 +2,6 @@ import sys
 import yaml
 from src.utils.run_utils import *
 from src.GopStages import *
-from src.ExperimentStages import EvaluateScoresCrossValStage
 from IPython import embed
 
 def run_all(config_yaml, from_stage, to_stage, use_heldout):
@@ -10,8 +9,8 @@ def run_all(config_yaml, from_stage, to_stage, use_heldout):
     config_dict = load_extended_config_dict(config_yaml, "gop", use_heldout, "cpu")
 
     prepdir_stage = CreateExperimentDirectoryStage(config_dict)
-    gop_stage     = GopStage(config_dict)
-    eval_stage    = get_eval_stage(config_dict)
+    gop_stage     = GopHeldoutStage(config_dict) if use_heldout else GopStage(config_dict)
+    eval_stage    = EvaluateGopStage(config_dict)
 
     gop_pipeline  = ComplexStage([prepdir_stage, gop_stage, eval_stage], "gop-pipeline")
 

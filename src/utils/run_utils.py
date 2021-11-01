@@ -77,6 +77,7 @@ def extend_config_dict(config_yaml, config_dict, setup, use_heldout, device_name
 	config_dict["alignments-path"]       = config_dict["alignments-dir-path"] + "align_output"
 	config_dict["heldout-align-path"]    = config_dict["alignments-dir-path"] + "align_output_heldout"
 	config_dict["loglikes-path"]         = config_dict["alignments-dir-path"] + "loglikes.ark"
+	config_dict["loglikes-heldout-path"] = config_dict["alignments-dir-path"] + "loglikes_heldout.ark"
 	config_dict["reference-trans-path"]  = config_dict["epa-ref-labels-dir-path"] + "reference_transcriptions.txt"
 	config_dict["held-out"]              = use_heldout
 	config_dict["libri-chain-mdl-path"]  = config_dict["libri-chain-mdl-path"]
@@ -99,10 +100,13 @@ def extend_config_dict(config_yaml, config_dict, setup, use_heldout, device_name
 			config_dict["full-gop-score-path"] = config_dict["gop-scores-dir"] + "gop-all-folds.txt"
 
 	if setup == "gop":
+		config_dict["eval-filename"]       = "data_for_eval.pickle"
+		config_dict["full-gop-score-path"] = config_dict["gop-scores-dir"] + "gop.txt"
+
 		if use_heldout:
-			config_dict["utterance-list-path"] = config_dict["train-list-path"]
-		else:
 			config_dict["utterance-list-path"] = config_dict["test-list-path"]
+		else:
+			config_dict["utterance-list-path"] = config_dict["train-list-path"]
 
 	#Choose labels dir
 	if config_dict["use-kaldi-labels"]:

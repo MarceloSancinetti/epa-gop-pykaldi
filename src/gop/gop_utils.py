@@ -117,10 +117,10 @@ def removeSymbols(str, symbols):
         str = str.replace(symbol,'')
     return str
 
-def get_alignments(alignments_dir_path, df_phones_pure):
+def get_alignments(alignments_path, df_phones_pure):
     alignments_dict = {}
 
-    for l in open(alignments_dir_path + "align_output", 'r', encoding="utf8").readlines():
+    for l in open(alignments_path, 'r', encoding="utf8").readlines():
         l=l.split()
         #Get transitions alignments
         if len(l) > 3 and l[1] == 'transitions':

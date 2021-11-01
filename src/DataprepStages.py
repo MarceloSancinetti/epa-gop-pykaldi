@@ -26,6 +26,7 @@ class AlignHeldoutStage(AtomicStage):
         config_dict['epadb-root-path']     = config_dict['heldout-root-path']
         config_dict['utterance-list-path'] = config_dict['test-list-path']
         config_dict['alignments-path']     = config_dict['heldout-align-path']
+        config_dict['loglikes-path']       = config_dict['loglikes-heldout-path']
         align.main(config_dict)
 
 class CreateLabelsCrossValStage(AtomicStage):

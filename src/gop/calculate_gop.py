@@ -10,14 +10,14 @@ from src.gop.gop_utils import *
 from src.gop.gop import *
 
 def prepare_dataframes(libri_phones_path, libri_phones_to_pure_int_path, 
-                       libri_phones_pure_path, libri_final_mdl_path, gop_dir, alignments_dir_path):
+                       libri_phones_pure_path, libri_final_mdl_path, gop_dir, alignments_path):
 
     if not os.path.exists(gop_dir + '/phones_pure_epa.pickle'):
         generate_df_phones_pure(libri_phones_path, libri_phones_to_pure_int_path, 
                                 libri_phones_pure_path, libri_final_mdl_path, gop_dir)
 
     if not os.path.exists(gop_dir + '/alignments.pickle'):
-        generate_df_alignments(gop_dir, alignments_dir_path)
+        generate_df_alignments(gop_dir, alignments_path)
 
 
     df_phones_pure = pd.read_pickle(gop_dir + '/phones_pure_epa.pickle')
@@ -41,9 +41,11 @@ def compute_gop(gop_dir, df_phones_pure, df_alignments, loglikes_path, utterance
     gop = {}
     gop_dict = {}
     loglikes_all_utts = []
+    keys = []
     with ReadHelper('ark:' + loglikes_path) as reader:
         for key, loglikes in tqdm(reader):
             loglikes = softmax(np.array(loglikes), axis=1) #Apply softmax before computing
+            keys.append(key)
             loglikes_all_utts.append(loglikes)
 
     df_scores = df_alignments.transpose()
@@ -91,6 +93,7 @@ def validate_gop_samples_with_utterance_list(gop_dict, utterance_list_path):
     utts_in_gop = set(gop_dict.keys())
 
     if utts_in_gop != utt_set:
+        embed()
         raise Exception("ERROR: Keys in gop dictionary do not match utterance list.")
 
 
@@ -99,14 +102,14 @@ def main(config_dict):
     utterance_list_path           = config_dict["utterance-list-path"]
     libri_phones_path             = config_dict["libri-phones-path"]
     libri_phones_to_pure_int_path = config_dict["libri-phones-to-pure-int-path"]
-    libri_phones_pure_path        = config_dict["libri-phones-pure-path"] 
+    libri_phones_pure_path        = config_dict["kaldi-phones-pure-path"] 
     libri_chain_mdl_path          = config_dict["libri-chain-mdl-path"] 
     gop_dir                       = config_dict["gop-scores-dir"]
     loglikes_path                 = config_dict["loglikes-path"]
-    alignments_dir_path           = config_dict["alignments-dir-path"]
+    alignments_path               = config_dict["alignments-path"]
 
     df_phones_pure, df_alignments = prepare_dataframes(libri_phones_path, libri_phones_to_pure_int_path, libri_phones_pure_path,
-                                                       libri_chain_mdl_path, gop_dir, alignments_dir_path)
+                                                       libri_chain_mdl_path, gop_dir, alignments_path)
 
     compute_gop(gop_dir, df_phones_pure, df_alignments, loglikes_path, utterance_list_path, 1)
 

@@ -67,11 +67,11 @@ def gop_robust_with_matrix(df_scores, df_phones_pure, number_senones, batch_size
                 lpp = (sum(np.log(scores_phone_pure[j][ti:tf+1])))/(tf-ti+1)
             except FloatingPointError as e:
                 embed()    
-           # embed()
 
             phone_pure = df_phones_pure.loc[(df_phones_pure['phone_name'] == str(phones[i]) )].phone_pure.unique()[0]
+            
             gop_r = lpp[int(phone_pure)-1]
-
+    
             phones_pure.append(phone_pure)
             gops_r.append(gop_r)
             
