@@ -1,0 +1,16 @@
+spkr22_7_0 HH HH + 56 69
+spkr22_7_1 ER ER + 69 75
+spkr22_7_2 L L + 75 83
+spkr22_7_3 IH IH + 83 92
+spkr22_7_4 DX DX + 92 97
+spkr22_7_5 0 0 + 97 97
+spkr22_7_6 L L + 97 107
+spkr22_7_7 S S + 107 121
+spkr22_7_8 IH IY - 121 130
+spkr22_7_9 S S + 130 142
+spkr22_7_10 T T + 142 152
+spkr22_7_11 ER ER + 152 161
+spkr22_7_12 Z S - 161 183
+spkr22_7_13 Th Th + 183 190
+spkr22_7_14 IY IY + 190 212
+spkr22_7_15 TH TH + 212 229

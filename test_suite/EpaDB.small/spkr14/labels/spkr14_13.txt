@@ -1,0 +1,17 @@
+spkr14_13_0 AY AY + 30 52
+spkr14_13_1 HH X - 52 73
+spkr14_13_2 AE AA - 73 89
+spkr14_13_3 D DH - 89 97
+spkr14_13_4 AX EH - 97 105
+spkr14_13_5 HH X - 105 119
+spkr14_13_6 EH EH + 119 129
+spkr14_13_7 D DH - 129 134
+spkr14_13_8 EY EY + 134 154
+spkr14_13_9 K K + 154 175
+spkr14_13_10 L L + 182 196
+spkr14_13_11 AE A - 196 206
+spkr14_13_12 S S + 206 217
+spkr14_13_13 T T + 217 222
+spkr14_13_14 Y Y + 229 247
+spkr14_13_15 IH E - 247 261
+spkr14_13_16 R DX - 261 271

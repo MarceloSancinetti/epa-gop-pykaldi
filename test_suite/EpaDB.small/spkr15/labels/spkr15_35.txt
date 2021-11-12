@@ -1,0 +1,15 @@
+spkr15_35_0 DH DH + 38 42
+spkr15_35_1 EY EY + 42 58
+spkr15_35_2 S S + 58 70
+spkr15_35_3 EH EH + 70 82
+spkr15_35_4 T T + 82 90
+spkr15_35_5 S S + 90 99
+spkr15_35_6 OW OW + 99 118
+spkr15_35_7 AO O - 118 134
+spkr15_35_8 N N + 134 137
+spkr15_35_9 DH DH + 137 140
+spkr15_35_10 AH E - 140 145
+spkr15_35_11 N N + 145 156
+spkr15_35_12 Y Y + 156 165
+spkr15_35_13 UW UW + 165 181
+spkr15_35_14 Z S - 181 207

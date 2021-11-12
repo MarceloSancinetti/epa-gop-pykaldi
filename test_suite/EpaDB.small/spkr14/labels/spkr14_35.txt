@@ -1,0 +1,15 @@
+spkr14_35_0 DH DH + 84 100
+spkr14_35_1 EY EY + 100 129
+spkr14_35_2 S S + 129 151
+spkr14_35_3 EH EY - 151 177
+spkr14_35_4 D DH - 177 194
+spkr14_35_5 S S + 246 274
+spkr14_35_6 OW OW + 274 328
+spkr14_35_7 AO O - 363 390
+spkr14_35_8 N N + 390 416
+spkr14_35_9 DH DH + 416 431
+spkr14_35_10 AH EH - 431 443
+spkr14_35_11 N N + 443 447
+spkr14_35_12 Y IY - 447 458
+spkr14_35_13 UW UW + 458 469
+spkr14_35_14 Z S - 469 505

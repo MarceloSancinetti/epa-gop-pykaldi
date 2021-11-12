@@ -10,6 +10,7 @@ import tqdm
 import argparse
 import os
 from src.utils.FeatureManager import FeatureManager
+from src.utils.utils import makedirs_for_file
 from src.pytorch_models.pytorch_models_old import *
 from IPython import embed
 
@@ -39,7 +40,7 @@ def main(config_dict):
     conf_path             = config_dict['features-conf-path']
     loglikes_path         = config_dict['loglikes-path']
     align_path            = config_dict['alignments-path']
-    epadb_root_path       = config_dict['epadb-root-path']
+    epadb_root_path       = config_dict['data-root-path']
 
     mfccs_rspec    = "ark:" + features_path + "/mfccs.ark"
     ivectors_rspec = "ark:" + features_path + "/ivectors.ark"
@@ -61,13 +62,14 @@ def main(config_dict):
     #Create feature manager
     feature_manager = FeatureManager(epadb_root_path, features_path, conf_path)
 
-
+    makedirs_for_file(align_path)
     align_out_file = open(align_path,"w+")
     # Decode and write output lattices
     with DoubleMatrixWriter(loglikes_wspec) as loglikes_writer:
         for line in tqdm.tqdm(open(sample_list_path,'r').readlines()):
             logid = line.split()[0]
-            feats, text = feature_manager.get_features_for_logid(logid)
+            feats = feature_manager.get_features_for_logid(logid)
+            text =  feature_manager.get_transcription_for_logid(logid)
             text = text.upper()
             feats = torch.unsqueeze(feats, 0)
             loglikes = model(feats)                         # Compute log-likelihoods

@@ -1,0 +1,14 @@
+spkr15_37_0 AY AY + 34 60
+spkr15_37_1 L L + 60 66
+spkr15_37_2 ER ER + 66 83
+spkr15_37_3 N N + 83 97
+spkr15_37_4 0 0 + 97 97
+spkr15_37_5 Th Th + 97 101
+spkr15_37_6 UW UW + 101 107
+spkr15_37_7 Th Th + 107 116
+spkr15_37_8 AY AY + 116 129
+spkr15_37_9 M M + 129 137
+spkr15_37_10 AY AY + 137 150
+spkr15_37_11 SH SH + 150 165
+spkr15_37_12 UW UW + 165 182
+spkr15_37_13 Z S - 182 194

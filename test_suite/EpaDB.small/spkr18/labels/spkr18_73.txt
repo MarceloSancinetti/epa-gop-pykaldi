@@ -1,0 +1,11 @@
+spkr18_73_0 AY AY+AH - 50 78
+spkr18_73_1 M M + 78 90
+spkr18_73_2 SH SH + 90 105
+spkr18_73_3 UH UH + 105 122
+spkr18_73_4 R ER - 122 136
+spkr18_73_5 IH IY - 136 146
+spkr18_73_6 T T + 146 156
+spkr18_73_7 S S + 156 167
+spkr18_73_8 OW O - 167 177
+spkr18_73_9 K K + 177 185
+spkr18_73_10 EY EY + 185 208

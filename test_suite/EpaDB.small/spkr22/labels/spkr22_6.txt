@@ -1,0 +1,12 @@
+spkr22_6_0 HH HH + 59 70
+spkr22_6_1 UW UW + 70 81
+spkr22_6_2 IH IH + 81 95
+spkr22_6_3 Z S - 95 108
+spkr22_6_4 R R + 108 119
+spkr22_6_5 AO AO + 119 125
+spkr22_6_6 B B + 125 131
+spkr22_6_7 IH IH + 131 139
+spkr22_6_8 N N + 139 147
+spkr22_6_9 HH HH + 147 158
+spkr22_6_10 UH UW - 158 173
+spkr22_6_11 D D + 173 184

@@ -1,0 +1,17 @@
+spkr22_12_0 DH DH + 52 60
+spkr22_12_1 AX E - 60 70
+spkr22_12_2 Kh Kh + 70 82
+spkr22_12_3 AE A - 82 98
+spkr22_12_4 T T + 98 120
+spkr22_12_5 IH IH + 120 132
+spkr22_12_6 Z S - 132 144
+spkr22_12_7 S S + 144 154
+spkr22_12_8 IH IY - 154 161
+spkr22_12_9 T T + 161 171
+spkr22_12_10 IH IY - 171 175
+spkr22_12_11 NG N - 175 179
+spkr22_12_12 AW AW + 179 194
+spkr22_12_13 T T + 194 204
+spkr22_12_14 S S + 204 216
+spkr22_12_15 AY AY + 216 240
+spkr22_12_16 D D + 240 264

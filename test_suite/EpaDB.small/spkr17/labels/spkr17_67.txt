@@ -1,0 +1,15 @@
+spkr17_67_0 AY AY + 174 200
+spkr17_67_1 N N + 200 204
+spkr17_67_2 Y Y + 204 217
+spkr17_67_3 UW UW + 217 222
+spkr17_67_4 AX AX + 222 227
+spkr17_67_5 V V + 227 233
+spkr17_67_6 EH EH + 233 238
+spkr17_67_7 R R + 238 248
+spkr17_67_8 IY IY + 248 257
+spkr17_67_9 Th Th + 257 267
+spkr17_67_10 AO AO + 267 271
+spkr17_67_11 L L + 271 282
+spkr17_67_12 M M + 282 291
+spkr17_67_13 AE AE + 291 307
+spkr17_67_14 N N + 307 326

@@ -1,0 +1,11 @@
+spkr17_73_0 AY AY + 63 74
+spkr17_73_1 M M + 74 79
+spkr17_73_2 SH SH + 79 94
+spkr17_73_3 UH UH + 94 100
+spkr17_73_4 R R + 100 105
+spkr17_73_5 IH IH + 105 109
+spkr17_73_6 T T + 109 116
+spkr17_73_7 S S + 116 121
+spkr17_73_8 OW O - 121 124
+spkr17_73_9 K K + 124 134
+spkr17_73_10 EY EY + 134 165

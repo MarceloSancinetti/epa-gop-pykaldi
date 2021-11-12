@@ -1,0 +1,15 @@
+spkr15_29_0 HH HH + 82 89
+spkr15_29_1 IY IY + 89 106
+spkr15_29_2 TH TH* - 106 115
+spkr15_29_3 R R + 115 122
+spkr15_29_4 UW UW + 122 133
+spkr15_29_5 S S + 133 144
+spkr15_29_6 AH AH + 144 153
+spkr15_29_7 M M + 153 164
+spkr15_29_8 TH TH + 164 169
+spkr15_29_9 IH IH + 169 174
+spkr15_29_10 NG N - 174 188
+spkr15_29_11 AE A - 188 196
+spkr15_29_12 CH CH + 196 209
+spkr15_29_13 Y Y + 209 226
+spkr15_29_14 UW UW + 226 244

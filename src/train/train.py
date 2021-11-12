@@ -18,7 +18,7 @@ from src.train.dataset import *
 
 from torch.utils.data import DataLoader, ConcatDataset
 
-from pytorch_models import *
+from src.pytorch_models.pytorch_models import *
 
 import wandb
 
@@ -316,7 +316,7 @@ def define_scheduler_from_config(scheduler_config, optimizer):
     return eval(scheduler_config)
 
 def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_dir, run_name, layer_amount, use_dropout, lr, scheduler_config, swa_lr, use_clipping, batchnorm, norm_per_phone_and_class):
-    global phone_weights, phone_count, device
+    global phone_weights, phone_count, device, checkpoint_step
 
     print("Started training fold " + str(fold))
 
@@ -350,16 +350,16 @@ def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_d
         if epoch >= swa_start:
             swa_model.update_parameters(model)
             swa_scheduler.step()
-            if epoch % 25 == 24:
+            if epoch % checkpoint_step == checkpoint_step -1:
                 save_state_dict(state_dict_dir, run_name, fold, epoch+1, step, swa_model, optimizer, scheduler, suffix='_swa')
 
 
-        if epoch % 25 == 24:
-            if epoch % 25 == 24:
+        if epoch % checkpoint_step == checkpoint_step -1:
+            if epoch % checkpoint_step == checkpoint_step -1:
                 save_state_dict(state_dict_dir, run_name, fold, epoch+1, step, swa_model, optimizer, scheduler, suffix='_swa')
 
 
-        if epoch % 25 == 24:
+        if epoch % checkpoint_step == checkpoint_step -1:
             save_state_dict(state_dict_dir, run_name, fold, epoch+1, step, model, optimizer, scheduler)
 
 
@@ -397,6 +397,8 @@ def parse_bool_arg(arg):
     return arg
 
 def main(config_dict):
+    global phone_int2sym, phone_weights, phone_count, device, checkpoint_step
+
     run_name                 = config_dict["run-name"]
     trainset_list            = config_dict["train-list-path"]
     testset_list             = config_dict["test-list-path"]
@@ -414,24 +416,21 @@ def main(config_dict):
     use_clipping             = config_dict["use-clipping"]
     batchnorm                = config_dict["batchnorm"]
     phones_file              = config_dict["phones-list-path"]
-    labels_dir               = config_dict["labels-dir-path"]
+    labels_dir               = config_dict["auto-labels-dir-path"]
     model_path               = config_dict["finetune-model-path"]
     phone_weights_path       = config_dict["phone-weights-path"]
-    train_root_path          = config_dict["train-root-path"]
-    test_root_path           = config_dict["test-root-path"]
     features_path            = config_dict["features-path"]
     conf_path                = config_dict["features-conf-path"]
     state_dict_dir           = config_dict["state-dict-dir"]
     device_name              = config_dict["device"]
-
+    checkpoint_step          = config_dict["checkpoint-step"]
 
     wandb.init(project="gop-finetuning", entity="pronscoring-liaa")
     wandb.run.name = run_name
 
-    trainset = EpaDB(train_root_path, trainset_list, phones_file, labels_dir, features_path, conf_path)
-    testset  = EpaDB(test_root_path,  testset_list , phones_file, labels_dir, features_path, conf_path)
+    trainset = EpaDB(trainset_list, phones_file, labels_dir, features_path, conf_path)
+    testset  = EpaDB(testset_list , phones_file, labels_dir, features_path, conf_path)
 
-    global phone_int2sym, phone_weights, phone_count, device
     phone_int2sym = trainset.phone_int2sym_dict
 
     device = torch.device(device_name)

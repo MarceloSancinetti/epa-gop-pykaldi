@@ -1,0 +1,17 @@
+spkr17_55_0 DH DH + 55 61
+spkr17_55_1 AX AX + 61 65
+spkr17_55_2 B B + 65 73
+spkr17_55_3 OY OY + 73 95
+spkr17_55_4 IY IY + 95 106
+spkr17_55_5 T T + 106 109
+spkr17_55_6 S S + 109 123
+spkr17_55_7 AX AX + 123 131
+spkr17_55_8 D DH - 131 137
+spkr17_55_9 D DH - 137 142
+spkr17_55_10 IY IY + 142 157
+spkr17_55_11 EH AX - 157 171
+spkr17_55_12 R 0 - 171 171
+spkr17_55_13 Ph P - 171 180
+spkr17_55_14 AO O - 180 189
+spkr17_55_15 R R + 189 199
+spkr17_55_16 T CH - 199 220

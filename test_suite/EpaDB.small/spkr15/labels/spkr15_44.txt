@@ -1,0 +1,16 @@
+spkr15_44_0 AY AY + 34 50
+spkr15_44_1 M M + 50 59
+spkr15_44_2 IH IH + 59 66
+spkr15_44_3 N N + 66 74
+spkr15_44_4 DH DH + 74 79
+spkr15_44_5 AX AX + 79 84
+spkr15_44_6 M M + 84 92
+spkr15_44_7 UW UW + 92 101
+spkr15_44_8 D D + 101 107
+spkr15_44_9 F F + 107 118
+spkr15_44_10 AO AO + 118 127
+spkr15_44_11 R R + 127 131
+spkr15_44_12 AX AX + 131 136
+spkr15_44_13 W W + 136 144
+spkr15_44_14 AO AO + 144 158
+spkr15_44_15 K K + 158 181

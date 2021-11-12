@@ -1,0 +1,16 @@
+spkr18_8_0 Th T - 68 75
+spkr18_8_1 ER ER* - 75 98
+spkr18_8_2 N N + 98 102
+spkr18_8_3 DH DH + 102 106
+spkr18_8_4 AX EH - 106 113
+spkr18_8_5 T T + 113 122
+spkr18_8_6 EH EH + 122 125
+spkr18_8_7 L L + 125 132
+spkr18_8_8 AX EH - 132 141
+spkr18_8_9 V BH - 141 148
+spkr18_8_10 IH IY - 148 153
+spkr18_8_11 ZH SH - 153 166
+spkr18_8_12 AX AX + 166 170
+spkr18_8_13 N N + 170 182
+spkr18_8_14 AO O - 182 193
+spkr18_8_15 F F + 193 214

@@ -154,7 +154,6 @@ def generate_fileid_list_and_spkr2logid_dict(sample_list_path):
         line = line.split()
         logid = line[0]
         speaker_id = logid.split('_')[0]
-        sample_path = line[1]
         file_id_list.append(logid)
         if speaker_id in logids_by_speaker:
             logids_by_speaker[speaker_id].append(logid)

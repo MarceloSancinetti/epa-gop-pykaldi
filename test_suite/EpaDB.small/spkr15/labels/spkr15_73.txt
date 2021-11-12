@@ -1,0 +1,11 @@
+spkr15_73_0 AY A - 36 46
+spkr15_73_1 M M + 46 57
+spkr15_73_2 SH SH + 57 72
+spkr15_73_3 UH O - 72 80
+spkr15_73_4 R R + 80 90
+spkr15_73_5 IH IY - 90 105
+spkr15_73_6 T T + 105 111
+spkr15_73_7 S S + 111 116
+spkr15_73_8 OW OW + 116 131
+spkr15_73_9 K K + 131 136
+spkr15_73_10 EY EY + 136 170

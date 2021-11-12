@@ -1,0 +1,14 @@
+spkr15_9_0 DH DH + 65 78
+spkr15_9_1 AX AH - 78 86
+spkr15_9_2 S S + 86 105
+spkr15_9_3 AH AH + 105 123
+spkr15_9_4 N N + 123 127
+spkr15_9_5 HH HH + 127 142
+spkr15_9_6 IY IY + 142 153
+spkr15_9_7 T T + 153 162
+spkr15_9_8 S S + 162 169
+spkr15_9_9 M M + 169 178
+spkr15_9_10 AY AY + 178 193
+spkr15_9_11 B B + 193 200
+spkr15_9_12 EH EH + 200 218
+spkr15_9_13 D DH - 218 227

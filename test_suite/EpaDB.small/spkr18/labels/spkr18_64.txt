@@ -1,0 +1,17 @@
+spkr18_64_0 DH DH + 88 94
+spkr18_64_1 AX E - 94 107
+spkr18_64_2 P P + 110 113
+spkr18_64_3 L L + 113 122
+spkr18_64_4 EH E - 122 130
+spkr18_64_5 ZH SH - 130 143
+spkr18_64_6 ER ER + 143 163
+spkr18_64_7 AX O - 163 168
+spkr18_64_8 V F - 168 182
+spkr18_64_9 S S + 182 197
+spkr18_64_10 IY IY + 197 203
+spkr18_64_11 IH IH + 203 213
+spkr18_64_12 NG N - 213 222
+spkr18_64_13 AX AX + 222 238
+spkr18_64_14 D D + 238 243
+spkr18_64_15 IH IY - 243 263
+spkr18_64_16 ER ER + 263 279

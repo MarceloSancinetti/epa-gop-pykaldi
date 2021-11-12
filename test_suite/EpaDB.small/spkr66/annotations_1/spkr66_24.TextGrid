@@ -1,0 +1,142 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 2.2291156462585033 
+tiers? <exists> 
+size = 3 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 2.2291156462585033 
+        intervals: size = 7 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.46 
+            text = "" 
+        intervals [2]:
+            xmin = 0.46 
+            xmax = 0.75 
+            text = "look" 
+        intervals [3]:
+            xmin = 0.75 
+            xmax = 0.8062079691305192 
+            text = "at" 
+        intervals [4]:
+            xmin = 0.8062079691305192 
+            xmax = 1.2 
+            text = "those" 
+        intervals [5]:
+            xmin = 1.2 
+            xmax = 1.5860830396760854 
+            text = "farm" 
+        intervals [6]:
+            xmin = 1.5860830396760854 
+            xmax = 2.1859153466652206 
+            text = "animals" 
+        intervals [7]:
+            xmin = 2.1859153466652206 
+            xmax = 2.2291156462585033 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "annotation" 
+        xmin = 0 
+        xmax = 2.2291156462585033 
+        intervals: size = 21 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.46 
+            text = "" 
+        intervals [2]:
+            xmin = 0.46 
+            xmax = 0.5705053616025488 
+            text = "L" 
+        intervals [3]:
+            xmin = 0.5705053616025488 
+            xmax = 0.67 
+            text = "UH" 
+        intervals [4]:
+            xmin = 0.67 
+            xmax = 0.75 
+            text = "K" 
+        intervals [5]:
+            xmin = 0.75 
+            xmax = 0.8046260724357006 
+            text = "AA" 
+        intervals [6]:
+            xmin = 0.8046260724357006 
+            xmax = 0.8062079691305192 
+            text = "0" 
+        intervals [7]:
+            xmin = 0.8062079691305192 
+            xmax = 0.9564881551382854 
+            text = "DH" 
+        intervals [8]:
+            xmin = 0.9564881551382854 
+            xmax = 1.1067683411460518 
+            text = "OW" 
+        intervals [9]:
+            xmin = 1.1067683411460518 
+            xmax = 1.2 
+            text = "S" 
+        intervals [10]:
+            xmin = 1.2 
+            xmax = 1.3456347420636592 
+            text = "F" 
+        intervals [11]:
+            xmin = 1.3456347420636592 
+            xmax = 1.4500399239216863 
+            text = "AA" 
+        intervals [12]:
+            xmin = 1.4500399239216863 
+            xmax = 1.5860830396760854 
+            text = "R" 
+        intervals [13]:
+            xmin = 1.5860830396760854 
+            xmax = 1.5861689295956805 
+            text = "0" 
+        intervals [14]:
+            xmin = 1.5861689295956805 
+            xmax = 1.7056629699613328 
+            text = "AA" 
+        intervals [15]:
+            xmin = 1.7056629699613328 
+            xmax = 1.77 
+            text = "N" 
+        intervals [16]:
+            xmin = 1.77 
+            xmax = 1.83 
+            text = "IH" 
+        intervals [17]:
+            xmin = 1.83 
+            xmax = 1.8912094110460191 
+            text = "M" 
+        intervals [18]:
+            xmin = 1.8912094110460191 
+            xmax = 1.9916828080117333 
+            text = "AH" 
+        intervals [19]:
+            xmin = 1.9916828080117333 
+            xmax = 1.9917129575298977 
+            text = "0" 
+        intervals [20]:
+            xmin = 1.9917129575298977 
+            xmax = 2.1859153466652206 
+            text = "S" 
+        intervals [21]:
+            xmin = 2.1859153466652206 
+            xmax = 2.2291156462585033 
+            text = "" 
+    item [3]:
+        class = "IntervalTier" 
+        name = "score" 
+        xmin = 0 
+        xmax = 2.2291156462585033 
+        intervals: size = 1 
+        intervals [1]:
+            xmin = 0 
+            xmax = 2.2291156462585033 
+            text = "3/5" 

@@ -1,0 +1,14 @@
+spkr22_11_0 DH DH + 81 91
+spkr22_11_1 AX AX + 91 103
+spkr22_11_2 G G + 103 112
+spkr22_11_3 ER ER + 112 135
+spkr22_11_4 L L + 135 148
+spkr22_11_5 G G + 148 165
+spkr22_11_6 OW OW + 165 184
+spkr22_11_7 Z S - 184 199
+spkr22_11_8 Th Th + 199 209
+spkr22_11_9 UW UW + 209 213
+spkr22_11_10 DH DH + 213 218
+spkr22_11_11 AX AX + 218 224
+spkr22_11_12 Z S - 224 242
+spkr22_11_13 UW UW + 242 269

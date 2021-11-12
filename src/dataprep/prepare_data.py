@@ -2,7 +2,8 @@ import glob
 import os
 import argparse
 from src.utils.FeatureManager import FeatureManager
-import src.dataprep.convert_chain_to_pytorch
+from src.utils.utils import makedirs_for_file
+import src.dataprep.convert_chain_to_pytorch as convert_chain_to_pytorch
 from IPython import embed
 
 def generate_arguments(args_dict):
@@ -35,11 +36,12 @@ def prepare_pytorch_models(pytorch_models_path, libri_chain_mdl_path, libri_chai
 
     #Convert final.txt to pytorch acoustic model used in alginments stage
     if not os.path.exists(acoustic_model_path):
+        makedirs_for_file(acoustic_model_path)
         config_dict = {"libri-chain-txt-path": libri_chain_txt_path,
                        "acoustic-model-path":  acoustic_model_path}
         convert_chain_to_pytorch.main(config_dict)
 
-def create_epadb_full_sample_list(epadb_root_path, utterance_list_path):
+def create_epadb_full_sample_list(data_root_path, utterance_list_path):
     #Skip if utterance list already exists
     if os.path.exists(utterance_list_path):
         return
@@ -50,13 +52,27 @@ def create_epadb_full_sample_list(epadb_root_path, utterance_list_path):
        os.makedirs(utterance_list_dir_path)
 
     utt_list_fh = open(utterance_list_path, 'w+')
-    for file in sorted(glob.glob(epadb_root_path + '/*/waveforms/*.wav')):
+    for file in sorted(glob.glob(data_root_path + '/*/waveforms/*.wav')):
         basename = os.path.basename(file)
         utt_list_fh.write(basename.split('.')[0] + ' ' + file + '\n')
 
-def create_ref_labels_symlinks(epadb_root_path, labels_path):
+def copy_sample_lists_and_reference(train_list_path, test_list_path, reference_path, dataprep_output_path):
+    new_train_list_path = dataprep_output_path + "epadb_full_path_list.txt"
+    new_test_list_path = dataprep_output_path  + "heldout_full_path_list.txt"
+    new_reference_path = dataprep_output_path  + "reference_transcriptions.txt"
+
+    if not os.path.exists(new_train_list_path):
+        os.system('cp ' + train_list_path + ' ' + new_train_list_path)
+
+    if not os.path.exists(new_test_list_path):
+        os.system('cp ' + test_list_path + ' ' + new_test_list_path)
+
+    if not os.path.exists(new_reference_path):
+        os.system('cp ' + reference_path + ' ' + new_reference_path)
+
+def create_ref_labels_symlinks(data_root_path, labels_path):
     #Create symbolic links to epa reference labels
-    for file in sorted(glob.glob(epadb_root_path + '*/labels/*')):
+    for file in sorted(glob.glob(data_root_path + '*/labels/*')):
         fullpath = os.path.abspath(file)
         basename = os.path.basename(file)
         #Get spkr id
@@ -72,23 +88,23 @@ def create_ref_labels_symlinks(epadb_root_path, labels_path):
     #Handle symbolic links for EpaDB reference transcriptions
     if not os.path.exists(labels_path + 'reference_transcriptions.txt'):
         current_path = os.getcwd()
-        cmd = 'ln -s ' + current_path + "/" + epadb_root_path + '/reference_transcriptions.txt ' + current_path + "/" + labels_path + '/reference_transcriptions.txt'
+        cmd = 'ln -s ' + current_path + "/" + data_root_path + '/reference_transcriptions.txt ' + current_path + "/" + labels_path + '/reference_transcriptions.txt'
         os.system(cmd)
 
 def main(config_dict):
-    epadb_root_path         = config_dict['epadb-root-path']
+    data_root_path          = config_dict['data-root-path']
     features_path           = config_dict['features-path']
     conf_path               = config_dict['features-conf-path']
-    labels_path             = config_dict['epa-ref-labels-dir-path']
     librispeech_models_path = config_dict['librispeech-models-path']
     pytorch_models_path     = config_dict['pytorch-models-path']
     libri_chain_mdl_path    = config_dict['libri-chain-mdl-path']
     libri_chain_txt_path    = config_dict['libri-chain-txt-path']
     acoustic_model_path     = config_dict['acoustic-model-path']
-    utterance_list_path     = config_dict['utterance-list-path']
-    heldout_root_path       = config_dict['heldout-root-path']
-    heldout_list_path       = config_dict['test-list-path']
-        
+    train_list_path         = config_dict['train-list-path']
+    test_list_path          = config_dict['test-list-path']
+    reference_path          = config_dict['reference-trans-path']
+    dataprep_output_path    = config_dict['output-dir']
+
     #Download librispeech models and extract them into librispeech-models-path
     download_librispeech_models(librispeech_models_path)
 
@@ -96,18 +112,11 @@ def main(config_dict):
     prepare_pytorch_models(pytorch_models_path, libri_chain_mdl_path, libri_chain_txt_path, acoustic_model_path)
 
     #Extract features
-    feature_manager = FeatureManager(epadb_root_path, features_path, conf_path, heldout_root_path=heldout_root_path)
+    feature_manager = FeatureManager(data_root_path, features_path, conf_path)
     feature_manager.extract_features_using_kaldi()
 
-    #Create symlinks
-    create_ref_labels_symlinks(epadb_root_path, labels_path)
-
-    
-    #Create full EpaDB sample list
-    create_epadb_full_sample_list(epadb_root_path, utterance_list_path)
-    
-    create_epadb_full_sample_list(heldout_root_path, heldout_list_path)
-
+    #Create links to utterance lists in data folder
+    copy_sample_lists_and_reference(train_list_path, test_list_path, reference_path, dataprep_output_path)
 
 
 

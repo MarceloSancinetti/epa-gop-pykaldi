@@ -1,0 +1,16 @@
+spkr17_7_0 HH HH + 87 94
+spkr17_7_1 ER AX - 94 99
+spkr17_7_2 L L + 99 105
+spkr17_7_3 IH IY - 105 115
+spkr17_7_4 DX DX + 115 119
+spkr17_7_5 0 0 + 119 119
+spkr17_7_6 L L + 119 136
+spkr17_7_7 S S + 136 148
+spkr17_7_8 IH IH + 148 157
+spkr17_7_9 S S + 157 163
+spkr17_7_10 T T + 163 176
+spkr17_7_11 ER ER + 176 182
+spkr17_7_12 Z S - 182 197
+spkr17_7_13 Th Th + 197 207
+spkr17_7_14 IY IY + 207 226
+spkr17_7_15 TH TH + 226 258

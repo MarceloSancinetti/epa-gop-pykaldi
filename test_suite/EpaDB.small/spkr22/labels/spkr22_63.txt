@@ -1,0 +1,10 @@
+spkr22_63_0 CH CH + 56 70
+spkr22_63_1 UH UW - 70 84
+spkr22_63_2 P P + 84 95
+spkr22_63_3 L L + 95 100
+spkr22_63_4 EY EY + 100 113
+spkr22_63_5 ER ER + 113 124
+spkr22_63_6 G G + 124 131
+spkr22_63_7 EY EY + 131 145
+spkr22_63_8 M M + 145 155
+spkr22_63_9 Z S - 155 180

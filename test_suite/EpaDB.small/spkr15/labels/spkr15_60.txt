@@ -1,0 +1,17 @@
+spkr15_60_0 DH DH + 24 35
+spkr15_60_1 AX AX + 35 51
+spkr15_60_2 CH CH + 51 67
+spkr15_60_3 AY AY + 67 82
+spkr15_60_4 L L + 82 94
+spkr15_60_5 D D + 94 102
+spkr15_60_6 HH HH + 102 110
+spkr15_60_7 AX A - 110 115
+spkr15_60_8 Z S - 115 134
+spkr15_60_9 L L + 134 145
+spkr15_60_10 IH IY - 145 162
+spkr15_60_11 DH DH + 162 173
+spkr15_60_12 DH DH + 173 177
+spkr15_60_13 AX AX + 177 186
+spkr15_60_14 F F + 186 193
+spkr15_60_15 AY AY + 193 220
+spkr15_60_16 ER ER + 220 241

@@ -1,0 +1,7 @@
+spkr82_54_0 SH SH +
+spkr82_54_1 IY IY +
+spkr82_54_2 Z S -
+spkr82_54_3 AX EH -
+spkr82_54_4 L L +
+spkr82_54_5 AY AY +
+spkr82_54_6 ER ER +

@@ -1,0 +1,10 @@
+spkr18_63_0 CH CH + 72 84
+spkr18_63_1 UH UW - 84 95
+spkr18_63_2 P P + 95 103
+spkr18_63_3 L L + 103 114
+spkr18_63_4 EY EY + 114 129
+spkr18_63_5 ER ER + 129 145
+spkr18_63_6 G G + 145 151
+spkr18_63_7 EY EY + 151 171
+spkr18_63_8 M M + 171 187
+spkr18_63_9 Z S - 187 197

@@ -75,7 +75,7 @@ class FeatureManager:
 				raise Exception("iVectors for utterance "+logid+" not found. Did you extract the features?")
 
 
-			transcription = self._get_transcription_for_logid(logid)
+			#transcription = self._get_transcription_for_logid(logid)
 
 			mfccs_rspec = ("ark:" + self.mfcc_path)
 			ivectors_rspec = ("ark:" + self.ivectors_path)
@@ -94,7 +94,7 @@ class FeatureManager:
 				#x = np.expand_dims(x, axis=0)
 				feats = torch.from_numpy(x)
 
-			self.cache[logid] = [feats, transcription.strip()]
+			self.cache[logid] = feats
 
 		return self.cache[logid]
 
@@ -104,7 +104,7 @@ class FeatureManager:
 		ivector_period = int(ivector_period_line.split('=')[1])
 		return ivector_period
 
-	def _get_transcription_for_logid(self, logid):
+	def get_transcription_for_logid(self, logid):
 		spkr = logid.split('_')[0]
 		transcription_path = self.epadb_root_path + '/' + spkr + '/transcriptions/' + logid +'.lab'
 

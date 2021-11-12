@@ -92,8 +92,6 @@ class TrainCrossValStage(AtomicStage):
             config_dict["fold"]            = fold
             config_dict["train-list-path"] = config_dict["train-sample-list-dir"] + 'train_sample_list_fold_' + str(fold)
             config_dict["test-list-path"]  = config_dict["test-sample-list-dir"]  + 'test_sample_list_fold_'  + str(fold)
-            config_dict["train-root-path"] = config_dict["epadb-root-path"]
-            config_dict["test-root-path"]  = config_dict["epadb-root-path"]				 
             train.main(config_dict)
 
 class TrainHeldoutStage(AtomicStage):
@@ -102,8 +100,6 @@ class TrainHeldoutStage(AtomicStage):
         config_dict = self._config_dict
 
         config_dict["fold"]            = 0
-        config_dict["train-root-path"] = config_dict["epadb-root-path"]
-        config_dict["test-root-path"]  = config_dict["heldout-root-path"]
         train.main(config_dict)
 
 class GenerateScoresCrossValStage(AtomicStage):

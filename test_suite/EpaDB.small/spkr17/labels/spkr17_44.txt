@@ -1,0 +1,16 @@
+spkr17_44_0 AY AY + 151 164
+spkr17_44_1 M M + 164 169
+spkr17_44_2 IH IH + 169 174
+spkr17_44_3 N N + 174 181
+spkr17_44_4 DH DH + 181 185
+spkr17_44_5 AX AX + 185 191
+spkr17_44_6 M M + 191 203
+spkr17_44_7 UW UW + 203 213
+spkr17_44_8 D CH - 213 222
+spkr17_44_9 F F + 222 229
+spkr17_44_10 AO AO + 229 240
+spkr17_44_11 R DX - 240 245
+spkr17_44_12 AX E - 245 256
+spkr17_44_13 W W + 256 267
+spkr17_44_14 AO O - 267 281
+spkr17_44_15 K K + 281 298

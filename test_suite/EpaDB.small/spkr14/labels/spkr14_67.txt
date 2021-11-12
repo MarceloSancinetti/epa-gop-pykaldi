@@ -1,0 +1,15 @@
+spkr14_67_0 AY AY + 101 128
+spkr14_67_1 N N + 128 142
+spkr14_67_2 Y IY - 142 163
+spkr14_67_3 UW UW + 163 202
+spkr14_67_4 AX E - 202 217
+spkr14_67_5 V V + 217 230
+spkr14_67_6 EH EH + 230 237
+spkr14_67_7 R R + 237 249
+spkr14_67_8 IY IY + 249 265
+spkr14_67_9 Th Th + 265 278
+spkr14_67_10 AO AO + 278 299
+spkr14_67_11 L L + 299 307
+spkr14_67_12 M M + 307 314
+spkr14_67_13 AE A - 314 322
+spkr14_67_14 N N + 322 337

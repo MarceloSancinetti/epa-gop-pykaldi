@@ -1,0 +1,13 @@
+spkr14_68_0 W W + 73 95
+spkr14_68_1 IY IY + 95 145
+spkr14_68_2 M M + 145 158
+spkr14_68_3 EH IY - 158 176
+spkr14_68_4 T T + 176 186
+spkr14_68_5 AX A - 186 196
+spkr14_68_6 T DH - 196 206
+spkr14_68_7 D DH - 206 210
+spkr14_68_8 AX E - 210 227
+spkr14_68_9 K CH - 227 236
+spkr14_68_10 W O - 236 246
+spkr14_68_11 AY IY - 246 261
+spkr14_68_12 ER DX - 261 266

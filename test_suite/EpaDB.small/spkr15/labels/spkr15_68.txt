@@ -1,0 +1,13 @@
+spkr15_68_0 W W + 17 22
+spkr15_68_1 IY IY + 22 34
+spkr15_68_2 M M + 34 44
+spkr15_68_3 EH EH + 44 56
+spkr15_68_4 T T + 56 64
+spkr15_68_5 AX AX + 64 72
+spkr15_68_6 T DH - 72 80
+spkr15_68_7 D DH - 80 84
+spkr15_68_8 AX AX + 84 98
+spkr15_68_9 K CH - 98 104
+spkr15_68_10 W 0 - 104 104
+spkr15_68_11 AY O - 104 130
+spkr15_68_12 ER R* - 130 142

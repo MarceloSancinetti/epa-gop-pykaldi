@@ -1,0 +1,11 @@
+spkr18_42_0 AW AW + 72 103
+spkr18_42_1 L L + 103 116
+spkr18_42_2 Z S - 116 123
+spkr18_42_3 HH HH + 123 140
+spkr18_42_4 AE A - 140 152
+spkr18_42_5 V BH - 152 164
+spkr18_42_6 B BH - 164 168
+spkr18_42_7 IH IY - 168 180
+spkr18_42_8 G G + 180 200
+spkr18_42_9 AY AY + 200 226
+spkr18_42_10 Z S - 226 257

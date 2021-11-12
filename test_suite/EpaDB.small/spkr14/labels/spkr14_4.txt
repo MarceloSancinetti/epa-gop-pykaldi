@@ -1,0 +1,13 @@
+spkr14_4_0 M M + 99 108
+spkr14_4_1 AY AY + 108 121
+spkr14_4_2 F F + 121 139
+spkr14_4_3 AA AA + 139 155
+spkr14_4_4 DH DH + 155 161
+spkr14_4_5 ER EH+DX - 161 197
+spkr14_4_6 IH IY - 197 209
+spkr14_4_7 Z S - 209 219
+spkr14_4_8 AX AA - 219 231
+spkr14_4_9 T Th - 231 235
+spkr14_4_10 HH X - 235 256
+spkr14_4_11 OW OW + 256 275
+spkr14_4_12 M M + 275 319

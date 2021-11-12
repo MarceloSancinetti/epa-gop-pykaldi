@@ -1,0 +1,16 @@
+spkr18_44_0 AY AY + 92 121
+spkr18_44_1 M AA+M - 121 140
+spkr18_44_2 IH IH + 140 146
+spkr18_44_3 N N + 146 157
+spkr18_44_4 DH DH + 157 162
+spkr18_44_5 AX AH - 162 170
+spkr18_44_6 M M + 170 186
+spkr18_44_7 UW UW* - 186 207
+spkr18_44_8 D D + 207 226
+spkr18_44_9 F F + 226 246
+spkr18_44_10 AO AO + 246 251
+spkr18_44_11 R R + 251 256
+spkr18_44_12 AX AX + 256 266
+spkr18_44_13 W W + 266 279
+spkr18_44_14 AO AO + 279 294
+spkr18_44_15 K K + 294 306

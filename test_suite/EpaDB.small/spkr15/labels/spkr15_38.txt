@@ -1,0 +1,15 @@
+spkr15_38_0 AY AY + 54 75
+spkr15_38_1 Kh Kh + 75 85
+spkr15_38_2 IY E - 85 97
+spkr15_38_3 P P + 97 105
+spkr15_38_4 AX A - 105 125
+spkr15_38_5 P P + 134 139
+spkr15_38_6 R R + 139 142
+spkr15_38_7 AY AY + 142 155
+spkr15_38_8 V BH - 155 159
+spkr15_38_9 AX AX + 159 164
+spkr15_38_10 D D + 164 174
+spkr15_38_11 D D + 180 186
+spkr15_38_12 AY AY + 186 198
+spkr15_38_13 ER ER + 198 209
+spkr15_38_14 IY IY + 209 226

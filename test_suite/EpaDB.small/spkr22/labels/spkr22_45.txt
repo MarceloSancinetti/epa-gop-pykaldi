@@ -1,0 +1,11 @@
+spkr22_45_0 Ph Ph + 41 49
+spkr22_45_1 UH UH + 49 56
+spkr22_45_2 CH CH + 56 70
+spkr22_45_3 Y Y + 70 73
+spkr22_45_4 AO AO + 73 86
+spkr22_45_5 R 0 - 86 86
+spkr22_45_6 Kh Kh + 86 99
+spkr22_45_7 OW OW + 99 118
+spkr22_45_8 T T + 118 132
+spkr22_45_9 AO AO + 132 150
+spkr22_45_10 N N + 150 169

@@ -1,0 +1,10 @@
+spkr14_1_0 AW AW + 92 133
+spkr14_1_1 ER ER + 133 151
+spkr14_1_2 N N + 151 161
+spkr14_1_3 AY AY + 161 194
+spkr14_1_4 S S + 194 215
+spkr14_1_5 R R + 215 231
+spkr14_1_6 EH EH + 231 239
+spkr14_1_7 D T - 239 259
+spkr14_1_8 Th Th + 277 286
+spkr14_1_9 OY OY + 286 313

@@ -1,0 +1,10 @@
+spkr15_63_0 CH CH + 15 20
+spkr15_63_1 UH UW - 20 34
+spkr15_63_2 P P + 34 43
+spkr15_63_3 L L + 43 47
+spkr15_63_4 EY EY + 47 63
+spkr15_63_5 ER ER + 63 78
+spkr15_63_6 G G + 78 84
+spkr15_63_7 EY EY + 84 110
+spkr15_63_8 M M + 110 118
+spkr15_63_9 Z S - 118 138

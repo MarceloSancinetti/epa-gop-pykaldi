@@ -1,7 +1,13 @@
+import os
+from pathlib import Path
 import textgrids
 import pandas as pd
 from pathlib import Path
 
+def makedirs_for_file(acoustic_model_path):
+    path = Path(acoustic_model_path)
+    if not os.path.exists(path.parent):
+        os.makedirs(path.parent)
 
 def parse_textgrid(file):
     """

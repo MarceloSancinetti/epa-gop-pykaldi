@@ -1,0 +1,10 @@
+spkr22_1_0 AW AW + 53 68
+spkr22_1_1 R R + 68 78
+spkr22_1_2 N N + 78 88
+spkr22_1_3 AY AY + 88 116
+spkr22_1_4 S S + 116 131
+spkr22_1_5 R R + 131 140
+spkr22_1_6 EH EH + 140 154
+spkr22_1_7 D D + 154 161
+spkr22_1_8 Th Th + 161 182
+spkr22_1_9 OY OY + 182 208

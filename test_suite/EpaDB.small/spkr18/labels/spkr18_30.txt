@@ -1,0 +1,15 @@
+spkr18_30_0 DH DH + 54 69
+spkr18_30_1 AX E - 69 80
+spkr18_30_2 M M + 80 94
+spkr18_30_3 UW UW + 94 121
+spkr18_30_4 N N + 121 130
+spkr18_30_5 L L + 133 150
+spkr18_30_6 UH UH + 150 161
+spkr18_30_7 K K + 161 165
+spkr18_30_8 S S + 165 181
+spkr18_30_9 L L + 181 191
+spkr18_30_10 AY AY + 191 202
+spkr18_30_11 K K + 202 217
+spkr18_30_12 CH CH + 217 226
+spkr18_30_13 IY IY + 226 234
+spkr18_30_14 Z S - 234 260

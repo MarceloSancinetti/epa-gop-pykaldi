@@ -1,0 +1,15 @@
+spkr18_5_0 T T + 62 66
+spkr18_5_1 R R + 66 72
+spkr18_5_2 AY AY + 72 83
+spkr18_5_3 Th Th + 83 96
+spkr18_5_4 UW UW + 96 102
+spkr18_5_5 S S + 102 120
+spkr18_5_6 IH IY - 120 126
+spkr18_5_7 NG NG + 126 142
+spkr18_5_8 AX AX + 142 148
+spkr18_5_9 N N + 148 164
+spkr18_5_10 0 0 + 164 164
+spkr18_5_11 JH JH + 164 171
+spkr18_5_12 AH AH + 171 180
+spkr18_5_13 M M + 180 190
+spkr18_5_14 P P + 190 204

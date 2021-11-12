@@ -1,0 +1,12 @@
+spkr14_6_0 HH X - 74 88
+spkr14_6_1 UW UW + 88 102
+spkr14_6_2 IH IH + 102 117
+spkr14_6_3 Z S - 117 135
+spkr14_6_4 R R + 135 142
+spkr14_6_5 AO O - 142 150
+spkr14_6_6 B BH - 150 154
+spkr14_6_7 IH IY - 154 164
+spkr14_6_8 N N + 164 167
+spkr14_6_9 HH HH + 167 179
+spkr14_6_10 UH UH + 179 196
+spkr14_6_11 T T + 196 214

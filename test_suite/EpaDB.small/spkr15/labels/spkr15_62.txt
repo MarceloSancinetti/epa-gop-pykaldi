@@ -1,0 +1,11 @@
+spkr15_62_0 AY AY + 25 37
+spkr15_62_1 G G + 37 44
+spkr15_62_2 EH EH + 44 56
+spkr15_62_3 T T + 56 60
+spkr15_62_4 Y Y + 60 64
+spkr15_62_5 AO O - 64 67
+spkr15_62_6 R R + 67 77
+spkr15_62_7 Ph Ph + 82 87
+spkr15_62_8 OY OY + 87 110
+spkr15_62_9 N N + 110 117
+spkr15_62_10 T CH - 117 132

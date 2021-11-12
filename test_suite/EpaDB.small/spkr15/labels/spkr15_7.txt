@@ -1,0 +1,16 @@
+spkr15_7_0 HH HH + 33 40
+spkr15_7_1 ER ER + 40 52
+spkr15_7_2 L L + 52 67
+spkr15_7_3 IH IH + 67 77
+spkr15_7_4 T T + 77 85
+spkr15_7_5 0 0 + 85 85
+spkr15_7_6 L L + 85 96
+spkr15_7_7 S S + 96 111
+spkr15_7_8 IH IH + 111 119
+spkr15_7_9 S S + 119 128
+spkr15_7_10 T T + 128 134
+spkr15_7_11 ER ER + 134 148
+spkr15_7_12 Z S - 148 160
+spkr15_7_13 Th T - 167 174
+spkr15_7_14 IY IY + 174 194
+spkr15_7_15 TH TH + 194 207

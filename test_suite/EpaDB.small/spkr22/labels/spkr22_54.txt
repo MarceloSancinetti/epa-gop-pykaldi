@@ -1,0 +1,7 @@
+spkr22_54_0 SH SH + 80 94
+spkr22_54_1 IY IY + 94 111
+spkr22_54_2 Z S - 111 123
+spkr22_54_3 AX AX + 123 127
+spkr22_54_4 L L + 127 136
+spkr22_54_5 AY AY + 136 156
+spkr22_54_6 ER ER + 156 174

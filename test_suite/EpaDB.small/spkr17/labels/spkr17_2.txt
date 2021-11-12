@@ -1,0 +1,11 @@
+spkr17_2_0 AX AX + 382 391
+spkr17_2_1 Kh Kh + 391 396
+spkr17_2_2 AH AH + 396 409
+spkr17_2_3 P P + 409 415
+spkr17_2_4 AX O - 415 424
+spkr17_2_5 V X - 424 430
+spkr17_2_6 HH X - 430 441
+spkr17_2_7 AO O - 441 455
+spkr17_2_8 Th D - 455 465
+spkr17_2_9 Th Th + 470 476
+spkr17_2_10 IY IY + 476 503

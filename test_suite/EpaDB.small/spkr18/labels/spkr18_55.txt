@@ -1,0 +1,17 @@
+spkr18_55_0 DH DH + 73 84
+spkr18_55_1 AX E - 84 97
+spkr18_55_2 B B + 97 109
+spkr18_55_3 OY OY + 109 142
+spkr18_55_4 IY IY + 169 190
+spkr18_55_5 T T + 190 195
+spkr18_55_6 S S + 195 203
+spkr18_55_7 AX A - 211 229
+spkr18_55_8 D DH - 229 237
+spkr18_55_9 D DH - 237 241
+spkr18_55_10 IY IY + 241 252
+spkr18_55_11 EH EH + 252 262
+spkr18_55_12 R R + 262 268
+spkr18_55_13 Ph P - 268 281
+spkr18_55_14 AO O - 281 287
+spkr18_55_15 R R + 287 293
+spkr18_55_16 T T + 293 310

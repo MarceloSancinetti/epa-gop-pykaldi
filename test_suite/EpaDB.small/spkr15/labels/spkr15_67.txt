@@ -1,0 +1,15 @@
+spkr15_67_0 AY AY + 25 45
+spkr15_67_1 N N + 45 54
+spkr15_67_2 Y Y + 54 63
+spkr15_67_3 UW UW + 63 79
+spkr15_67_4 AX A - 84 95
+spkr15_67_5 V V + 95 100
+spkr15_67_6 EH EH + 100 114
+spkr15_67_7 R R + 114 120
+spkr15_67_8 IY IY + 120 130
+spkr15_67_9 Th Th + 130 140
+spkr15_67_10 AO O - 140 155
+spkr15_67_11 L L + 155 161
+spkr15_67_12 M M + 161 168
+spkr15_67_13 AE AE + 168 189
+spkr15_67_14 N N + 189 209

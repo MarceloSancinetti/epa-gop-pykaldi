@@ -1,0 +1,10 @@
+spkr18_56_0 Y Y + 64 76
+spkr18_56_1 UW UW + 76 85
+spkr18_56_2 Kh Kh + 85 97
+spkr18_56_3 AO AO + 97 106
+spkr18_56_4 L L + 106 112
+spkr18_56_5 D D + 112 119
+spkr18_56_6 AX AX + 119 133
+spkr18_56_7 Kh Kh + 133 142
+spkr18_56_8 AE AE + 142 158
+spkr18_56_9 B B + 158 173

@@ -68,20 +68,48 @@ def get_eval_stage(config_dict, epoch, is_swa=False):
     else:
         return EvaluateScoresCrossValStage(config_dict, epoch=epoch, is_swa=is_swa)
 
-def extend_config_dict(config_yaml, config_dict, setup, use_heldout, device_name):
-	config_dict["experiment-dir-path"] 	 = get_experiment_directory(config_yaml, use_heldout=use_heldout)
-	config_dict["run-name"] 			 = get_run_name(config_yaml, use_heldout=use_heldout)
-	config_dict["gop-scores-dir"] 		 = config_dict["experiment-dir-path"] 	  + "gop_scores/"	
-	config_dict["eval-dir"] 			 = config_dict["experiment-dir-path"] 	  + "eval/"
-	config_dict["alignments-dir-path"]   = "alignments/"
+def add_data_keys_to_config_dict(config_dict, setup):
+
+	if setup == "dataprep":
+		data_dir_key = "output-dir"
+		config_dict["ref-labels-dir-path"]   = config_dict["data-root-path"]
+	else:
+		data_dir_key = "data-dir"
+
+	data_path = config_dict[data_dir_key]
+	config_dict["alignments-dir-path"]   = data_path + "alignments/"
 	config_dict["alignments-path"]       = config_dict["alignments-dir-path"] + "align_output"
 	config_dict["heldout-align-path"]    = config_dict["alignments-dir-path"] + "align_output_heldout"
 	config_dict["loglikes-path"]         = config_dict["alignments-dir-path"] + "loglikes.ark"
 	config_dict["loglikes-heldout-path"] = config_dict["alignments-dir-path"] + "loglikes_heldout.ark"
-	config_dict["reference-trans-path"]  = config_dict["epa-ref-labels-dir-path"] + "reference_transcriptions.txt"
+	config_dict["acoustic-model-path"]   = data_path + "pytorch_models/acoustic_model.pt"
+	config_dict["finetune-model-path"]   = data_path + "pytorch_models/model_finetuning_kaldi.pt"     
+	config_dict["features-path"]         = data_path + "features/data"
+	config_dict["features-conf-path"]    = data_path + "features/conf"
+	config_dict["auto-labels-dir-path"]  = data_path + "kaldi_labels/"
+	config_dict["utterance-list-path"]   = data_path + "/epadb_full_path_list.txt"
+	config_dict["train-list-path"]       = data_path + "/epadb_full_path_list.txt"
+	config_dict["test-list-path"]        = data_path + "/heldout_full_path_list.txt"
+	config_dict["reference-trans-path"]  = data_path + "/reference_transcriptions.txt"
+        
+
+	return config_dict
+
+def extend_config_dict(config_yaml, config_dict, setup, use_heldout, device_name):
+
+	config_dict = add_data_keys_to_config_dict(config_dict, setup)
+
+	if setup == "dataprep":
+		config_dict["utterance-list-path"]   = config_dict["data-root-path"] + "/epadb_full_path_list.txt"
+		config_dict["train-list-path"]       = config_dict["data-root-path"] + "/epadb_full_path_list.txt"
+		config_dict["test-list-path"]        = config_dict["data-root-path"] + "/heldout_full_path_list.txt"
+		config_dict["reference-trans-path"]  = config_dict["data-root-path"] + "reference_transcriptions.txt"
+	
+	config_dict["experiment-dir-path"] 	 = get_experiment_directory(config_yaml, use_heldout=use_heldout)
+	config_dict["run-name"] 			 = get_run_name(config_yaml, use_heldout=use_heldout)
+	config_dict["gop-scores-dir"] 		 = config_dict["experiment-dir-path"] 	  + "gop_scores/"	
+	config_dict["eval-dir"] 			 = config_dict["experiment-dir-path"] 	  + "eval/"
 	config_dict["held-out"]              = use_heldout
-	config_dict["libri-chain-mdl-path"]  = config_dict["libri-chain-mdl-path"]
-	config_dict["libri-chain-txt-path"]  = config_dict["libri-chain-txt-path"]
 	config_dict["setup"]                 = setup
 	config_dict["seed"]                  = 42
 	config_dict["device"]                = device_name
@@ -91,10 +119,6 @@ def extend_config_dict(config_yaml, config_dict, setup, use_heldout, device_name
 		config_dict["state-dict-dir"] 		 = config_dict["experiment-dir-path"] 	  + "state_dicts/"
 		config_dict["test-sample-list-dir"]  = config_dict["experiment-dir-path"] 	  + "test_sample_lists/"
 		config_dict["train-sample-list-dir"] = config_dict["experiment-dir-path"] 	  + "train_sample_lists/"
-		if "utterance-list-path" not in config_dict:
-			config_dict["utterance-list-path"] = config_dict["train-list-path"]
-		if "train-list-path" not in config_dict:
-			config_dict["train-list-path"] = config_dict["utterance-list-path"]
 
 		if  not use_heldout:
 			config_dict["full-gop-score-path"] = config_dict["gop-scores-dir"] + "gop-all-folds.txt"
@@ -107,12 +131,6 @@ def extend_config_dict(config_yaml, config_dict, setup, use_heldout, device_name
 			config_dict["utterance-list-path"] = config_dict["test-list-path"]
 		else:
 			config_dict["utterance-list-path"] = config_dict["train-list-path"]
-
-	#Choose labels dir
-	if config_dict["use-kaldi-labels"]:
-		config_dict["labels-dir-path"] = config_dict["kaldi-labels-path"]
-	else:
-		config_dict["labels-dir-path"] = config_dict["epa-ref-labels-dir-path"]
 
 	#If only one layer will be trained or finetune model path is not defined, make finetune model path relative to experiment dir
 	if setup == "exp" and config_dict["layers"] == 1 or "finetune-model-path" not in config_dict:

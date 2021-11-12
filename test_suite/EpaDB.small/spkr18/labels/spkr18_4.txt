@@ -1,0 +1,13 @@
+spkr18_4_0 M M + 86 99
+spkr18_4_1 AY AY + 99 116
+spkr18_4_2 F F + 116 126
+spkr18_4_3 AA AA + 126 138
+spkr18_4_4 DH DH + 138 143
+spkr18_4_5 ER ER + 143 171
+spkr18_4_6 IH IY - 171 182
+spkr18_4_7 Z S - 182 192
+spkr18_4_8 AX A - 192 203
+spkr18_4_9 T T + 203 207
+spkr18_4_10 HH X - 207 220
+spkr18_4_11 OW O - 220 230
+spkr18_4_12 M M + 230 253

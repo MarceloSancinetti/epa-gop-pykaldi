@@ -1,0 +1,17 @@
+spkr18_15_0 Kh Kh + 106 114
+spkr18_15_1 AO AO + 114 127
+spkr18_15_2 F F + 127 138
+spkr18_15_3 IY IY + 138 144
+spkr18_15_4 W W + 144 155
+spkr18_15_5 IH IY - 155 160
+spkr18_15_6 DH DH + 160 164
+spkr18_15_7 SH SH + 164 182
+spkr18_15_8 UH UH + 182 193
+spkr18_15_9 G G + 193 203
+spkr18_15_10 ER ER + 203 216
+spkr18_15_11 P P + 216 229
+spkr18_15_12 L L + 229 236
+spkr18_15_13 IY IY + 236 247
+spkr18_15_14 Z S - 247 255
+spkr18_15_15 S S + 255 267
+spkr18_15_16 ER ER + 267 291

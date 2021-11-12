@@ -1,0 +1,15 @@
+spkr15_30_0 DH DH + 35 40
+spkr15_30_1 AX AX + 40 46
+spkr15_30_2 M M + 46 57
+spkr15_30_3 UW UW + 57 64
+spkr15_30_4 N N + 64 72
+spkr15_30_5 L L + 72 83
+spkr15_30_6 UH UW - 83 92
+spkr15_30_7 K K + 92 97
+spkr15_30_8 S S + 97 108
+spkr15_30_9 L L + 108 113
+spkr15_30_10 AY AY + 113 131
+spkr15_30_11 K K + 131 135
+spkr15_30_12 CH CH + 135 146
+spkr15_30_13 IY IY + 146 174
+spkr15_30_14 Z S - 174 196

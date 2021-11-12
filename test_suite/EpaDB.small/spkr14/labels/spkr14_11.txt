@@ -1,0 +1,14 @@
+spkr14_11_0 DH DH + 84 93
+spkr14_11_1 AX EH - 93 109
+spkr14_11_2 G G + 109 118
+spkr14_11_3 ER ER + 118 169
+spkr14_11_4 L 0 - 169 169
+spkr14_11_5 G G + 169 184
+spkr14_11_6 OW OW + 184 217
+spkr14_11_7 Z S - 217 237
+spkr14_11_8 Th Th + 257 263
+spkr14_11_9 UW UW + 263 321
+spkr14_11_10 DH DH + 321 327
+spkr14_11_11 AX E - 327 344
+spkr14_11_12 Z S - 344 366
+spkr14_11_13 UW UW + 366 392

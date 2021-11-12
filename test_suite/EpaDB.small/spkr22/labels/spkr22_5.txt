@@ -1,0 +1,15 @@
+spkr22_5_0 CH CH + 39 51
+spkr22_5_1 R R + 51 57
+spkr22_5_2 AY AY + 57 72
+spkr22_5_3 Th T - 72 81
+spkr22_5_4 UW UW + 81 89
+spkr22_5_5 S S + 89 101
+spkr22_5_6 IH IY - 101 109
+spkr22_5_7 NG NG + 109 121
+spkr22_5_8 AX AX + 121 124
+spkr22_5_9 N N + 124 141
+spkr22_5_10 0 0 + 141 141
+spkr22_5_11 JH CH - 141 151
+spkr22_5_12 AH AH + 151 167
+spkr22_5_13 M M + 167 175
+spkr22_5_14 P P + 175 186

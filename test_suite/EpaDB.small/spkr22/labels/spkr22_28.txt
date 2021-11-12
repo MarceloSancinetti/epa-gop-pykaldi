@@ -1,0 +1,17 @@
+spkr22_28_0 SH SH + 37 50
+spkr22_28_1 IY IY + 50 58
+spkr22_28_2 TH TH + 58 64
+spkr22_28_3 IH IH + 64 70
+spkr22_28_4 NG NG + 70 77
+spkr22_28_5 K K + 77 82
+spkr22_28_6 S S + 82 90
+spkr22_28_7 Kh Kh + 90 106
+spkr22_28_8 AA AA + 106 131
+spkr22_28_9 0 0 + 131 131
+spkr22_28_10 Z Z + 131 144
+spkr22_28_11 AA AA + 144 149
+spkr22_28_12 R R + 149 153
+spkr22_28_13 G G + 153 161
+spkr22_28_14 R R + 161 168
+spkr22_28_15 EY EY + 168 189
+spkr22_28_16 T T + 189 212

@@ -1,0 +1,17 @@
+spkr18_12_0 DH DH + 86 100
+spkr18_12_1 AX EH - 100 113
+spkr18_12_2 Kh Kh + 118 123
+spkr18_12_3 AE AA - 123 136
+spkr18_12_4 T T + 136 152
+spkr18_12_5 IH IH + 156 164
+spkr18_12_6 Z S - 164 171
+spkr18_12_7 S S + 171 186
+spkr18_12_8 IH IY - 186 191
+spkr18_12_9 T T + 191 201
+spkr18_12_10 IH IY - 201 205
+spkr18_12_11 NG N - 205 218
+spkr18_12_12 AW AW + 218 233
+spkr18_12_13 T T + 233 241
+spkr18_12_14 S S + 241 247
+spkr18_12_15 AY AY + 247 263
+spkr18_12_16 D DH - 263 284

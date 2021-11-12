@@ -164,7 +164,7 @@ def main(config_dict):
     output_filename               = config_dict['eval-filename']
     gop_path                      = config_dict['full-gop-score-path']
     phones_pure_path              = config_dict['kaldi-phones-pure-path']
-    labels_dir_path               = config_dict['labels-dir-path']
+    labels_dir_path               = config_dict['auto-labels-dir-path']
 
     # Code that generates a pickle with useful data to analyze.
     # The outpul will be used to compute ROCs, AUCs and EERs.

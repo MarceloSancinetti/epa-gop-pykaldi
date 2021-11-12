@@ -1,0 +1,10 @@
+spkr17_1_0 AW AW + 96 108
+spkr17_1_1 R AX - 108 117
+spkr17_1_2 N N + 117 124
+spkr17_1_3 AY AY + 124 138
+spkr17_1_4 S S + 138 152
+spkr17_1_5 R R + 152 157
+spkr17_1_6 EH EH + 157 167
+spkr17_1_7 D D + 167 177
+spkr17_1_8 Th Th + 177 187
+spkr17_1_9 OY OY + 187 211

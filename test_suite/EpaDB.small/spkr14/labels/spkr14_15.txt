@@ -1,0 +1,17 @@
+spkr14_15_0 Kh Kh + 98 111
+spkr14_15_1 AO AO + 111 121
+spkr14_15_2 F F + 121 134
+spkr14_15_3 IY IY + 134 145
+spkr14_15_4 W W + 145 157
+spkr14_15_5 IH IY - 157 163
+spkr14_15_6 DH DH + 163 184
+spkr14_15_7 SH SH + 184 202
+spkr14_15_8 UH UW - 202 216
+spkr14_15_9 G GH - 216 227
+spkr14_15_10 ER AA+DX - 227 250
+spkr14_15_11 P P + 266 273
+spkr14_15_12 L L + 273 278
+spkr14_15_13 IY IY + 278 285
+spkr14_15_14 Z S - 285 297
+spkr14_15_15 S S + 297 302
+spkr14_15_16 ER ER + 302 327

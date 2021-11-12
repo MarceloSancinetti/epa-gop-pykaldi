@@ -1,0 +1,15 @@
+spkr17_35_0 DH DH + 115 120
+spkr17_35_1 EY EY + 120 136
+spkr17_35_2 S S + 136 154
+spkr17_35_3 EH EH + 154 167
+spkr17_35_4 T T + 167 180
+spkr17_35_5 S S + 180 190
+spkr17_35_6 OW OW + 190 210
+spkr17_35_7 AO AO + 210 225
+spkr17_35_8 N N + 225 229
+spkr17_35_9 DH DH + 229 233
+spkr17_35_10 AX AX + 233 237
+spkr17_35_11 N N + 237 243
+spkr17_35_12 Y Y + 243 254
+spkr17_35_13 UW UW + 254 266
+spkr17_35_14 Z Z + 266 278

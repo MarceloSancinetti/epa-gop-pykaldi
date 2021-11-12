@@ -1,0 +1,15 @@
+spkr18_38_0 AY AY + 69 85
+spkr18_38_1 Kh Kh + 90 98
+spkr18_38_2 IY IY + 98 106
+spkr18_38_3 P P + 106 115
+spkr18_38_4 AX AX + 115 122
+spkr18_38_5 P P + 122 134
+spkr18_38_6 R R + 134 142
+spkr18_38_7 AY AY + 142 151
+spkr18_38_8 V BH - 151 157
+spkr18_38_9 AX AX + 157 167
+spkr18_38_10 D D + 167 176
+spkr18_38_11 D D + 176 181
+spkr18_38_12 AY AY + 181 188
+spkr18_38_13 ER ER + 188 214
+spkr18_38_14 IY IY + 214 224

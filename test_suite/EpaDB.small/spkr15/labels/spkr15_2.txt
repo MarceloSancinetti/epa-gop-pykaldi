@@ -1,0 +1,11 @@
+spkr15_2_0 AX A - 55 73
+spkr15_2_1 Kh K - 73 78
+spkr15_2_2 AH AH + 78 93
+spkr15_2_3 P P + 93 123
+spkr15_2_4 AX AA - 123 132
+spkr15_2_5 V F - 132 145
+spkr15_2_6 HH HH + 145 156
+spkr15_2_7 AO AO + 156 171
+spkr15_2_8 CH CH + 171 187
+spkr15_2_9 Th Th + 193 204
+spkr15_2_10 IY IY + 204 230

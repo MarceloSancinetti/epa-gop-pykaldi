@@ -7,7 +7,7 @@ from IPython import embed
 
 def run_all(config_yaml):
 
-    config_dict = load_extended_config_dict(config_yaml, "exp", True, "cpu")
+    config_dict = load_extended_config_dict(config_yaml, "dataprep", True, "cpu")
 
     prep_stage   = PrepareFeaturesAndModelsStage(config_dict)
     align_stage  = ComplexStage([AlignCrossValStage(config_dict), AlignHeldoutStage(config_dict)], "align")

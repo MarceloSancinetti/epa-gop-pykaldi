@@ -1,0 +1,15 @@
+spkr14_38_0 AY AY + 77 111
+spkr14_38_1 Kh Kh + 111 125
+spkr14_38_2 IY IY + 125 138
+spkr14_38_3 P P + 138 156
+spkr14_38_4 AX EH - 165 179
+spkr14_38_5 P P + 179 196
+spkr14_38_6 R R + 196 206
+spkr14_38_7 AY AY + 206 219
+spkr14_38_8 V V + 219 232
+spkr14_38_9 AX EH - 232 243
+spkr14_38_10 T CH - 243 264
+spkr14_38_11 D D + 299 304
+spkr14_38_12 AY IY - 304 315
+spkr14_38_13 ER AR - 315 335
+spkr14_38_14 IY IY + 335 360

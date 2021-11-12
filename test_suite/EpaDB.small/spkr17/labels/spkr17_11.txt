@@ -1,0 +1,14 @@
+spkr17_11_0 DH DH + 80 88
+spkr17_11_1 AX AX + 88 94
+spkr17_11_2 G G + 94 103
+spkr17_11_3 ER ER + 103 119
+spkr17_11_4 L L + 119 122
+spkr17_11_5 G G + 122 127
+spkr17_11_6 OW OW + 127 146
+spkr17_11_7 Z Z + 146 151
+spkr17_11_8 Th Th + 151 161
+spkr17_11_9 UW UW + 161 170
+spkr17_11_10 DH DH + 170 174
+spkr17_11_11 AX E - 174 182
+spkr17_11_12 Z Z + 182 193
+spkr17_11_13 UW UW + 193 214

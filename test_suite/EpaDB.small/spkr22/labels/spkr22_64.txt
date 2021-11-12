@@ -1,0 +1,17 @@
+spkr22_64_0 DH DH + 58 63
+spkr22_64_1 AX AX + 63 70
+spkr22_64_2 P P + 70 81
+spkr22_64_3 L L + 81 86
+spkr22_64_4 EH EH + 86 95
+spkr22_64_5 ZH ZH + 95 110
+spkr22_64_6 ER ER + 110 131
+spkr22_64_7 AX AX + 131 139
+spkr22_64_8 V F - 139 148
+spkr22_64_9 S S + 148 166
+spkr22_64_10 IY IY + 166 174
+spkr22_64_11 IH IH + 174 186
+spkr22_64_12 NG NG + 186 195
+spkr22_64_13 AX AX + 195 206
+spkr22_64_14 D D + 206 214
+spkr22_64_15 IH IY - 214 238
+spkr22_64_16 ER ER + 238 255

@@ -1,0 +1,17 @@
+spkr17_28_0 SH SH + 44 57
+spkr17_28_1 IY IY + 57 70
+spkr17_28_2 TH TH + 70 79
+spkr17_28_3 IH IH + 79 87
+spkr17_28_4 NG NG + 87 96
+spkr17_28_5 K K + 96 102
+spkr17_28_6 S S + 102 109
+spkr17_28_7 Kh Kh + 109 118
+spkr17_28_8 AA AA + 118 129
+spkr17_28_9 R R + 129 136
+spkr17_28_10 Z Z + 136 150
+spkr17_28_11 AX AX + 150 155
+spkr17_28_12 R R + 155 162
+spkr17_28_13 G G + 162 166
+spkr17_28_14 R R + 166 172
+spkr17_28_15 EY EY + 172 196
+spkr17_28_16 T CH - 202 224

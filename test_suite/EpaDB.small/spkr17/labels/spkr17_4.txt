@@ -1,0 +1,13 @@
+spkr17_4_0 M M + 78 84
+spkr17_4_1 AY AY + 84 91
+spkr17_4_2 F F + 91 102
+spkr17_4_3 AA AA + 102 114
+spkr17_4_4 DH DH + 114 120
+spkr17_4_5 ER EH+DX - 120 130
+spkr17_4_6 IH IY - 130 139
+spkr17_4_7 Z S - 139 150
+spkr17_4_8 AX AX + 150 155
+spkr17_4_9 CH CH + 155 163
+spkr17_4_10 HH HH + 163 169
+spkr17_4_11 OW OW + 169 190
+spkr17_4_12 M M + 190 202

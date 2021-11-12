@@ -1,0 +1,16 @@
+spkr22_44_0 AY AY + 72 86
+spkr22_44_1 M M + 86 92
+spkr22_44_2 IH IH + 92 97
+spkr22_44_3 N N + 97 107
+spkr22_44_4 DH DH + 107 111
+spkr22_44_5 AX AX + 111 116
+spkr22_44_6 M M + 116 126
+spkr22_44_7 UW UW + 126 137
+spkr22_44_8 D D + 137 147
+spkr22_44_9 F F + 147 159
+spkr22_44_10 AO AO + 159 162
+spkr22_44_11 R R + 162 170
+spkr22_44_12 AX AX + 170 176
+spkr22_44_13 W W + 176 185
+spkr22_44_14 AO AO + 185 202
+spkr22_44_15 K K + 202 224

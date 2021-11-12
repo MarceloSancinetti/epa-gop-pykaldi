@@ -1,0 +1,11 @@
+spkr14_2_0 AX E - 181 201
+spkr14_2_1 Kh Kh + 201 205
+spkr14_2_2 AH AA - 205 223
+spkr14_2_3 P P + 223 230
+spkr14_2_4 AX O - 230 241
+spkr14_2_5 V F - 241 267
+spkr14_2_6 HH HH + 272 288
+spkr14_2_7 AO O - 288 307
+spkr14_2_8 Th D - 307 313
+spkr14_2_9 Th Th + 313 320
+spkr14_2_10 IY IY + 320 351

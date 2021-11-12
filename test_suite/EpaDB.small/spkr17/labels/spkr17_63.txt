@@ -1,0 +1,10 @@
+spkr17_63_0 Th Th + 63 69
+spkr17_63_1 UH UW - 69 83
+spkr17_63_2 P P + 83 89
+spkr17_63_3 L L + 89 94
+spkr17_63_4 EY EY + 94 109
+spkr17_63_5 ER E - 109 112
+spkr17_63_6 G G + 112 119
+spkr17_63_7 EY EY + 119 134
+spkr17_63_8 M M + 134 144
+spkr17_63_9 Z Z + 144 153

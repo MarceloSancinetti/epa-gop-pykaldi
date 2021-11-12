@@ -1,0 +1,11 @@
+spkr22_73_0 AY AH - 38 48
+spkr22_73_1 M M + 48 57
+spkr22_73_2 SH SH + 57 73
+spkr22_73_3 UH UH + 73 91
+spkr22_73_4 R R + 91 98
+spkr22_73_5 IH IH + 98 106
+spkr22_73_6 T T + 106 115
+spkr22_73_7 S S + 115 123
+spkr22_73_8 OW O - 123 130
+spkr22_73_9 K K + 130 141
+spkr22_73_10 EY EY + 141 165

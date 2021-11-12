@@ -1,0 +1,7 @@
+spkr17_54_0 SH SH + 81 92
+spkr17_54_1 IY IY + 92 98
+spkr17_54_2 Z S - 98 110
+spkr17_54_3 AX AX + 110 117
+spkr17_54_4 L L + 117 123
+spkr17_54_5 AY AY + 123 148
+spkr17_54_6 ER ER + 148 175

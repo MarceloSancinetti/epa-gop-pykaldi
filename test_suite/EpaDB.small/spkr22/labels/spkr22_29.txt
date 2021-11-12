@@ -1,0 +1,15 @@
+spkr22_29_0 HH HH + 36 46
+spkr22_29_1 IY IY + 46 56
+spkr22_29_2 TH TH + 56 63
+spkr22_29_3 R DX - 63 69
+spkr22_29_4 UW UW + 69 77
+spkr22_29_5 S S + 77 90
+spkr22_29_6 AH AH + 90 97
+spkr22_29_7 M M + 97 109
+spkr22_29_8 TH TH + 109 114
+spkr22_29_9 IH IH + 114 118
+spkr22_29_10 NG N - 118 127
+spkr22_29_11 AE AE + 127 137
+spkr22_29_12 CH CH + 137 156
+spkr22_29_13 Y Y + 156 163
+spkr22_29_14 UW UW + 163 177

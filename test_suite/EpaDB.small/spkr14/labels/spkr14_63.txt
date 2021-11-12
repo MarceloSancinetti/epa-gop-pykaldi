@@ -1,0 +1,10 @@
+spkr14_63_0 Th Th + 87 93
+spkr14_63_1 UH UW - 93 126
+spkr14_63_2 P P + 126 135
+spkr14_63_3 L L + 135 139
+spkr14_63_4 EY EY + 139 167
+spkr14_63_5 ER EH+DX - 167 204
+spkr14_63_6 G G + 204 221
+spkr14_63_7 EY EY + 221 245
+spkr14_63_8 M M + 245 263
+spkr14_63_9 Z S - 263 305

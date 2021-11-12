@@ -1,0 +1,11 @@
+spkr14_45_0 Ph Ph + 249 253
+spkr14_45_1 UH UH + 253 270
+spkr14_45_2 T Th - 270 277
+spkr14_45_3 Y Y + 277 290
+spkr14_45_4 AO O - 290 296
+spkr14_45_5 R DX - 296 320
+spkr14_45_6 Kh K - 320 325
+spkr14_45_7 OW OW + 325 357
+spkr14_45_8 T CH - 357 382
+spkr14_45_9 AO O - 382 399
+spkr14_45_10 N N + 399 430

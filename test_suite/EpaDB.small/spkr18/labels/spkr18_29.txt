@@ -1,0 +1,15 @@
+spkr18_29_0 HH HH + 89 102
+spkr18_29_1 IY IY + 102 113
+spkr18_29_2 TH F - 113 124
+spkr18_29_3 R RR - 124 132
+spkr18_29_4 UW UW + 132 141
+spkr18_29_5 S S + 141 155
+spkr18_29_6 AH AH + 155 169
+spkr18_29_7 M M + 169 176
+spkr18_29_8 TH F - 176 186
+spkr18_29_9 IH IH + 186 190
+spkr18_29_10 NG N - 190 198
+spkr18_29_11 AE AX - 198 206
+spkr18_29_12 T T + 206 217
+spkr18_29_13 Y Y + 217 228
+spkr18_29_14 UW UW + 228 245

@@ -1,0 +1,18 @@
+---
+  phone-weights-path:       "experiments/configs/phone_weights_trivial.yaml"
+  folds:                    2
+  epochs:                   10
+  layers:                   1
+  learning-rate:            0.005
+  batch-size:               4
+  use-dropout:              true
+  checkpoint-step:          2
+  dropout-p:                0.4
+  batchnorm:                "last"
+  norm-per-phone-and-class: false
+  use-clipping:             false
+  use-multi-process:        false
+  phones-list-path:         "phones/kaldi_phones_list.txt"
+  libri-chain-txt-path:    "librispeech_models/exp/chain_cleaned/tdnn_1d_sp/final.txt"
+  kaldi-phones-pure-path:  "phones/kaldi/phones-pure.txt"
+  data-dir:                 "data/"

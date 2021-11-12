@@ -1,0 +1,11 @@
+spkr14_73_0 AY AY + 137 157
+spkr14_73_1 M M + 157 166
+spkr14_73_2 SH SH + 166 184
+spkr14_73_3 UH UH + 184 200
+spkr14_73_4 R AA+DX - 200 225
+spkr14_73_5 IH IY - 225 238
+spkr14_73_6 T T + 238 245
+spkr14_73_7 S S + 245 266
+spkr14_73_8 OW O - 266 284
+spkr14_73_9 K K + 284 291
+spkr14_73_10 EY EY + 291 316

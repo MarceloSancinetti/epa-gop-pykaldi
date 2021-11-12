@@ -1,0 +1,17 @@
+spkr17_13_0 AY AA - 77 85
+spkr17_13_1 HH HH + 85 95
+spkr17_13_2 AE AE + 95 105
+spkr17_13_3 D D + 105 109
+spkr17_13_4 AX AX + 109 120
+spkr17_13_5 HH HH + 120 124
+spkr17_13_6 EH EH + 124 135
+spkr17_13_7 D D + 135 140
+spkr17_13_8 EY EY + 140 150
+spkr17_13_9 K K + 150 158
+spkr17_13_10 L L + 158 163
+spkr17_13_11 AE AE + 163 176
+spkr17_13_12 S S + 176 185
+spkr17_13_13 CH CH + 185 193
+spkr17_13_14 Y Y + 193 197
+spkr17_13_15 IH IH + 197 208
+spkr17_13_16 R ER - 208 229

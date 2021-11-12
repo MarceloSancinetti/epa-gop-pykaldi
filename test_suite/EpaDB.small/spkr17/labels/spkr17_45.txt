@@ -1,0 +1,11 @@
+spkr17_45_0 Ph Ph + 99 105
+spkr17_45_1 UH UH + 105 115
+spkr17_45_2 CH CH + 115 120
+spkr17_45_3 Y Y + 120 123
+spkr17_45_4 UH UH + 123 127
+spkr17_45_5 R R + 127 133
+spkr17_45_6 Kh Kh + 133 142
+spkr17_45_7 OW OW + 142 155
+spkr17_45_8 T T + 155 165
+spkr17_45_9 AO AO + 165 183
+spkr17_45_10 N N + 183 202

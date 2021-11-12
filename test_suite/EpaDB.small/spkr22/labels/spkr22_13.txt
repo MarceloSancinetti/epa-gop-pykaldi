@@ -1,0 +1,17 @@
+spkr22_13_0 AY AY + 44 66
+spkr22_13_1 HH HH + 66 84
+spkr22_13_2 AE AE + 84 88
+spkr22_13_3 DX DX + 88 91
+spkr22_13_4 AX AX + 91 98
+spkr22_13_5 HH HH + 98 109
+spkr22_13_6 EH EH + 109 119
+spkr22_13_7 DX DX + 119 124
+spkr22_13_8 EY EY + 124 142
+spkr22_13_9 K K + 142 153
+spkr22_13_10 L L + 158 172
+spkr22_13_11 AE A - 172 182
+spkr22_13_12 S S + 182 193
+spkr22_13_13 CH CH + 193 207
+spkr22_13_14 Y Y + 207 211
+spkr22_13_15 IH IH + 211 219
+spkr22_13_16 R AX - 219 230

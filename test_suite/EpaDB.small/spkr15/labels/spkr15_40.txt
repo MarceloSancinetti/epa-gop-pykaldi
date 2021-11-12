@@ -1,0 +1,15 @@
+spkr15_40_0 DH DH + 40 48
+spkr15_40_1 AX AX + 48 55
+spkr15_40_2 G G + 55 63
+spkr15_40_3 AA A - 63 79
+spkr15_40_4 R R + 79 85
+spkr15_40_5 D D + 85 94
+spkr15_40_6 AX AX + 94 98
+spkr15_40_7 N N + 98 114
+spkr15_40_8 IH IY - 114 122
+spkr15_40_9 Z S - 122 134
+spkr15_40_10 P P + 134 145
+spkr15_40_11 R R + 145 148
+spkr15_40_12 IH IY - 148 156
+spkr15_40_13 DX DX + 156 161
+spkr15_40_14 IY IY + 161 182

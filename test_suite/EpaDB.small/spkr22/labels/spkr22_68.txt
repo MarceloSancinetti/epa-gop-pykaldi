@@ -1,0 +1,13 @@
+spkr22_68_0 W W + 69 77
+spkr22_68_1 IY IY + 77 82
+spkr22_68_2 M M + 82 95
+spkr22_68_3 EH EH + 95 107
+spkr22_68_4 T Th - 107 125
+spkr22_68_5 AX A - 128 138
+spkr22_68_6 T T + 138 147
+spkr22_68_7 D DH - 147 151
+spkr22_68_8 AX AX + 151 158
+spkr22_68_9 K Kh - 158 171
+spkr22_68_10 W W + 171 178
+spkr22_68_11 AY A - 178 191
+spkr22_68_12 ER R - 191 207

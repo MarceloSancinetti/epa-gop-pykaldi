@@ -48,7 +48,6 @@ class EpaDB(Dataset):
 
     def __init__(
         self,
-        root_path: Union[str, Path],
         sample_list_path: Union[str, Path],
         phones_list_path: Union[str, Path],
         labels_path: Union[str, Path],
@@ -59,16 +58,14 @@ class EpaDB(Dataset):
         self._ext_audio = audio_ext
 
         # Get string representation of 'path' in case Path object is passed
-        root_path = os.fspath(root_path)
         sample_list_path = os.fspath(sample_list_path)
         phones_list_path = os.fspath(phones_list_path)
         labels_path = os.fspath(labels_path)
 
-        self._root_path = root_path
         self._labels_path = labels_path
 
         #Create FeatureManager
-        self._feature_manager = FeatureManager(root_path, features_path, conf_path)
+        self._feature_manager = FeatureManager("", features_path, conf_path)
 
         # Read from sample list and create dictionary mapping fileid to .wav path and file list mapping int to logid
         self._filelist, self._logids_by_speaker = generate_fileid_list_and_spkr2logid_dict(sample_list_path)
@@ -84,12 +81,12 @@ class EpaDB(Dataset):
                             '-' : 0}
             
 
-    def _load_epa_item(self, file_id: str, path: str, labels_path: str) -> Tuple[Tensor, str, str, str, List[Tuple[str, str, str, int, int]]]:
+    def _load_epa_item(self, file_id: str, labels_path: str) -> Tuple[Tensor, str, str, str, List[Tuple[str, str, str, int, int]]]:
         """Loads an EpaDB dataset sample given a file name and corresponding sentence name.
 
         Args:
             file_id (str): File id to identify both text and audio files corresponding to the sample
-            path (dict): Dataset root path
+            labels_path (dict): Labels path
 
         Returns:
             tuple: ``(features, transcript, speaker_id, utterance_id, labels, phone_times)``
@@ -98,7 +95,8 @@ class EpaDB(Dataset):
         speaker_id = file_id.split("_")[0]
         utterance_id = file_id.split("_")[1]
 
-        features, transcript = self._feature_manager.get_features_for_logid(file_id)
+#       features, transcript = self._feature_manager.get_features_for_logid(file_id)
+        features = self._feature_manager.get_features_for_logid(file_id)
 
 
         annotation_path = os.path.join(labels_path, speaker_id, "labels", file_id)
@@ -166,7 +164,7 @@ class EpaDB(Dataset):
                     print(e)
 
         output_dict = {'features'    : features,
-                       'transcript'  : transcript,
+                       #'transcript'  : transcript,
                        'speaker_id'  : speaker_id,
                        'utterance_id': utterance_id,
                        'pos_labels'  : torch.from_numpy(pos_labels),
@@ -189,7 +187,7 @@ class EpaDB(Dataset):
                     phone_times is List[(canonic_phone, start_time, end_time)]        
         """
         fileid = self._filelist[n]
-        return self._load_epa_item(fileid, self._root_path, self._labels_path)
+        return self._load_epa_item(fileid, self._labels_path)
 
 
     def __len__(self) -> int:

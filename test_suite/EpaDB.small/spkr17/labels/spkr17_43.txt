@@ -1,0 +1,13 @@
+spkr17_43_0 W W + 62 65
+spkr17_43_1 IY IY + 65 71
+spkr17_43_2 S S + 71 84
+spkr17_43_3 AO O - 84 100
+spkr17_43_4 AX AX + 100 105
+spkr17_43_5 N N + 105 110
+spkr17_43_6 OW OW + 110 120
+spkr17_43_7 L L + 120 125
+spkr17_43_8 D CH - 125 134
+spkr17_43_9 F F + 134 143
+spkr17_43_10 IH IY - 143 157
+spkr17_43_11 L L + 157 162
+spkr17_43_12 M M + 162 183

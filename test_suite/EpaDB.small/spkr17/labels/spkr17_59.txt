@@ -1,0 +1,11 @@
+spkr17_59_0 AX AX + 63 70
+spkr17_59_1 G G + 70 79
+spkr17_59_2 EH EH + 79 93
+spkr17_59_3 N N + 93 98
+spkr17_59_4 S S + 98 104
+spkr17_59_5 T T + 104 113
+spkr17_59_6 AO AO + 113 124
+spkr17_59_7 L L+D - 124 137
+spkr17_59_8 AO AO + 137 157
+spkr17_59_9 D D + 157 169
+spkr17_59_10 Z S - 169 185

@@ -1,0 +1,10 @@
+spkr15_56_0 Y Y + 45 54
+spkr15_56_1 UW UW + 54 69
+spkr15_56_2 Kh Kh + 69 77
+spkr15_56_3 AO AO + 77 88
+spkr15_56_4 L L + 88 95
+spkr15_56_5 D D + 95 100
+spkr15_56_6 AX AX + 100 110
+spkr15_56_7 Kh Kh + 110 120
+spkr15_56_8 AE AA - 120 141
+spkr15_56_9 B B + 141 153

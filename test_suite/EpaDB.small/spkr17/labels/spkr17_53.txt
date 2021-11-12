@@ -1,0 +1,15 @@
+spkr17_53_0 M M + 81 88
+spkr17_53_1 AH AH + 88 99
+spkr17_53_2 M M + 99 108
+spkr17_53_3 S S + 108 121
+spkr17_53_4 EH EH + 121 132
+spkr17_53_5 N N + 132 136
+spkr17_53_6 T CH - 136 147
+spkr17_53_7 M M + 147 153
+spkr17_53_8 IY IY + 153 161
+spkr17_53_9 AX AX + 161 167
+spkr17_53_10 M M + 167 174
+spkr17_53_11 EH EH + 174 185
+spkr17_53_12 S S + 185 198
+spkr17_53_13 IH IH + 198 210
+spkr17_53_14 JH JH + 210 245

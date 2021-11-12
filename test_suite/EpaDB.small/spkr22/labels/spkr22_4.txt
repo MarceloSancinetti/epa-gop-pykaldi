@@ -1,0 +1,13 @@
+spkr22_4_0 M M + 62 74
+spkr22_4_1 AY AY + 74 86
+spkr22_4_2 F F + 86 100
+spkr22_4_3 AA AA + 100 113
+spkr22_4_4 DH DH + 113 120
+spkr22_4_5 ER AX - 120 139
+spkr22_4_6 IH IH + 142 156
+spkr22_4_7 Z S - 156 164
+spkr22_4_8 AX AX + 164 168
+spkr22_4_9 T T + 168 172
+spkr22_4_10 HH HH + 172 189
+spkr22_4_11 OW OW + 189 200
+spkr22_4_12 M M + 200 221

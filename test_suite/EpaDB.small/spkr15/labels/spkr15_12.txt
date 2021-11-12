@@ -1,0 +1,17 @@
+spkr15_12_0 DH DH + 21 29
+spkr15_12_1 AX AX + 29 44
+spkr15_12_2 Kh Kh + 44 52
+spkr15_12_3 AE A - 52 68
+spkr15_12_4 T T + 68 79
+spkr15_12_5 IH IY - 84 91
+spkr15_12_6 Z S - 91 102
+spkr15_12_7 S S + 102 107
+spkr15_12_8 IH IY - 107 115
+spkr15_12_9 T T + 115 123
+spkr15_12_10 IH IY - 123 129
+spkr15_12_11 NG N - 129 141
+spkr15_12_12 AW AW + 141 159
+spkr15_12_13 T 0 - 159 159
+spkr15_12_14 S S + 159 169
+spkr15_12_15 AY AY + 169 197
+spkr15_12_16 T T + 197 206

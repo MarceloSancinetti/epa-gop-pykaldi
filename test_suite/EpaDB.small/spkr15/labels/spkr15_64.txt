@@ -1,0 +1,17 @@
+spkr15_64_0 DH DH + 49 53
+spkr15_64_1 AX AH - 53 59
+spkr15_64_2 P P + 59 70
+spkr15_64_3 L L + 70 78
+spkr15_64_4 EH EH + 78 89
+spkr15_64_5 ZH ZH + 89 101
+spkr15_64_6 ER ER + 101 117
+spkr15_64_7 AX O - 117 128
+spkr15_64_8 V F - 128 139
+spkr15_64_9 S S + 139 153
+spkr15_64_10 IY IY + 153 159
+spkr15_64_11 IH IH + 159 172
+spkr15_64_12 NG NG + 172 183
+spkr15_64_13 AX AH - 183 199
+spkr15_64_14 D D + 199 203
+spkr15_64_15 IH IH + 203 225
+spkr15_64_16 ER ER + 225 246

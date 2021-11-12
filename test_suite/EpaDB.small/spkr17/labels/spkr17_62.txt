@@ -1,0 +1,11 @@
+spkr17_62_0 AY AY + 83 100
+spkr17_62_1 G G + 100 107
+spkr17_62_2 EH EH + 107 119
+spkr17_62_3 CH CH + 119 127
+spkr17_62_4 Y Y + 127 130
+spkr17_62_5 AO AO + 130 133
+spkr17_62_6 R R + 133 136
+spkr17_62_7 Ph Ph + 136 148
+spkr17_62_8 OY OY + 148 164
+spkr17_62_9 N N + 164 173
+spkr17_62_10 T CH - 173 196

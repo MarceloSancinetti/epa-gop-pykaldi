@@ -1,0 +1,15 @@
+spkr22_35_0 DH DH + 48 57
+spkr22_35_1 EY EY + 57 68
+spkr22_35_2 S S + 68 81
+spkr22_35_3 EH EH + 81 92
+spkr22_35_4 D D + 92 98
+spkr22_35_5 S S + 98 109
+spkr22_35_6 OW OW + 109 130
+spkr22_35_7 AO AO + 130 136
+spkr22_35_8 N N + 136 142
+spkr22_35_9 DH DH + 142 149
+spkr22_35_10 AX AX + 149 153
+spkr22_35_11 N N + 153 163
+spkr22_35_12 0 0 + 163 163
+spkr22_35_13 UW UW + 163 181
+spkr22_35_14 Z S - 181 197

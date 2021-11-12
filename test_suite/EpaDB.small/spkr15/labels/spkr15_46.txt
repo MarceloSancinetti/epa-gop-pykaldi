@@ -1,0 +1,15 @@
+spkr15_46_0 AY AY + 49 62
+spkr15_46_1 D D + 62 70
+spkr15_46_2 OW OW + 70 89
+spkr15_46_3 N N + 89 94
+spkr15_46_4 T T + 94 101
+spkr15_46_5 L L + 101 107
+spkr15_46_6 AY AY + 107 128
+spkr15_46_7 K K + 128 132
+spkr15_46_8 R R + 132 139
+spkr15_46_9 EY EY + 139 152
+spkr15_46_10 N N + 152 157
+spkr15_46_11 IY IY + 157 163
+spkr15_46_12 D D + 163 168
+spkr15_46_13 EY EY + 168 195
+spkr15_46_14 Z S - 195 213

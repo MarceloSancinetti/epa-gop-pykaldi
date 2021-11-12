@@ -1,0 +1,11 @@
+spkr15_42_0 AW AW + 73 95
+spkr15_42_1 L L + 95 105
+spkr15_42_2 Z S - 105 113
+spkr15_42_3 HH HH + 113 127
+spkr15_42_4 AE AE + 127 137
+spkr15_42_5 V B - 137 148
+spkr15_42_6 B B + 155 168
+spkr15_42_7 IH IY - 168 182
+spkr15_42_8 G G + 182 192
+spkr15_42_9 AY AY + 204 238
+spkr15_42_10 Z S - 238 265

@@ -1,0 +1,16 @@
+spkr14_7_0 HH X - 86 98
+spkr14_7_1 ER EH+DX - 98 113
+spkr14_7_2 L L + 113 121
+spkr14_7_3 IH IY - 121 132
+spkr14_7_4 T T + 132 146
+spkr14_7_5 0 0 + 146 146
+spkr14_7_6 L L + 146 166
+spkr14_7_7 S S + 180 196
+spkr14_7_8 IH IY - 196 202
+spkr14_7_9 S Sh - 202 215
+spkr14_7_10 T T + 215 227
+spkr14_7_11 ER EH+DX - 227 250
+spkr14_7_12 Z 0 - 250 250
+spkr14_7_13 Th T - 268 273
+spkr14_7_14 IY IY + 273 288
+spkr14_7_15 TH TH + 288 301

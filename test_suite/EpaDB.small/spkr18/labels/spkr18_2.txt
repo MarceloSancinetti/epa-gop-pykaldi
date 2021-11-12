@@ -1,0 +1,11 @@
+spkr18_2_0 AX AX + 45 62
+spkr18_2_1 Kh Kh + 62 68
+spkr18_2_2 AH A - 68 81
+spkr18_2_3 P P + 81 84
+spkr18_2_4 AX O - 84 91
+spkr18_2_5 V F - 91 97
+spkr18_2_6 HH HH + 97 109
+spkr18_2_7 AO AO + 109 121
+spkr18_2_8 Th D - 121 131
+spkr18_2_9 Th Th + 131 137
+spkr18_2_10 IY IY + 137 153

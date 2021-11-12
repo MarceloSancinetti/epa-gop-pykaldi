@@ -1,0 +1,15 @@
+spkr17_40_0 DH DH + 95 98
+spkr17_40_1 AX AX + 98 108
+spkr17_40_2 G G + 108 112
+spkr17_40_3 AA AA + 112 122
+spkr17_40_4 R R + 122 128
+spkr17_40_5 D D + 128 134
+spkr17_40_6 AX AX + 134 140
+spkr17_40_7 N N + 140 146
+spkr17_40_8 IH IH + 146 153
+spkr17_40_9 Z S - 153 166
+spkr17_40_10 P P + 166 172
+spkr17_40_11 R R + 172 175
+spkr17_40_12 IH IY - 175 188
+spkr17_40_13 T T + 188 199
+spkr17_40_14 IY IY + 199 213

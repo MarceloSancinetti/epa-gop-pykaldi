@@ -1,0 +1,7 @@
+spkr62_54_0 SH SH +
+spkr62_54_1 IY IH -
+spkr62_54_2 Z S -
+spkr62_54_3 AX AX +
+spkr62_54_4 L L +
+spkr62_54_5 AY AY +
+spkr62_54_6 ER ER +

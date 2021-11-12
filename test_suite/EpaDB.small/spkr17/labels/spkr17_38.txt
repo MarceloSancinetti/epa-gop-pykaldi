@@ -1,0 +1,15 @@
+spkr17_38_0 AY AY + 61 78
+spkr17_38_1 Kh Kh + 78 88
+spkr17_38_2 IY IY + 88 95
+spkr17_38_3 P P + 95 102
+spkr17_38_4 AX AX + 102 115
+spkr17_38_5 P P + 115 120
+spkr17_38_6 R R + 120 124
+spkr17_38_7 AY AY + 124 133
+spkr17_38_8 V V + 133 139
+spkr17_38_9 AX AX + 139 146
+spkr17_38_10 T T + 146 151
+spkr17_38_11 D D + 151 159
+spkr17_38_12 AY AY + 159 177
+spkr17_38_13 ER ER + 177 189
+spkr17_38_14 IY IY + 189 206

@@ -1,0 +1,13 @@
+spkr15_4_0 M M + 83 90
+spkr15_4_1 AY AY + 90 104
+spkr15_4_2 F F + 104 116
+spkr15_4_3 AA AA + 116 128
+spkr15_4_4 DH DH + 128 133
+spkr15_4_5 ER ER + 133 158
+spkr15_4_6 IH IY - 158 168
+spkr15_4_7 Z S - 168 175
+spkr15_4_8 AX AX + 175 184
+spkr15_4_9 T T + 184 189
+spkr15_4_10 HH HH + 189 206
+spkr15_4_11 OW OW + 206 221
+spkr15_4_12 M M + 221 234

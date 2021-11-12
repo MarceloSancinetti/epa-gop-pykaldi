@@ -1,0 +1,15 @@
+spkr15_53_0 M M + 61 71
+spkr15_53_1 AH AH + 71 83
+spkr15_53_2 M M + 83 94
+spkr15_53_3 S S + 94 105
+spkr15_53_4 EH EH + 105 114
+spkr15_53_5 N N + 114 120
+spkr15_53_6 T T + 120 130
+spkr15_53_7 M M + 130 137
+spkr15_53_8 IY IY + 137 153
+spkr15_53_9 AX AH - 156 164
+spkr15_53_10 M M + 164 173
+spkr15_53_11 EH EH + 173 182
+spkr15_53_12 S S + 182 194
+spkr15_53_13 AX A - 194 210
+spkr15_53_14 JH CH - 210 228

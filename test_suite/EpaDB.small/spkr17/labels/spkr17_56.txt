@@ -1,0 +1,10 @@
+spkr17_56_0 Y Y + 70 77
+spkr17_56_1 UW UW + 77 84
+spkr17_56_2 Kh Kh + 84 90
+spkr17_56_3 AO O - 90 100
+spkr17_56_4 L L + 100 106
+spkr17_56_5 D T - 106 111
+spkr17_56_6 AX AX + 111 122
+spkr17_56_7 Kh Kh + 122 129
+spkr17_56_8 AE AE + 129 150
+spkr17_56_9 B B + 150 161

@@ -1,0 +1,17 @@
+spkr14_75_0 AX EH - 22 34
+spkr14_75_1 S S + 34 51
+spkr14_75_2 AE AA - 51 65
+spkr14_75_3 N N + 65 70
+spkr14_75_4 D G - 70 75
+spkr14_75_5 W W + 75 80
+spkr14_75_6 IH IY - 80 99
+spkr14_75_7 CH T - 99 113
+spkr14_75_8 W W + 189 207
+spkr14_75_9 IH IY - 207 220
+spkr14_75_10 DH DH + 220 235
+spkr14_75_11 M M + 235 248
+spkr14_75_12 EY AA+SH - 248 267
+spkr14_75_13 AX O - 267 279
+spkr14_75_14 N N + 279 285
+spkr14_75_15 EY IY - 285 294
+spkr14_75_16 Z S - 294 328

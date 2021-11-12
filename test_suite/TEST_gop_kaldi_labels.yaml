@@ -1,0 +1,6 @@
+---
+  data-dir:                      "data/"
+  libri-phones-path:             "librispeech_models/exp/chain_cleaned/tdnn_1d_sp/phones.txt"
+  libri-phones-to-pure-int-path: "phones/kaldi/phone-to-pure-phone.int"
+  libri-chain-mdl-path:          "librispeech_models/exp/chain_cleaned/tdnn_1d_sp/final.mdl"
+  kaldi-phones-pure-path:        "phones/kaldi/phones-pure.txt"

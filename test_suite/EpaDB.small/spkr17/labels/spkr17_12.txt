@@ -1,0 +1,17 @@
+spkr17_12_0 DH DH + 94 98
+spkr17_12_1 AX EH - 98 112
+spkr17_12_2 Kh Kh + 112 115
+spkr17_12_3 AE A - 115 129
+spkr17_12_4 DX DX + 129 133
+spkr17_12_5 IH IH + 133 141
+spkr17_12_6 Z S - 141 149
+spkr17_12_7 S S + 149 155
+spkr17_12_8 IH IH + 155 163
+spkr17_12_9 DX DX + 163 168
+spkr17_12_10 IH IH + 168 171
+spkr17_12_11 NG N - 171 179
+spkr17_12_12 AW AW + 179 187
+spkr17_12_13 T T + 187 195
+spkr17_12_14 S S + 195 205
+spkr17_12_15 AY AY + 205 222
+spkr17_12_16 T T + 222 234

@@ -1,0 +1,17 @@
+spkr15_70_0 F F + 23 37
+spkr15_70_1 R R + 37 42
+spkr15_70_2 IY IY + 42 59
+spkr15_70_3 Th Th + 59 66
+spkr15_70_4 UH UH + 66 76
+spkr15_70_5 R R + 76 86
+spkr15_70_6 Z S - 86 108
+spkr15_70_7 AA AA + 108 117
+spkr15_70_8 R R + 117 125
+spkr15_70_9 AW AW + 125 139
+spkr15_70_10 N N + 139 151
+spkr15_70_11 D T - 151 157
+spkr15_70_12 Y Y + 185 194
+spkr15_70_13 UH UH + 194 206
+spkr15_70_14 R R + 206 211
+spkr15_70_15 AX AX + 211 218
+spkr15_70_16 P P + 218 236

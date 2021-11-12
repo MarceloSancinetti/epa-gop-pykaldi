@@ -1,0 +1,12 @@
+spkr17_6_0 HH HH + 63 66
+spkr17_6_1 UW UW + 66 70
+spkr17_6_2 IH IH + 70 76
+spkr17_6_3 Z S - 76 87
+spkr17_6_4 R R + 87 92
+spkr17_6_5 AO AO + 92 99
+spkr17_6_6 B B + 99 102
+spkr17_6_7 IH IH + 102 105
+spkr17_6_8 N N + 105 111
+spkr17_6_9 HH HH + 111 122
+spkr17_6_10 UH UH + 122 142
+spkr17_6_11 T T + 142 155

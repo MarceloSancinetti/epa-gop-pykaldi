@@ -1,0 +1,14 @@
+spkr17_9_0 DH DH + 77 80
+spkr17_9_1 AX AX + 80 86
+spkr17_9_2 S S + 86 98
+spkr17_9_3 AH AH + 98 108
+spkr17_9_4 N N + 108 116
+spkr17_9_5 HH HH + 116 125
+spkr17_9_6 IY IY + 125 138
+spkr17_9_7 T T* - 138 172
+spkr17_9_8 S S + 172 193
+spkr17_9_9 M M + 197 203
+spkr17_9_10 AY AY + 203 211
+spkr17_9_11 B B + 211 220
+spkr17_9_12 EH EH + 220 239
+spkr17_9_13 T T + 239 251

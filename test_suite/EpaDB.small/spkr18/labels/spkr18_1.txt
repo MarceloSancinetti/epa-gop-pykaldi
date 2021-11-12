@@ -1,0 +1,10 @@
+spkr18_1_0 AW AW + 52 78
+spkr18_1_1 ER ER + 78 92
+spkr18_1_2 N N + 92 103
+spkr18_1_3 AY AY + 103 120
+spkr18_1_4 S S + 120 131
+spkr18_1_5 R R + 131 149
+spkr18_1_6 EH E - 149 153
+spkr18_1_7 D D + 153 172
+spkr18_1_8 Th Th + 172 177
+spkr18_1_9 OY OY + 177 205

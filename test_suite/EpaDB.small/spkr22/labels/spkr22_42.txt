@@ -1,0 +1,11 @@
+spkr22_42_0 AW AW + 47 75
+spkr22_42_1 L L + 75 80
+spkr22_42_2 Z S - 80 89
+spkr22_42_3 HH HH + 89 101
+spkr22_42_4 AE A - 101 106
+spkr22_42_5 V B - 106 112
+spkr22_42_6 B B + 116 128
+spkr22_42_7 IH IY - 128 146
+spkr22_42_8 G G + 146 154
+spkr22_42_9 AY AY + 154 182
+spkr22_42_10 Z S - 182 213

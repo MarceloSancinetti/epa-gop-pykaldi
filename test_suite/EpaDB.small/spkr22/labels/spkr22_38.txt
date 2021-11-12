@@ -1,0 +1,15 @@
+spkr22_38_0 AY AY + 44 57
+spkr22_38_1 Kh Kh + 57 65
+spkr22_38_2 IY IY + 65 71
+spkr22_38_3 P P + 71 76
+spkr22_38_4 AX A - 76 89
+spkr22_38_5 P P + 89 97
+spkr22_38_6 R R + 97 103
+spkr22_38_7 AY AY + 103 115
+spkr22_38_8 V BH - 115 121
+spkr22_38_9 AX E - 121 132
+spkr22_38_10 T T + 132 142
+spkr22_38_11 D D + 142 151
+spkr22_38_12 AY AY + 151 170
+spkr22_38_13 ER ER + 170 181
+spkr22_38_14 IY IY + 181 196

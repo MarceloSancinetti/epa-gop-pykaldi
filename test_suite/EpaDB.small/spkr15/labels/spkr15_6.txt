@@ -1,0 +1,12 @@
+spkr15_6_0 HH HH + 42 49
+spkr15_6_1 UW UW + 49 59
+spkr15_6_2 IH IH + 59 71
+spkr15_6_3 Z S - 71 87
+spkr15_6_4 R R + 87 93
+spkr15_6_5 AO AO + 93 100
+spkr15_6_6 B B + 100 106
+spkr15_6_7 IH IY - 106 114
+spkr15_6_8 N N + 114 122
+spkr15_6_9 HH HH + 122 134
+spkr15_6_10 UH UH + 134 148
+spkr15_6_11 T T + 148 164

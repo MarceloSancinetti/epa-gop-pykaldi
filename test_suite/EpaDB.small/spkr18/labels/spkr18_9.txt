@@ -1,0 +1,14 @@
+spkr18_9_0 DH DH + 70 80
+spkr18_9_1 AX AX + 80 91
+spkr18_9_2 S S + 91 108
+spkr18_9_3 AH AH + 108 122
+spkr18_9_4 N N + 122 141
+spkr18_9_5 HH HH + 157 162
+spkr18_9_6 IY IY + 162 168
+spkr18_9_7 T T + 168 178
+spkr18_9_8 S S + 178 188
+spkr18_9_9 M M + 188 193
+spkr18_9_10 AY AY + 193 203
+spkr18_9_11 B BH - 203 213
+spkr18_9_12 EH EH + 213 221
+spkr18_9_13 D DH - 221 232

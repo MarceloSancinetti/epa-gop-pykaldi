@@ -1,0 +1,14 @@
+spkr18_11_0 DH DH + 68 76
+spkr18_11_1 AX E - 76 88
+spkr18_11_2 G G + 88 97
+spkr18_11_3 ER ER + 97 124
+spkr18_11_4 L L + 124 138
+spkr18_11_5 G G + 138 144
+spkr18_11_6 OW OW + 144 166
+spkr18_11_7 Z S - 166 177
+spkr18_11_8 Th T - 177 181
+spkr18_11_9 UW UW + 181 188
+spkr18_11_10 DH DH + 188 195
+spkr18_11_11 AX AX + 195 201
+spkr18_11_12 Z S - 201 218
+spkr18_11_13 UW UW + 218 241

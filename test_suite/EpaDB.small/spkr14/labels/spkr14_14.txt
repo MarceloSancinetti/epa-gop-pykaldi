@@ -1,0 +1,17 @@
+spkr14_14_0 M M + 62 75
+spkr14_14_1 AY AY + 75 97
+spkr14_14_2 B B + 97 105
+spkr14_14_3 R R + 105 112
+spkr14_14_4 AH AH + 112 127
+spkr14_14_5 DH DH + 127 135
+spkr14_14_6 ER EH+DX - 135 165
+spkr14_14_7 CH CH + 165 175
+spkr14_14_8 IY IY + 175 192
+spkr14_14_9 T S+T - 192 225
+spkr14_14_10 S S + 225 258
+spkr14_14_11 AX A - 267 289
+spkr14_14_12 T T + 289 301
+spkr14_14_13 S S + 301 318
+spkr14_14_14 K K + 318 331
+spkr14_14_15 UW UW + 331 349
+spkr14_14_16 L L + 349 357

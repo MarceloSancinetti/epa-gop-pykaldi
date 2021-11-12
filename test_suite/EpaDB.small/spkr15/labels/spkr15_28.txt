@@ -1,0 +1,17 @@
+spkr15_28_0 SH SH + 43 60
+spkr15_28_1 IY IY + 60 74
+spkr15_28_2 TH TH + 74 87
+spkr15_28_3 IH IH + 87 100
+spkr15_28_4 NG NG + 100 109
+spkr15_28_5 K K + 109 115
+spkr15_28_6 S S* - 115 126
+spkr15_28_7 Kh Kh + 126 136
+spkr15_28_8 AA AA + 136 152
+spkr15_28_9 R R + 152 162
+spkr15_28_10 Z S - 162 175
+spkr15_28_11 AA AA + 175 191
+spkr15_28_12 R R + 191 207
+spkr15_28_13 G G + 207 216
+spkr15_28_14 R R + 216 232
+spkr15_28_15 EY EY + 232 256
+spkr15_28_16 T CH - 256 276

@@ -1,0 +1,11 @@
+spkr15_45_0 Ph Ph + 69 73
+spkr15_45_1 UH UH + 73 86
+spkr15_45_2 CH CH + 91 99
+spkr15_45_3 Y Y + 99 106
+spkr15_45_4 UH UH + 106 114
+spkr15_45_5 R R + 114 121
+spkr15_45_6 Kh Kh + 121 137
+spkr15_45_7 OW OW + 137 157
+spkr15_45_8 T T* - 157 174
+spkr15_45_9 AO O - 178 201
+spkr15_45_10 N N + 201 225

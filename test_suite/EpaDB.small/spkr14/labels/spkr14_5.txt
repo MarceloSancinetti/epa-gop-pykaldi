@@ -1,0 +1,15 @@
+spkr14_5_0 CH CH + 86 92
+spkr14_5_1 R R + 92 98
+spkr14_5_2 AY AY + 98 143
+spkr14_5_3 Th T - 143 151
+spkr14_5_4 UW UW + 151 161
+spkr14_5_5 S S + 161 178
+spkr14_5_6 IH IY - 178 187
+spkr14_5_7 NG NG + 187 207
+spkr14_5_8 AE AE + 207 214
+spkr14_5_9 N N + 214 226
+spkr14_5_10 0 0 + 226 226
+spkr14_5_11 JH JH + 226 235
+spkr14_5_12 AH AH + 235 252
+spkr14_5_13 M M + 252 258
+spkr14_5_14 P P + 258 278

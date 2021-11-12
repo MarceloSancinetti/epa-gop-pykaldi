@@ -1,0 +1,10 @@
+spkr15_1_0 AA AO - 50 62
+spkr15_1_1 R R + 62 77
+spkr15_1_2 N N + 77 87
+spkr15_1_3 AY AY + 87 101
+spkr15_1_4 S S + 101 116
+spkr15_1_5 R R + 116 130
+spkr15_1_6 EH EH + 130 140
+spkr15_1_7 D D + 140 149
+spkr15_1_8 Th CH - 149 170
+spkr15_1_9 OY OY + 170 205

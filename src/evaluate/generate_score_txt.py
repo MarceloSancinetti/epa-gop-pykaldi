@@ -12,7 +12,7 @@ from src.train.dataset import *
 
 from torch.optim.swa_utils import AveragedModel
 
-from pytorch_models import *
+from src.pytorch_models.pytorch_models import *
 
 from IPython import embed
 
@@ -94,10 +94,9 @@ def main(config_dict):
 
     state_dict_dir      = config_dict['state-dict-dir']
     model_name          = config_dict['model-name']
-    epa_root_path       = config_dict['epadb-root-path']
     sample_list         = config_dict['utterance-list-path']
     phone_list_path     = config_dict['phones-list-path']
-    labels_dir          = config_dict['labels-dir-path']
+    labels_dir          = config_dict['auto-labels-dir-path']
     gop_txt_dir         = config_dict['gop-scores-dir']
     gop_txt_name        = config_dict['gop-txt-name']
     features_path       = config_dict['features-path']
@@ -105,7 +104,7 @@ def main(config_dict):
     device_name         = config_dict['device']
     batchnorm           = config_dict['batchnorm']
 
-    testset = EpaDB(epa_root_path, sample_list, phone_list_path, labels_dir, features_path, conf_path)
+    testset = EpaDB(sample_list, phone_list_path, labels_dir, features_path, conf_path)
     testloader = torch.utils.data.DataLoader(testset, batch_size=2,
                                           shuffle=False, num_workers=0, collate_fn=collate_fn_padd)
 

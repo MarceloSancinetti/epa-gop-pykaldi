@@ -1,0 +1,12 @@
+spkr18_6_0 HH X - 61 66
+spkr18_6_1 UW UW + 66 80
+spkr18_6_2 IH IY - 80 91
+spkr18_6_3 Z S - 91 105
+spkr18_6_4 R R + 105 118
+spkr18_6_5 AO O - 118 126
+spkr18_6_6 B BH - 126 129
+spkr18_6_7 IH IY - 129 141
+spkr18_6_8 N N + 141 148
+spkr18_6_9 HH HH + 148 155
+spkr18_6_10 UH UH + 155 169
+spkr18_6_11 D D + 169 174

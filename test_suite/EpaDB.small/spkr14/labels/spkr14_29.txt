@@ -1,0 +1,15 @@
+spkr14_29_0 HH X - 71 94
+spkr14_29_1 IY IY + 94 129
+spkr14_29_2 TH TH + 129 144
+spkr14_29_3 R R + 144 155
+spkr14_29_4 UW UW + 155 197
+spkr14_29_5 S S + 197 212
+spkr14_29_6 AH AH + 212 221
+spkr14_29_7 M M + 221 231
+spkr14_29_8 TH TH + 231 248
+spkr14_29_9 IH IY - 248 252
+spkr14_29_10 NG N - 252 267
+spkr14_29_11 AE AX - 267 278
+spkr14_29_12 T T + 278 296
+spkr14_29_13 Y Y + 296 321
+spkr14_29_14 UW UW + 321 343

@@ -1,0 +1,15 @@
+spkr22_40_0 DH DH + 52 58
+spkr22_40_1 AX AX + 58 65
+spkr22_40_2 G K - 65 72
+spkr22_40_3 AA AA + 72 85
+spkr22_40_4 R R + 85 90
+spkr22_40_5 D D + 90 97
+spkr22_40_6 AX AX + 97 109
+spkr22_40_7 N N + 109 123
+spkr22_40_8 IH IH + 126 140
+spkr22_40_9 Z S - 140 154
+spkr22_40_10 P P + 157 164
+spkr22_40_11 R R + 164 169
+spkr22_40_12 IH IY - 169 179
+spkr22_40_13 T T + 179 196
+spkr22_40_14 IY IY + 196 233

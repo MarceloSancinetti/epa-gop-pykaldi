@@ -1,0 +1,11 @@
+spkr22_52_0 L L + 60 66
+spkr22_52_1 EH EH + 66 74
+spkr22_52_2 T T + 74 80
+spkr22_52_3 S S + 80 92
+spkr22_52_4 P P + 92 96
+spkr22_52_5 L L + 96 102
+spkr22_52_6 EY EY + 102 116
+spkr22_52_7 S S + 116 129
+spkr22_52_8 AO O - 129 139
+spkr22_52_9 K K + 139 152
+spkr22_52_10 ER ER + 152 169

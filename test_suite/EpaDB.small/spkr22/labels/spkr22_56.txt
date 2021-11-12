@@ -1,0 +1,10 @@
+spkr22_56_0 Y Y + 59 71
+spkr22_56_1 UW UW + 71 86
+spkr22_56_2 Kh Kh + 86 99
+spkr22_56_3 AO AO + 99 106
+spkr22_56_4 L L + 106 113
+spkr22_56_5 D D + 113 118
+spkr22_56_6 AX AX + 118 125
+spkr22_56_7 Kh Kh + 125 136
+spkr22_56_8 AE A - 136 151
+spkr22_56_9 B B + 151 167

@@ -1,0 +1,11 @@
+spkr17_42_0 AW OW - 81 99
+spkr17_42_1 L L + 99 104
+spkr17_42_2 Z S - 104 110
+spkr17_42_3 HH HH + 110 120
+spkr17_42_4 AE AE + 120 134
+spkr17_42_5 V B - 134 142
+spkr17_42_6 B B + 142 147
+spkr17_42_7 IH IY - 147 158
+spkr17_42_8 G G + 158 167
+spkr17_42_9 AY AY + 167 192
+spkr17_42_10 Z Z + 192 216

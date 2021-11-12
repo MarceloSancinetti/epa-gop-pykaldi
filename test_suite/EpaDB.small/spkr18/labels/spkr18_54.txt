@@ -1,0 +1,7 @@
+spkr18_54_0 SH HH - 87 102
+spkr18_54_1 IY IY+IY - 102 123
+spkr18_54_2 Z S - 123 135
+spkr18_54_3 AX AX + 135 148
+spkr18_54_4 L L + 148 158
+spkr18_54_5 AY AY + 158 183
+spkr18_54_6 ER ER + 183 203

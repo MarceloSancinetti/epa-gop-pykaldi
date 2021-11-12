@@ -1,0 +1,11 @@
+spkr22_2_0 AX A - 84 105
+spkr22_2_1 Kh Kh + 105 112
+spkr22_2_2 AH AH + 112 131
+spkr22_2_3 P P + 131 144
+spkr22_2_4 AX AO - 147 156
+spkr22_2_5 V F - 156 166
+spkr22_2_6 HH HH + 166 185
+spkr22_2_7 AO O - 185 198
+spkr22_2_8 Th T - 198 216
+spkr22_2_9 Th Th + 234 245
+spkr22_2_10 IY IY + 245 265

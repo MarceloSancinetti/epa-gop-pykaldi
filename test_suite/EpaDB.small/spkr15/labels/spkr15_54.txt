@@ -1,0 +1,7 @@
+spkr15_54_0 SH SH + 42 60
+spkr15_54_1 IY IY + 60 76
+spkr15_54_2 Z S - 76 87
+spkr15_54_3 AX AA - 87 95
+spkr15_54_4 L L + 95 101
+spkr15_54_5 AY AY + 101 126
+spkr15_54_6 ER ER + 126 156

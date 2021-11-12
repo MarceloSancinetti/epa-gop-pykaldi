@@ -1,0 +1,13 @@
+spkr18_68_0 W W + 70 83
+spkr18_68_1 IY IY + 83 87
+spkr18_68_2 M M + 87 98
+spkr18_68_3 EH EH + 98 107
+spkr18_68_4 T T + 107 110
+spkr18_68_5 AX A - 110 125
+spkr18_68_6 T T + 125 129
+spkr18_68_7 D DH - 129 137
+spkr18_68_8 AX AX + 137 144
+spkr18_68_9 K K + 147 156
+spkr18_68_10 W W* - 156 162
+spkr18_68_11 AY AY + 162 175
+spkr18_68_12 ER ER + 175 194

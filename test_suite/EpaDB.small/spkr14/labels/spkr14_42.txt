@@ -1,0 +1,11 @@
+spkr14_42_0 AW AO+UW - 80 123
+spkr14_42_1 L L + 123 143
+spkr14_42_2 Z 0 - 143 143
+spkr14_42_3 HH X - 143 156
+spkr14_42_4 AE AA - 156 168
+spkr14_42_5 V BH - 168 186
+spkr14_42_6 B BH - 186 196
+spkr14_42_7 IH IY - 196 206
+spkr14_42_8 G G+S - 206 229
+spkr14_42_9 AY AY + 244 272
+spkr14_42_10 Z S - 272 305

@@ -1,0 +1,17 @@
+spkr18_75_0 AX AX + 46 57
+spkr18_75_1 S S + 57 72
+spkr18_75_2 AE A - 72 80
+spkr18_75_3 N N + 80 91
+spkr18_75_4 D 0 - 91 91
+spkr18_75_5 W W + 91 96
+spkr18_75_6 IH IH + 96 103
+spkr18_75_7 CH SH - 103 114
+spkr18_75_8 W W + 114 124
+spkr18_75_9 IH IY - 124 128
+spkr18_75_10 DH DH + 128 134
+spkr18_75_11 M M + 134 148
+spkr18_75_12 EY AY - 148 170
+spkr18_75_13 AX O - 170 174
+spkr18_75_14 N N + 174 183
+spkr18_75_15 EY EY + 183 200
+spkr18_75_16 Z S - 200 217

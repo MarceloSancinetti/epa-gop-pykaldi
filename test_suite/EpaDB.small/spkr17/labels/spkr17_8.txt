@@ -1,0 +1,16 @@
+spkr17_8_0 Th Th + 87 91
+spkr17_8_1 ER AX - 91 105
+spkr17_8_2 N N + 105 110
+spkr17_8_3 DH DH + 110 115
+spkr17_8_4 AX AX + 115 122
+spkr17_8_5 T Th - 122 128
+spkr17_8_6 EH EH + 128 135
+spkr17_8_7 L L + 135 140
+spkr17_8_8 AX IH - 140 146
+spkr17_8_9 V V + 146 154
+spkr17_8_10 IH IH + 154 166
+spkr17_8_11 ZH ZH + 166 177
+spkr17_8_12 AX AH - 177 182
+spkr17_8_13 N N + 182 187
+spkr17_8_14 AO AO + 187 204
+spkr17_8_15 F F + 204 220

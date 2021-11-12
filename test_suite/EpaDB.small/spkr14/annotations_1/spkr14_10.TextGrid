@@ -1,0 +1,150 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0.0
+xmax = 4.352
+tiers? <exists>
+size = 3
+item []:
+    item [1]:
+        class = "IntervalTier"
+        name = "words"
+        xmin = 0.0
+        xmax = 4.352
+        intervals: size = 9
+            intervals [1]:
+                xmin = 0.0
+                xmax = 0.99
+                text = ""
+            intervals [2]:
+                xmin = 0.99
+                xmax = 1.36
+                text = "i"
+            intervals [3]:
+                xmin = 1.36
+                xmax = 2.05
+                text = "think"
+            intervals [4]:
+                xmin = 2.05
+                xmax = 2.108560111387266
+                text = ""
+            intervals [5]:
+                xmin = 2.108560111387266
+                xmax = 2.37
+                text = "the"
+            intervals [6]:
+                xmin = 2.37
+                xmax = 2.82
+                text = "ship"
+            intervals [7]:
+                xmin = 2.82
+                xmax = 3.32
+                text = "will"
+            intervals [8]:
+                xmin = 3.32
+                xmax = 3.9776084529401814
+                text = "sink"
+            intervals [9]:
+                xmin = 3.9776084529401814
+                xmax = 4.352
+                text = ""
+    item [1]:
+        class = "IntervalTier"
+        name = "annotation"
+        xmin = 0.0
+        xmax = 4.352
+        intervals: size = 21
+            intervals [1]:
+                xmin = 0.0
+                xmax = 0.99
+                text = "sil"
+            intervals [2]:
+                xmin = 0.99
+                xmax = 1.36
+                text = "AY"
+            intervals [3]:
+                xmin = 1.36
+                xmax = 1.59
+                text = "TH"
+            intervals [4]:
+                xmin = 1.59
+                xmax = 1.69
+                text = "IY"
+            intervals [5]:
+                xmin = 1.69
+                xmax = 1.83
+                text = "N"
+            intervals [6]:
+                xmin = 1.83
+                xmax = 2.05
+                text = "K"
+            intervals [7]:
+                xmin = 2.05
+                xmax = 2.108560111387266
+                text = "sp"
+            intervals [8]:
+                xmin = 2.108560111387266
+                xmax = 2.29
+                text = "DH"
+            intervals [9]:
+                xmin = 2.29
+                xmax = 2.37
+                text = "EH"
+            intervals [10]:
+                xmin = 2.37
+                xmax = 2.55
+                text = "SH"
+            intervals [11]:
+                xmin = 2.55
+                xmax = 2.69
+                text = "IY"
+            intervals [12]:
+                xmin = 2.69
+                xmax = 2.82
+                text = "P"
+            intervals [13]:
+                xmin = 2.82
+                xmax = 3.01
+                text = "W"
+            intervals [14]:
+                xmin = 3.01
+                xmax = 3.09
+                text = "IY"
+            intervals [15]:
+                xmin = 3.09
+                xmax = 3.32
+                text = "L"
+            intervals [16]:
+                xmin = 3.32
+                xmax = 3.48
+                text = "S"
+            intervals [17]:
+                xmin = 3.48
+                xmax = 3.56
+                text = "IY"
+            intervals [18]:
+                xmin = 3.56
+                xmax = 3.74
+                text = "N"
+            intervals [19]:
+                xmin = 3.74
+                xmax = 3.9776084529401814
+                text = "K"
+            intervals [20]:
+                xmin = 3.9776084529401814
+                xmax = 4.33
+                text = "sp"
+            intervals [21]:
+                xmin = 4.33
+                xmax = 4.352
+                text = ""
+    item [1]:
+        class = "IntervalTier"
+        name = "score"
+        xmin = 0.0
+        xmax = 4.352
+        intervals: size = 1
+            intervals [1]:
+                xmin = 0.0
+                xmax = 4.352
+                text = "3/5"

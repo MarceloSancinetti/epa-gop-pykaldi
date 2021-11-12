@@ -1,0 +1,14 @@
+spkr18_74_0 DH DH + 77 86
+spkr18_74_1 AE A - 86 97
+spkr18_74_2 T T + 97 106
+spkr18_74_3 S S + 106 118
+spkr18_74_4 P P + 123 130
+spkr18_74_5 Y Y + 130 135
+spkr18_74_6 UH UH + 135 149
+spkr18_74_7 R R + 149 156
+spkr18_74_8 L L + 156 159
+spkr18_74_9 AH UW - 159 165
+spkr18_74_10 G G + 165 173
+spkr18_74_11 ZH S - 173 182
+spkr18_74_12 ER UR - 182 192
+spkr18_74_13 IY IY + 192 207

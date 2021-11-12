@@ -1,0 +1,17 @@
+spkr15_75_0 AX AX + 56 69
+spkr15_75_1 S S + 69 82
+spkr15_75_2 AE A - 82 91
+spkr15_75_3 N N + 91 101
+spkr15_75_4 D D + 101 105
+spkr15_75_5 W W + 105 110
+spkr15_75_6 IH IH + 110 116
+spkr15_75_7 CH CH + 116 119
+spkr15_75_8 W W + 119 125
+spkr15_75_9 IH IH + 125 132
+spkr15_75_10 DH DH + 132 139
+spkr15_75_11 M M + 139 149
+spkr15_75_12 EY AY - 149 161
+spkr15_75_13 AX O - 161 167
+spkr15_75_14 N N + 167 174
+spkr15_75_15 EY E - 174 193
+spkr15_75_16 Z S - 193 214

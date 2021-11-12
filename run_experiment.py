@@ -3,6 +3,7 @@ import yaml
 import argparse 
 from src.utils.run_utils import load_extended_config_dict, get_eval_stage
 from src.ExperimentStages import *
+from src.Config import ExperimentConfig
 from IPython import embed
 
 def get_prep_stage(config_dict):
@@ -46,7 +47,8 @@ def get_scores_and_eval_stages_for_many_epochs(config_dict, step):
 
 def run_all(config_yaml, from_stage, to_stage, device_name, use_heldout):
 
-    config_dict = load_extended_config_dict(config_yaml, "exp", use_heldout, device_name)
+    config = ExperimentConfig(config_yaml, use_heldout, device_name)
+    config_dict = config.config_dict
 
     prep_stage  = get_prep_stage(config_dict)
     train_stage = get_train_stage(config_dict)

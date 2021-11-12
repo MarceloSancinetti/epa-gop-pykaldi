@@ -1,0 +1,198 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0.0
+xmax = 3.622312925170068
+tiers? <exists>
+size = 3
+item []:
+    item [1]:
+        class = "IntervalTier"
+        name = "words"
+        xmin = 0.0
+        xmax = 3.622312925170068
+        intervals: size = 9
+            intervals [1]:
+                xmin = 0.0
+                xmax = 0.7
+                text = ""
+            intervals [2]:
+                xmin = 0.7
+                xmax = 0.88
+                text = "my"
+            intervals [3]:
+                xmin = 0.88
+                xmax = 1.35
+                text = "family"
+            intervals [4]:
+                xmin = 1.35
+                xmax = 1.58
+                text = "will"
+            intervals [5]:
+                xmin = 1.58
+                xmax = 1.99
+                text = "visit"
+            intervals [6]:
+                xmin = 1.99
+                xmax = 2.64
+                text = "argentina"
+            intervals [7]:
+                xmin = 2.64
+                xmax = 2.83
+                text = "in"
+            intervals [8]:
+                xmin = 2.83
+                xmax = 3.32
+                text = "july"
+            intervals [9]:
+                xmin = 3.32
+                xmax = 3.622312925170068
+                text = ""
+    item [1]:
+        class = "IntervalTier"
+        name = "annotation"
+        xmin = 0.0
+        xmax = 3.622312925170068
+        intervals: size = 33
+            intervals [1]:
+                xmin = 0.0
+                xmax = 0.7
+                text = "sil"
+            intervals [2]:
+                xmin = 0.7
+                xmax = 0.79
+                text = "M"
+            intervals [3]:
+                xmin = 0.79
+                xmax = 0.88
+                text = "AY"
+            intervals [4]:
+                xmin = 0.88
+                xmax = 0.9916228341770676
+                text = "F"
+            intervals [5]:
+                xmin = 0.9916228341770676
+                xmax = 1.09
+                text = "AH"
+            intervals [6]:
+                xmin = 1.09
+                xmax = 1.16
+                text = "M"
+            intervals [7]:
+                xmin = 1.16
+                xmax = 1.2
+                text = "IY"
+            intervals [8]:
+                xmin = 1.2
+                xmax = 1.25
+                text = "L"
+            intervals [9]:
+                xmin = 1.25
+                xmax = 1.35
+                text = "IY"
+            intervals [10]:
+                xmin = 1.35
+                xmax = 1.43
+                text = "W"
+            intervals [11]:
+                xmin = 1.43
+                xmax = 1.51
+                text = "IH"
+            intervals [12]:
+                xmin = 1.51
+                xmax = 1.58
+                text = "L"
+            intervals [13]:
+                xmin = 1.58
+                xmax = 1.62
+                text = "B"
+            intervals [14]:
+                xmin = 1.62
+                xmax = 1.7
+                text = "IH"
+            intervals [15]:
+                xmin = 1.7
+                xmax = 1.81
+                text = "S"
+            intervals [16]:
+                xmin = 1.81
+                xmax = 1.86
+                text = "IY"
+            intervals [17]:
+                xmin = 1.86
+                xmax = 1.99
+                text = "DH"
+            intervals [18]:
+                xmin = 1.99
+                xmax = 2.04
+                text = "AA"
+            intervals [19]:
+                xmin = 2.04
+                xmax = 2.11
+                text = "R"
+            intervals [20]:
+                xmin = 2.11
+                xmax = 2.18
+                text = "JH*"
+            intervals [21]:
+                xmin = 2.18
+                xmax = 2.24
+                text = "AH"
+            intervals [22]:
+                xmin = 2.24
+                xmax = 2.31
+                text = "N"
+            intervals [23]:
+                xmin = 2.31
+                xmax = 2.39
+                text = "Th"
+            intervals [24]:
+                xmin = 2.39
+                xmax = 2.47
+                text = "IY"
+            intervals [25]:
+                xmin = 2.47
+                xmax = 2.54
+                text = "N"
+            intervals [26]:
+                xmin = 2.54
+                xmax = 2.64
+                text = "AH"
+            intervals [27]:
+                xmin = 2.64
+                xmax = 2.74
+                text = "IH"
+            intervals [28]:
+                xmin = 2.74
+                xmax = 2.83
+                text = "N"
+            intervals [29]:
+                xmin = 2.83
+                xmax = 2.9
+                text = "JH*"
+            intervals [30]:
+                xmin = 2.9
+                xmax = 2.95
+                text = "UW"
+            intervals [31]:
+                xmin = 2.95
+                xmax = 3.03
+                text = "L"
+            intervals [32]:
+                xmin = 3.03
+                xmax = 3.32
+                text = "AY"
+            intervals [33]:
+                xmin = 3.32
+                xmax = 3.622312925170068
+                text = ""
+    item [1]:
+        class = "IntervalTier"
+        name = "score"
+        xmin = 0.0
+        xmax = 3.622312925170068
+        intervals: size = 1
+            intervals [1]:
+                xmin = 0.0
+                xmax = 3.622312925170068
+                text = "3/5"

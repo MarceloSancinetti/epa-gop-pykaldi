@@ -1,0 +1,15 @@
+spkr17_5_0 T T + 59 64
+spkr17_5_1 R R + 64 68
+spkr17_5_2 AY AY + 68 76
+spkr17_5_3 Th Th + 76 86
+spkr17_5_4 UW UW + 86 97
+spkr17_5_5 S S + 97 103
+spkr17_5_6 IH IH + 103 110
+spkr17_5_7 NG NG + 110 120
+spkr17_5_8 AX AX + 120 123
+spkr17_5_9 N N + 123 129
+spkr17_5_10 D D + 129 132
+spkr17_5_11 JH JH + 132 140
+spkr17_5_12 AH AH + 140 151
+spkr17_5_13 M M + 151 160
+spkr17_5_14 P P + 160 170

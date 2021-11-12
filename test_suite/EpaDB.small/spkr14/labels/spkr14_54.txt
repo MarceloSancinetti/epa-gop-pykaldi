@@ -1,0 +1,7 @@
+spkr14_54_0 SH SH + 133 153
+spkr14_54_1 IY IY + 153 195
+spkr14_54_2 Z S - 195 235
+spkr14_54_3 AX EH - 275 285
+spkr14_54_4 L L + 285 295
+spkr14_54_5 AY AY + 295 323
+spkr14_54_6 ER EH+DX - 323 348

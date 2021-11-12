@@ -1,0 +1,17 @@
+spkr22_15_0 Kh Kh + 52 62
+spkr22_15_1 AA AA + 62 70
+spkr22_15_2 F F + 70 81
+spkr22_15_3 IY IY + 81 90
+spkr22_15_4 W W + 90 96
+spkr22_15_5 IH IH + 96 101
+spkr22_15_6 DH DH + 101 111
+spkr22_15_7 SH SH + 111 126
+spkr22_15_8 UH UH + 126 132
+spkr22_15_9 G G + 132 139
+spkr22_15_10 ER AX - 139 152
+spkr22_15_11 P P + 152 168
+spkr22_15_12 L L + 168 171
+spkr22_15_13 IY IY + 171 184
+spkr22_15_14 Z S - 184 197
+spkr22_15_15 S S + 197 205
+spkr22_15_16 ER ER + 205 226

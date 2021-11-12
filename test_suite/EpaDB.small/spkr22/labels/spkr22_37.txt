@@ -1,0 +1,14 @@
+spkr22_37_0 AY AY + 79 93
+spkr22_37_1 L L + 93 103
+spkr22_37_2 ER ER + 103 126
+spkr22_37_3 N N + 126 143
+spkr22_37_4 0 0 + 143 143
+spkr22_37_5 Th Th + 143 150
+spkr22_37_6 UW UW + 150 157
+spkr22_37_7 Th Th + 157 169
+spkr22_37_8 AY AY + 169 182
+spkr22_37_9 M M + 182 190
+spkr22_37_10 AY AY + 190 206
+spkr22_37_11 SH SH + 206 224
+spkr22_37_12 UW UW + 224 243
+spkr22_37_13 Z S - 243 268

@@ -1,0 +1,14 @@
+spkr17_51_0 W W + 89 97
+spkr17_51_1 IY IY + 97 103
+spkr17_51_2 R R + 103 112
+spkr17_51_3 AE AE + 112 122
+spkr17_51_4 N N + 122 126
+spkr17_51_5 AW AW + 126 142
+spkr17_51_6 T CH - 142 151
+spkr17_51_7 AX AX + 151 156
+spkr17_51_8 V F - 156 160
+spkr17_51_9 SH SH + 160 173
+spkr17_51_10 AE AE + 173 176
+spkr17_51_11 M M + 176 184
+spkr17_51_12 Ph P - 184 193
+spkr17_51_13 UW UW + 193 226

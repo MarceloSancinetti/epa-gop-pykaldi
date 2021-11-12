@@ -1,0 +1,16 @@
+spkr14_8_0 Th Th + 99 104
+spkr14_8_1 ER AX - 104 130
+spkr14_8_2 N N + 130 146
+spkr14_8_3 DH T - 146 151
+spkr14_8_4 AX EH - 151 163
+spkr14_8_5 T T + 163 168
+spkr14_8_6 EH EH + 168 178
+spkr14_8_7 L L + 178 183
+spkr14_8_8 AX EH - 183 196
+spkr14_8_9 V BH - 196 200
+spkr14_8_10 IH IH + 200 213
+spkr14_8_11 ZH ZH + 213 229
+spkr14_8_12 AX AX + 229 232
+spkr14_8_13 N N + 232 257
+spkr14_8_14 AO O - 266 283
+spkr14_8_15 F F + 283 310
