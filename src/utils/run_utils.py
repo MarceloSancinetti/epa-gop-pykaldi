@@ -16,8 +16,14 @@ def run_script(script, args_dict):
 	arguments = generate_arguments(args_dict)
 	return os.system("python " + script + " " + arguments)
 
-def get_phone_count(phone_list_path):
-	return len(open(phone_list_path).readlines())
+def get_phone_count(phones_list_path):
+	phones_list_fh = open(phones_list_path)
+	phone_count = 0
+	for line in phones_list_fh.readlines():
+		line = line.split()
+		use_current_phone = int(line[2])
+		phone_count += use_current_phone
+	return phone_count
 
 def get_run_name(config_yaml, use_heldout=False):
 	heldout_suffix = ''

@@ -1,0 +1,18 @@
+---
+  data-root-path:          "EpaDB/"
+  output-dir:              "data/"
+  librispeech-models-path: "librispeech_models/"
+  pytorch-models-path:     "pytorch_models/"
+  libri-chain-mdl-path:    "librispeech_models/exp/chain_cleaned/tdnn_1d_sp/final.mdl"
+  libri-chain-txt-path:    "librispeech_models/exp/chain_cleaned/tdnn_1d_sp/final.txt"
+  transition-model-path:   "librispeech_models/exp/chain_cleaned/tdnn_1d_sp/final.mdl"
+  tree-path:               "librispeech_models/exp/chain_cleaned/tdnn_1d_sp/tree"
+  disam-path:              "librispeech_models/data/lang_test_tgsmall/phones/disambig.int"
+  word-boundary-path:      "librispeech_models/data/lang_test_tgsmall/phones/word_boundary.int"
+  lang-graph-path:         "librispeech_models/data/lang_test_tgsmall/L.fst"
+  words-path:              "librispeech_models/data/lang_test_tgsmall/words.txt"
+  libri-phones-path:       "librispeech_models/exp/chain_cleaned/tdnn_1d_sp/phones.txt"
+  phone-weights-path:      "experiments/configs/phone_weights_trivial.yaml"
+  phones-list-path:        "phones/kaldi_phones_list.txt"  
+
+

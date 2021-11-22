@@ -121,47 +121,7 @@ def get_times(kaldi_alignments, utterance):
     
     return start_times, end_times
 
-def add_phone_count(phone_count_dict, transcription, phone_sym2int, as_int=False, separate_pos_neg=False, labels=None):
-
-    for i, phone in enumerate(transcription):
-        if as_int:
-            phone = phone_sym2int[phone]
-        if separate_pos_neg:
-            phone = phone + labels[i]
-        
-        if phone in phone_count_dict:
-            phone_count_dict[phone] = phone_count_dict[phone] + 1
-        else:
-            phone_count_dict[phone] = 1
-    return phone_count_dict
-
-def create_phone_weight_yaml(phone_weights_path, phone_count_dict, class_count_dict, phone_sym2int, phone_int2sym):    
-
-    phone_weights_fh = open(phone_weights_path, "w+")
-    phone_weights_fh.write("---\n")
-
-    for phone in sorted(phone_count_dict.keys()):
-        phone_sym = phone_int2sym[phone]
-        minority_occurences = min(class_count_dict[phone_sym + '-'], class_count_dict[phone_sym + '+'])
-        occurrences = phone_count_dict[phone]
-
-        if occurrences < 100 or minority_occurences < 50:
-            phone_weights_fh.write("  " + str(phone_sym) + ":    " + str(0) + "\n")
-        else:
-            total_occurrences = sum(phone_count_dict.values())
-            phone_count = len(phone_count_dict.keys())
-            weight = occurrences / total_occurrences * phone_count * 2
-            phone_weights_fh.write("  " + str(phone_sym) + ":    " + str(weight) + "\n")
-
-def create_phone_class_count_list(class_count_dict):
-    class_counts_fh = open("phone_class_counts.yaml", "w+")
-    class_counts_fh.write("---\n")
-    for phone in sorted(class_count_dict.keys()):
-        occurrences = class_count_dict[phone]
-        class_counts_fh.write("  " + str(phone) + ":    " + str(occurrences) + "\n")
-
 def main(config_dict):
-    global phone_count
     
     reference_transcriptions_path = config_dict['reference-trans-path']
     utterance_list_path           = config_dict['utterance-list-path']
@@ -169,34 +129,15 @@ def main(config_dict):
     align_path                    = config_dict['alignments-path']
     output_dir_path               = config_dict['auto-labels-dir-path']
 
-    phone_list_path               = config_dict.get('phones-list-path')
-    phone_weights_path            = config_dict.get('phone-weights-path')
-    phone_count                   = config_dict.get('phone-count')
-
-    create_phone_count_yamls      = False
-
     kaldi_alignments = get_kaldi_alignments(align_path)
     utterance_list = generate_utterance_list_from_path(utterance_list_path) 
     trans_dict = get_reference_from_system_alignments(reference_transcriptions_path, labels_dir_path, kaldi_alignments, utterance_list)
-
-    if create_phone_count_yamls:
-        phone_sym2int = get_phone_symbol_to_int_dict(phone_list_path)
-        phone_int2sym = get_phone_int_to_symbol_dict(phone_list_path)
-
-        phone_int_count_dict = {phone:0 for phone in range(phone_count)}
-        phone_sym_count_dict = {phone_int2sym[phone_int]+'+':0 for phone_int in range(phone_count)}
-        phone_sym_count_dict.update({phone_int2sym[phone_int]+'-':0 for phone_int in range(phone_count)})
 
     for utterance in utterance_list:
         spk, sent = utterance.split("_")
 
         start_times, end_times = get_times(kaldi_alignments, utterance)
         target_column, trans_manual, labels, start_times, end_times = match_trans_lengths(trans_dict[utterance], start_times, end_times)       
-
-        if create_phone_count_yamls:
-            #Add occurrences of each phone to the phone count dict
-            phone_int_count_dict = add_phone_count(phone_int_count_dict, target_column, phone_sym2int, as_int=True)
-            phone_sym_count_dict = add_phone_count(phone_sym_count_dict, target_column, phone_sym2int, separate_pos_neg=True, labels=labels)
 
 
         #outdir  = "%s/labels_with_kaldi_phones/%s/labels" % (args.output_dir_path, spk)
@@ -209,7 +150,3 @@ def main(config_dict):
             np.savetxt(outfile, np.c_[np.arange(len(target_column)), target_column, trans_manual, labels, start_times, end_times], fmt=utterance+"_%s %s %s %s %s %s")
         except ValueError as e:
             embed()
-
-    if create_phone_count_yamls:
-        create_phone_class_count_list(phone_sym_count_dict)
-        create_phone_weight_yaml(args.phone_weights_path, phone_int_count_dict, phone_sym_count_dict, phone_sym2int, phone_int2sym)    

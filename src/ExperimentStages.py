@@ -141,7 +141,6 @@ class GenerateScoresHeldoutStage(AtomicStage):
         config_dict["model-name"]           = model_name
         config_dict["utterance-list-path"]  = config_dict["test-list-path"]
         config_dict["gop-txt-name"]         = 'gop-'+model_name+'.txt'
-        config_dict["epadb-root-path"]      = config_dict["heldout-root-path"]
 
         generate_score_txt.main(config_dict)
 

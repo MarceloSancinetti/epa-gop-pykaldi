@@ -12,25 +12,10 @@ import argparse
 import glob
 
 from src.utils.reference_utils import *
+from src.utils.finetuning_utils import *
 
 def phonelist2str(phones):
     return " ".join(["%3s"%p for p in phones])
-
-# Function that matches phone ints to phone symbols and loads them to a dictionary
-
-def phones2dic(path):
-    print(path)
-    phones_dic = {}
-    with open(path, "r") as fileHandler:
-        line = fileHandler.readline()
-        while line:
-            print(line)
-            l=line.split()
-            phones_dic[int(l[1])] = l[0]
-            line = fileHandler.readline()
-
-    return phones_dic
-
 
 def mkdirs(newdir):
     try: os.makedirs(newdir)
@@ -62,7 +47,7 @@ def generate_trans_SAE(trans_complete):
 # Function that reads the output of gop-dnn and returns the
 # phone alignments
 
-def get_gop_alignments(path_filename, phone_pure_dict):
+def get_gop_alignments(path_filename, phone_int2sym_dict):
 
     output = []
     print(path_filename)
@@ -83,9 +68,9 @@ def get_gop_alignments(path_filename, phone_pure_dict):
             while i < len(data):
                 if data[i] == "[":
                     phone = int(data[i+1])
-                    phone_name = phone_pure_dict[phone]
 
-                    if phone_name not in ('SIL', 'sil', 'sp', 'spn', 'SP', 'SPN'):
+                    if phone in phone_int2sym_dict.keys():
+                        phone_name = phone_int2sym_dict[phone]
                         gop = float(data[i+2])
                         phones.append(phone)
                         gops.append(gop)
@@ -163,14 +148,14 @@ def main(config_dict):
     output_dir                    = config_dict['eval-dir']
     output_filename               = config_dict['eval-filename']
     gop_path                      = config_dict['full-gop-score-path']
-    phones_pure_path              = config_dict['kaldi-phones-pure-path']
+    phones_list_path              = config_dict['phones-list-path']
     labels_dir_path               = config_dict['auto-labels-dir-path']
 
     # Code that generates a pickle with useful data to analyze.
     # The outpul will be used to compute ROCs, AUCs and EERs.
 
-    phone_pure_dict = phones2dic(phones_pure_path)
-    gop_alignments = get_gop_alignments(gop_path, phone_pure_dict)
+    _, phone_int2sym_dict, _ = get_phone_dictionaries(phones_list_path)
+    gop_alignments = get_gop_alignments(gop_path, phone_int2sym_dict)
 
     utterance_list = generate_utterance_list_from_path(utterance_list_path) 
     trans_dict = get_reference_from_system_alignments(reference_transcriptions_path, labels_dir_path, gop_alignments, utterance_list)

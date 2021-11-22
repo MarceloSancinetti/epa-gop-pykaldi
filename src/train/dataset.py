@@ -70,10 +70,8 @@ class EpaDB(Dataset):
         # Read from sample list and create dictionary mapping fileid to .wav path and file list mapping int to logid
         self._filelist, self._logids_by_speaker = generate_fileid_list_and_spkr2logid_dict(sample_list_path)
         
-        #Define pure phone dictionary to map pure phone symbols to a label vector index  
-        self._pure_phone_dict = get_phone_symbol_to_int_dict(phones_list_path)
-
-        self.phone_int2sym_dict = get_phone_int_to_symbol_dict(phones_list_path)
+        #Create phone dictionaries
+        self._phone_sym2int_dict, self.phone_int2sym_dict, self.phone_int2node_dict = get_phone_dictionaries(phones_list_path)
 
 
         #Create dictionary to turn +/- labels into 1/-1
@@ -130,19 +128,23 @@ class EpaDB(Dataset):
                     phone_times.append((target_phone, start_time, end_time))
 
                     #If the target phone is not defined, collapse it into similar Kaldi phone (i.e Th -> T)
-                    if target_phone not in self._pure_phone_dict.keys():
-                        target_phone = collapse_target_phone(target_phone)                    
+                    if target_phone not in self._phone_sym2int_dict.keys():
+                        target_phone = collapse_target_phone(target_phone)
+
+                    #Get network output node index for the target phone
+                    target_phone_int = self._phone_sym2int_dict[target_phone]
+                    target_node      = self.phone_int2node_dict[target_phone_int]
 
                     #If the phone was mispronounced, put a -1 in the labels
                     #If the phone was pronounced correcly, put a 1 in the labels
                     #(If start_time == end_time we cant assign a label)
                     if start_time != end_time and label == '+':
-                        pos_labels[start_time:end_time, self._pure_phone_dict[target_phone]] = 1
-                        labels[start_time:end_time, self._pure_phone_dict[target_phone]] = 1                        
+                        pos_labels[start_time:end_time, target_node] = 1
+                        labels[start_time:end_time, target_node] = 1                        
                     
                     if start_time != end_time and label == '-':
-                        neg_labels[start_time:end_time, self._pure_phone_dict[target_phone]] = 0
-                        labels[start_time:end_time, self._pure_phone_dict[target_phone]] = -1
+                        neg_labels[start_time:end_time, target_node] = 0
+                        labels[start_time:end_time, target_node] = -1
 
                 except ValueError as e:
                     print("Bad item:")
@@ -233,5 +235,5 @@ class EpaDB(Dataset):
         Returns:
             int: amount of phones in phone dictionary 
         """
-        return len(self._pure_phone_dict.keys())
+        return len(self._phone_sym2int_dict.keys())
 

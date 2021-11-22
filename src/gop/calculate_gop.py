@@ -35,7 +35,6 @@ def pad_loglikes(loglikes):
     return padded_loglikes
 
 
-
 def compute_gop(gop_dir, df_phones_pure, df_alignments, loglikes_path, utterance_list_path, batch_size):
 
     gop = {}
@@ -102,7 +101,7 @@ def main(config_dict):
     utterance_list_path           = config_dict["utterance-list-path"]
     libri_phones_path             = config_dict["libri-phones-path"]
     libri_phones_to_pure_int_path = config_dict["libri-phones-to-pure-int-path"]
-    libri_phones_pure_path        = config_dict["kaldi-phones-pure-path"] 
+    libri_phones_pure_path        = config_dict["phones-list-path"] 
     libri_chain_mdl_path          = config_dict["libri-chain-mdl-path"] 
     gop_dir                       = config_dict["gop-scores-dir"]
     loglikes_path                 = config_dict["loglikes-path"]

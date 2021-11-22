@@ -54,27 +54,31 @@ def collate_fn_padd(batch):
         batch[i]['labels']     = batch_labels[i]
     return batch
 
-#Creates dictionary mapping phone symbol to integer given a phone list path
-def get_phone_symbol_to_int_dict(phone_list_path):
+#phone_sym2int_dict:  Dictionary mapping phone symbol to integer given a phone list path
+#phone_int2sym_dict:  Dictionary mapping phone integer to symbol given a phone list path
+#phone_int2node_dict: Dictionary mapping phone symbol to the index of the node in the networks's output layer
+#NOTE: The node number in the output layer is not the same as the phone number, as some phones will not be scored
+def get_phone_dictionaries(phone_list_path):
     #Open file that contains list of pure phones
     phones_list_fh = open(phone_list_path, "r")
 
-    phone_dict = {}
-    #Get phone number for each phone
-    for i, phone_pure_name in enumerate(phones_list_fh.readlines()):
-        phone_dict[phone_pure_name.strip()] = i
-    return phone_dict
+    phone_sym2int_dict  = {}
+    phone_int2sym_dict  = {}
+    phone_int2node_dict = {}
+    current_node_index  = 0
+    #Populate the dictionaries
+    for line in phones_list_fh.readlines():
+        line = line.split()
+        phone_symbol = line[0]
+        phone_number = int(line[1])
+        use_phone    = bool(int(line[2]))
+        if use_phone:
+            phone_sym2int_dict[phone_symbol]    = phone_number
+            phone_int2sym_dict[phone_number]    = phone_symbol
+            phone_int2node_dict[phone_number]   = current_node_index
+            current_node_index += 1
 
-#Creates dictionary mapping phone integer to symbol given a phone list path
-def get_phone_int_to_symbol_dict(phone_list_path):
-    #Open file that contains list of pure phones
-    phones_list_fh = open(phone_list_path, "r")
-
-    phone_dict = {}
-    #Get phone number for each phone
-    for i, phone_pure_name in enumerate(phones_list_fh.readlines()):
-        phone_dict[i] = phone_pure_name.strip()
-    return phone_dict
+    return phone_sym2int_dict, phone_int2sym_dict, phone_int2node_dict
 
 #The model outputs a score for each phone in each frame. This function extracts only the relevant scores,
 #i.e the scores for the canonic phone in each frame based on the annotations.

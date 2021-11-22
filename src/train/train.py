@@ -189,7 +189,7 @@ def calculate_loss(outputs, mask, labels, phone_weights=None, norm_per_phone_and
     return loss_fn(outputs, labels), torch.sum(weights)
 
 
-def criterion_fast(batch_outputs, batch_labels, weights=None, norm_per_phone_and_class=False, log_per_phone_and_class_loss=False, phone_int2sym=None, min_frame_count=0):
+def criterion_fast(batch_outputs, batch_labels, weights=None, norm_per_phone_and_class=False, log_per_phone_and_class_loss=False, phone_int2sym=None, phone_int2node = None, min_frame_count=0):
     
     batch_labels_for_loss = torch.abs((batch_labels-1)/2)
 
@@ -209,12 +209,12 @@ def criterion_fast(batch_outputs, batch_labels, weights=None, norm_per_phone_and
         pos_phone_loss = torch.sum(loss_pos,dim=[0,1])
         neg_phone_loss = torch.sum(loss_neg,dim=[0,1])
         loss_dict = {}
-        for phone, phone_sym in phone_int2sym.items():
-            loss_dict[phone_sym+'+'] = pos_phone_loss[phone]/weights[phone]/sum_weights_pos
-            loss_dict[phone_sym+'-'] = neg_phone_loss[phone]/weights[phone]/sum_weights_neg
+        for phone_int, phone_sym in phone_int2sym.items():
+            phone_node_index = phone_int2node[phone_int]
+            loss_dict[phone_sym+'+'] = pos_phone_loss[phone_node_index] / weights[phone_node_index] / sum_weights_pos
+            loss_dict[phone_sym+'-'] = neg_phone_loss[phone_node_index] / weights[phone_node_index] / sum_weights_neg
 
         return total_loss, loss_dict
-
     else:
         return total_loss
 
@@ -266,7 +266,7 @@ def choose_starting_epoch(epochs, state_dict_dir, run_name, fold, model, optimiz
 
     return model, optimizer, scheduler, step, start_from_epoch
 
-def foward_backward_pass(data, model, optimizer, phone_weights, phone_int2sym, norm_per_phone_and_class):
+def foward_backward_pass(data, model, optimizer, phone_weights, phone_int2sym, phone_int2node, norm_per_phone_and_class):
     logids       = unpack_logids_from_batch(data)
     inputs       = unpack_features_from_batch(data).to(device)
     batch_labels = unpack_labels_from_batch(data).to(device)
@@ -278,7 +278,7 @@ def foward_backward_pass(data, model, optimizer, phone_weights, phone_int2sym, n
 
     outputs = model(inputs)
     
-    loss = criterion_fast(outputs, batch_labels, weights=phone_weights, phone_int2sym=phone_int2sym, norm_per_phone_and_class=norm_per_phone_and_class, min_frame_count=0)
+    loss = criterion_fast(outputs, batch_labels, weights=phone_weights, phone_int2sym=phone_int2sym, phone_int2node=phone_int2node, norm_per_phone_and_class=norm_per_phone_and_class, min_frame_count=0)
 
     loss.backward()
 
@@ -293,11 +293,11 @@ def log_loss_if_first_batch(epoch, i, fold, loss, model, testloader, step):
 
     return step
 
-def train_one_epoch(trainloader, testloader, model, optimizer, running_loss, fold, epoch, step, use_clipping, phone_weights, phone_int2sym, norm_per_phone_and_class):
+def train_one_epoch(trainloader, testloader, model, optimizer, running_loss, fold, epoch, step, use_clipping, phone_weights, phone_int2sym, phone_int2node, norm_per_phone_and_class):
 
     for i, data in enumerate(trainloader, 0):
 
-        loss = foward_backward_pass(data, model, optimizer, phone_weights, phone_int2sym, norm_per_phone_and_class)
+        loss = foward_backward_pass(data, model, optimizer, phone_weights, phone_int2sym, phone_int2node, norm_per_phone_and_class)
 
         step = log_loss_if_first_batch(epoch, i, fold, loss, model, testloader, step)
 
@@ -339,7 +339,7 @@ def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_d
         running_loss = 0.0
         
         running_loss, step, model, optimizer = train_one_epoch(trainloader, testloader, model, optimizer, running_loss, fold, epoch,
-                                                        step, use_clipping, phone_weights, phone_int2sym, norm_per_phone_and_class)
+                                                        step, use_clipping, phone_weights, phone_int2sym, phone_int2node, norm_per_phone_and_class)
 
         test_loss, test_loss_dict = test(model, testloader)
         step = log_test_loss(fold, test_loss, step, test_loss_dict)
@@ -365,7 +365,7 @@ def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_d
 
 def test(model, testloader):
 
-    global phone_weights, phone_count, phone_int2sym, device
+    global phone_weights, phone_count, phone_int2sym, phone_int2node, device
 
     total_loss = 0
     for i, batch in enumerate(testloader, 0):
@@ -377,8 +377,7 @@ def test(model, testloader):
         outputs = model(features)
         loss_dict = {}
         loss, loss_dict = criterion_fast(outputs, labels, weights=phone_weights, 
-                                         log_per_phone_and_class_loss=True, phone_int2sym=phone_int2sym)
-        #loss = criterion_simple(outputs, labels)
+                                         log_per_phone_and_class_loss=True, phone_int2sym=phone_int2sym, phone_int2node=phone_int2node)
 
         loss = loss.item()
         total_loss += loss
@@ -397,7 +396,7 @@ def parse_bool_arg(arg):
     return arg
 
 def main(config_dict):
-    global phone_int2sym, phone_weights, phone_count, device, checkpoint_step
+    global phone_int2sym, phone_int2node, phone_weights, phone_count, device, checkpoint_step
 
     run_name                 = config_dict["run-name"]
     trainset_list            = config_dict["train-list-path"]
@@ -431,7 +430,8 @@ def main(config_dict):
     trainset = EpaDB(trainset_list, phones_file, labels_dir, features_path, conf_path)
     testset  = EpaDB(testset_list , phones_file, labels_dir, features_path, conf_path)
 
-    phone_int2sym = trainset.phone_int2sym_dict
+    phone_int2sym  = trainset.phone_int2sym_dict
+    phone_int2node = trainset.phone_int2node_dict
 
     device = torch.device(device_name)
 
