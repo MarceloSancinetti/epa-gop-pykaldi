@@ -99,13 +99,14 @@ def main(config_dict):
     labels_dir          = config_dict['auto-labels-dir-path']
     gop_txt_dir         = config_dict['gop-scores-dir']
     gop_txt_name        = config_dict['gop-txt-name']
+    batch_size          = config_dict['batch-size']
     features_path       = config_dict['features-path']
     conf_path           = config_dict['features-conf-path']
     device_name         = config_dict['device']
     batchnorm           = config_dict['batchnorm']
 
     testset = EpaDB(sample_list, phone_list_path, labels_dir, features_path, conf_path)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=2,
+    testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
                                           shuffle=False, num_workers=0, collate_fn=collate_fn_padd)
 
     phone_count = testset.phone_count()

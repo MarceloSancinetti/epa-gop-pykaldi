@@ -2,6 +2,7 @@
   phone-weights-path:       "configs/phone_weights_trivial.yaml"
   folds:                    2
   epochs:                   10
+  swa-epochs:               0
   layers:                   1
   learning-rate:            0.005
   batch-size:               4
