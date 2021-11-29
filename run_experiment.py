@@ -23,6 +23,7 @@ def get_scores_stage(config_dict, epoch, is_swa=False):
     else:
         return GenerateScoresCrossValStage(config_dict, epoch=epoch, is_swa=is_swa)
 
+
 def get_scores_and_eval_stages_for_many_epochs(config_dict, step):
     scores_stages = [] 
     eval_stages   = []
@@ -49,10 +50,11 @@ def run_all(config_yaml, from_stage, to_stage, device_name, use_heldout):
 
     config = ExperimentConfig(config_yaml, use_heldout, device_name)
     config_dict = config.config_dict
+    checkpoint_step = config_dict['checkpoint-step']
 
     prep_stage  = get_prep_stage(config_dict)
     train_stage = get_train_stage(config_dict)
-    scores_stage, eval_stage = get_scores_and_eval_stages_for_many_epochs(config_dict, 4)
+    scores_stage, eval_stage = get_scores_and_eval_stages_for_many_epochs(config_dict, checkpoint_step)
 
     experiment_stages = [prep_stage, train_stage, scores_stage, eval_stage]
 

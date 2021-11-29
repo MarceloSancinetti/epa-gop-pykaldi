@@ -69,6 +69,9 @@ def fold_identifier(use_heldout, fold_number):
 		
 	return fold_identifier
 
+def get_full_gop_txt_path_for_crossval(config_dict, epoch):
+    return config_dict["gop-scores-dir"] + "gop-all-folds-epoch" + str(epoch) + ".txt"
+
 class CreateExperimentDirectoryStage(AtomicStage):
     _name = "prepdir"
     def run(self):
@@ -124,7 +127,7 @@ class GenerateScoresCrossValStage(AtomicStage):
             generate_score_txt.main(config_dict)
             cat_file_names += config_dict['gop-scores-dir'] + '/' +'gop-'+config_dict['model-name']+'.txt ' #Codigo repetido con generate_score_txt
         #Concatenate gop scores for all folds
-        os.system("cat " + cat_file_names + " > " + config_dict["full-gop-score-path"])
+        os.system("cat " + cat_file_names + " > " + get_full_gop_txt_path_for_crossval(config_dict, self._epoch))
 
 class GenerateScoresHeldoutStage(AtomicStage):
     _name = "scores"
@@ -155,7 +158,8 @@ class EvaluateScoresCrossValStage(AtomicStage):
 
     def run(self):
         config_dict = self._config_dict
-        config_dict["eval-filename"] = get_eval_filename(self._epoch, self._is_swa)
+        config_dict["eval-filename"]       = get_eval_filename(self._epoch, self._is_swa)
+        config_dict["full-gop-score-path"] = get_full_gop_txt_path_for_crossval(config_dict, self._epoch)
         generate_data_for_eval.main(config_dict)
 
 class EvaluateScoresHeldoutStage(AtomicStage):

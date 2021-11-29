@@ -329,9 +329,9 @@ def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_d
     model, optimizer, scheduler, step, start_from_epoch = choose_starting_epoch(epochs, state_dict_dir, run_name, 
                                                                      fold, model, optimizer, scheduler)
     
-    swa_model  = AveragedModel(model)
-    swa_start  = epochs - swa_epochs
     if swa_epochs > 0:
+        swa_model  = AveragedModel(model)
+        swa_start  = epochs - swa_epochs
         swa_scheduler = SWALR(optimizer, swa_lr=swa_lr)
 
     for epoch in range(start_from_epoch, epochs):  # loop over the dataset multiple times
@@ -350,16 +350,13 @@ def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_d
         if epoch >= swa_start:
             swa_model.update_parameters(model)
             swa_scheduler.step()
+            #Save SWA model
             if epoch % checkpoint_step == checkpoint_step -1:
                 save_state_dict(state_dict_dir, run_name, fold, epoch+1, step, swa_model, optimizer, scheduler, suffix='_swa')
 
 
         if epoch % checkpoint_step == checkpoint_step -1:
-            if epoch % checkpoint_step == checkpoint_step -1:
-                save_state_dict(state_dict_dir, run_name, fold, epoch+1, step, swa_model, optimizer, scheduler, suffix='_swa')
-
-
-        if epoch % checkpoint_step == checkpoint_step -1:
+            #Save model
             save_state_dict(state_dict_dir, run_name, fold, epoch+1, step, model, optimizer, scheduler)
 
 
@@ -383,17 +380,6 @@ def test(model, testloader):
         total_loss += loss
 
     return total_loss / (i + 1), loss_dict
-
-def parse_bool_arg(arg):
-    if arg not in ["true", "false"]:
-        raise Exception("Argument must be true or false, got " + arg)
-
-    if arg == "true":
-        arg = True
-    else:
-        arg = False
-
-    return arg
 
 def main(config_dict):
     global phone_int2sym, phone_int2node, phone_weights, phone_count, device, checkpoint_step
