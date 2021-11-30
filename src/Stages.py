@@ -17,15 +17,15 @@ class ComplexStage():
     def run(self, from_stage=None, to_stage=None):
         #Run substages from_stage:to_stage 
         if from_stage == None:
-            from_stage_index = 0
+            from_stage_index = None
         else:
             from_stage_index = self._substage_names.index(from_stage)
 
         if to_stage == None:
-            to_stage_index   = -1
+            to_stage_index   = None
         else:
             to_stage_index   = self._substage_names.index(to_stage) + 1
-        
+
         for stage in self._substages[from_stage_index : to_stage_index]:
             stage.run()
  

@@ -1,6 +1,6 @@
-# PyKaldi GOP-DNN on Epa-DB
+# Pronunciation scoring on Epa-DB using Pykaldi
 
-This repository has the tools to run a PyKaldi GOP-DNN algorithm on Epa-DB, a database of non-native English speech by Spanish speakers from Argentina. It uses a PyTorch acoustic model based on Kaldi's TDNN-F acoustic model. A script is provided to convert Kaldi's model to PyTorch. Kaldi's model must be downloaded separately from the Kaldi website
+This repository has the tools to run two pronunciation assessment systems on Epa-DB, a database of non-native English speech by Spanish speakers from Argentina. The available systems are a classic GOP-DNN algorithm as baseline and a new, experimental DNN system with multiple possible configurations. Both systems use a PyTorch acoustic model based on Kaldi's TDNN-F acoustic model. A script is provided to convert Kaldi's model to PyTorch.
 
 If you use this code or the Epa database, please cite the following paper:
 
@@ -28,8 +28,8 @@ If you use this code or the Epa database, please cite the following paper:
 
 ## Introduction
 
-This toolkit is meant to facilitate experimentation with Epa-DB by allowing users to run a state-of-the-art baseline system on it.
-Epa-DB, is a database of non-native English speech by argentinian speakers of Spanish. It is intended for research on mispronunciation detection
+This toolkit is meant to facilitate experimentation with Epa-DB.
+Epa-DB is a database of non-native English speech by argentinian speakers of Spanish. It is intended for research on mispronunciation detection
 and development of pronunciation assessment systems.
 The database includes recordings from 30 non-native speakers of English, 15 male and 15 female, whose first language (L1) is Spanish from Argentina (mainly of the Rio de la Plata dialect).
 Each speaker recorded 64 short English phrases phonetically balanced and specifically designed to globally contain all the sounds difficult to pronounce for the target population.
@@ -67,24 +67,48 @@ wget https://kaldi-asr.org/models/13/0013_librispeech_v1_chain.tar.gz
 tar -zxvf 0013_librispeech_v1_chain.tar.gz
 ```
 
-3. Convert the acoustic model to text format:
-
-```
-nnet3-copy --binary=false exp/chain_cleaned/tdnn_1d_sp/final.mdl exp/chain_cleaned/tdnn_1d_sp/final.txt
-```
-
-4. Install the requirements:
+3. Install the requirements:
 
 ```
 pip install -r requirements.txt
 ```
 
-5. Install PyKaldi:
+4. Install PyKaldi:
 
 Follow instructions from https://github.com/pykaldi/pykaldi#installation
 
-6. Convert the acoustic model to Pytorch:
+## Data preparation
+Before using any of the systems, it is necessary to run the data preparation script. This step handles feature extraction, downloads the Librispeech ASR acoustic model, converts said model to PyTorch and creates forced alignments and training labels. This should only be done once unless EpaDB is updated, in which case new features, labels, and alignments can be generated.
+
+
+## How to run the GOP recipe
+If you want to run the GOP baseline system, use the run_gop.py script:
 
 ```
-python convert_chain_to_pytorch.py
+python run_gop.py --config configs/gop.yaml --from STAGE --to STAGE
 ```
+Note that STAGE can be one of the following:
+prep
+gop
+evaluate
+
+To run all stages, use ``` --from prep --to evaluate ```
+
+
+## How to run the transfer-learning experiments
+This repository allows training a state-of-the art DNN system that leverages the Librispeech senone ASR model for phone mispronunciation detection using EpaDB (though it can be hacked to train on different datasets). The config directory includes multiple different configuration files, mostly describing hyperparameters to use during training. Custom configuration files can be created if you wish to tweak the hyperparameter values.
+
+To run an experiment, use the run_experiment.py script:
+
+```
+python run_experiment.py --config configs/CONFIG.yaml --from STAGE --to STAGE --device DEVICE
+```
+Note that STAGE can be one of the following:
+prep
+train
+scores
+evaluate
+
+DEVICE can either be cpu of cuda.
+
+Add the --heldout option to run on heldout set
