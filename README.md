@@ -48,9 +48,6 @@ If you are only looking for the EpaDB corpus, you can download it from this [lin
 
 3. [The EpaDB database](https://drive.google.com/file/d/1jEvqeAXTLKRAYJXTQAvfsc3Qye6vOb5o/view?usp=sharing) downloaded. Alternative [link](https://www.dropbox.com/s/m931q0vch1qhzzx/epadb.zip?dl=0).
 
-4. [Librispeech ASR model](https://kaldi-asr.org/models/m13)
-
-
 ## How to install
 
 To install this repository, do the following steps:
@@ -60,26 +57,24 @@ To install this repository, do the following steps:
 git clone https://github.com/MarceloSancinetti/epa-gop-pykaldi.git
 ```
 
-2. Download Librispeech ASR acoustic model from Kaldi and move it or link it inside the top directory of the repository:
-
-```
-wget https://kaldi-asr.org/models/13/0013_librispeech_v1_chain.tar.gz
-tar -zxvf 0013_librispeech_v1_chain.tar.gz
-```
-
-3. Install the requirements:
+2. Install the requirements:
 
 ```
 pip install -r requirements.txt
 ```
 
-4. Install PyKaldi:
+3. Install PyKaldi:
 
 Follow instructions from https://github.com/pykaldi/pykaldi#installation
 
 ## Data preparation
 Before using any of the systems, it is necessary to run the data preparation script. This step handles feature extraction, downloads the Librispeech ASR acoustic model, converts said model to PyTorch and creates forced alignments and training labels. This should only be done once unless EpaDB is updated, in which case new features, labels, and alignments can be generated.
 
+To run data preparation, use:
+
+```
+python run_dataprep.py --config configs/dataprep.yaml
+```
 
 ## How to run the GOP recipe
 If you want to run the GOP baseline system, use the run_gop.py script:
