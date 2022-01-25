@@ -89,7 +89,6 @@ def add_data_keys_to_config_dict(config_dict, setup):
 	config_dict["loglikes-path"]         = config_dict["alignments-dir-path"] + "loglikes.ark"
 	config_dict["loglikes-heldout-path"] = config_dict["alignments-dir-path"] + "loglikes_heldout.ark"
 	config_dict["acoustic-model-path"]   = data_path + "pytorch_models/acoustic_model.pt"
-	config_dict["finetune-model-path"]   = data_path + "pytorch_models/model_finetuning_kaldi.pt"     
 	config_dict["features-path"]         = data_path + "features/data"
 	config_dict["features-conf-path"]    = data_path + "features/conf"
 	config_dict["auto-labels-dir-path"]  = data_path + "kaldi_labels/"
