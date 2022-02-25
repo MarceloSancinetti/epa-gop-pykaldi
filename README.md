@@ -11,7 +11,7 @@ Two pronunciation scoring systems are available: (1) a standard goodness of pron
 * [How to run](#how-to-run)
 * [Data preparation](#data-preparation)
 * [How to run the GOP recipe](#how-to-run-the-GOP-recipe)
-* [How to run the GOP-FT recipe](#how-to-run-the-GOPFT-recipe)
+* [How to run the GOP-FT recipe](#how-to-run-the-GOP-FT-recipe)
 * [Copyright](#copyright)
 * [References](#references)
 
