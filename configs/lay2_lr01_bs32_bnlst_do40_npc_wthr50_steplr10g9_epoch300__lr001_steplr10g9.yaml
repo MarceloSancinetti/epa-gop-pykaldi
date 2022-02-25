@@ -1,0 +1,20 @@
+---
+  phone-weights-path:       "configs/phone_weights_50.yaml"
+  folds:                    6
+  epochs:                   300
+  swa_epochs:               0
+  layers:                   2
+  scheduler:               "StepLR(optimizer, 10, gamma=0.9, last_epoch=-1, verbose=True)"
+  learning-rate:            0.001
+  batch-size:               32
+  use-dropout:              true
+  checkpoint-step:          25
+  dropout-p:                0.4
+  batchnorm:                "last"
+  norm-per-phone-and-class: true
+  use-clipping:             false
+  use-multi-process:        false
+  finetune-model-path:      "experiments/05_lay1_lr01_bs32_bnlst_do40_npc_wthr50_steplr10g9/state_dicts/05_lay1_lr01_bs32_bnlst_do40_npc_wthr50_steplr10g9-fold-@FOLD@-epoch-300.pth"
+  phones-list-path:         "phones/kaldi/phones-list.txt"
+  libri-chain-txt-path:     "librispeech_models/exp/chain_cleaned/tdnn_1d_sp/final.txt"
+  data-dir:                 "data/"

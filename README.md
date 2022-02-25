@@ -66,7 +66,7 @@ We explore two approaches for fine-tuning the new model: (1) **LayO**, where onl
 The config directory includes two configuration files that list the hyperparameters used during training for both cases. 
 To run the **LayO** experiment, use: 
 ```
-python run_experiment.py --config configs/05_lay1_lr01_bs32_bnlst_do40_npc_wthr50_steplr10g9.yaml --from STAGE --to STAGE --device DEVICE
+python run_experiment.py --config configs/lay1_lr01_bs32_bnlst_do40_npc_wthr50_steplr10g9.yaml --from STAGE --to STAGE --device DEVICE
 ```
 STAGE can be one of the following: prep, train, scores, evaluate.
 DEVICE can be either cpu of cuda.
@@ -74,7 +74,7 @@ Add the --heldout option to run on heldout set.
 
 To run the **LayO+1** experiment, use:
 ```
-python run_experiment.py --config configs/05_lay1_lr01_bs32_bnlst_do40_npc_wthr50_steplr10g9.yaml --from STAGE --to STAGE --device DEVICE
+python run_experiment.py --config configs/lay2_lr01_bs32_bnlst_do40_npc_wthr50_steplr10g9_epoch300__lr001_steplr10g9.yaml  --from STAGE --to STAGE --device DEVICE
 ```
 The examples correspond to the hyperparameters resulting in the system with the best performance. Custom configuration files can be created if you wish to tweak the hyperparameter values by following the examples at the config directory. 
 
