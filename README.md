@@ -12,6 +12,7 @@ Two pronunciation scoring systems are available: (1) a standard goodness of pron
 * [Data preparation](#data-preparation)
 * [How to run the GOP recipe](#how-to-run-the-GOP-recipe)
 * [How to run the GOP-FT recipe](#how-to-run-the-GOPFT-recipe)
+* [Copyright](#copyright)
 * [References](#references)
 
 ## Prerequisites
@@ -77,6 +78,9 @@ python run_experiment.py --config configs/05_lay1_lr01_bs32_bnlst_do40_npc_wthr5
 ```
 The examples correspond to the hyperparameters resulting in the system with the best performance. Custom configuration files can be created if you wish to tweak the hyperparameter values by following the examples at the config directory. 
 
+
+## Copyright
+The code in this repository and the EpaDB database were developed at the Speech Lab at Universidad de Buenos Aires, Argentina and are freely available for research purposes. 
 
 If you use the EpaDB database, please cite the following paper:
 
