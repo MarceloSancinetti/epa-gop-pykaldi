@@ -12,7 +12,7 @@ from src.train.dataset import *
 
 from torch.optim.swa_utils import AveragedModel
 
-from src.pytorch_models.pytorch_models import *
+from src.pytorch_models.FTDNNPronscorer import *
 
 from IPython import embed
 
@@ -111,8 +111,8 @@ def main(config_dict):
 
     phone_count = testset.phone_count()
 
-    #Get acoustic model to test
-    model = FTDNN(out_dim=phone_count, device_name=device_name, batchnorm=batchnorm)
+    #Get pronscoring model to test
+    model = FTDNNPronscorer(out_dim=phone_count, device_name=device_name, batchnorm=batchnorm)
     if model_name.split("_")[-1] == "swa":
         model = AveragedModel(model)
     

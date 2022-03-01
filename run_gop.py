@@ -2,11 +2,12 @@ import sys
 import yaml
 from src.utils.run_utils import *
 from src.GopStages import *
+from src.Config import GopConfig
 from IPython import embed
 
 def run_all(config_yaml, from_stage, to_stage, use_heldout):
 
-    config_dict = load_extended_config_dict(config_yaml, "gop", use_heldout, "cpu")
+    config_dict = GopConfig(config_yaml, use_heldout).config_dict
 
     prepdir_stage = CreateExperimentDirectoryStage(config_dict)
     gop_stage     = GopHeldoutStage(config_dict) if use_heldout else GopStage(config_dict)

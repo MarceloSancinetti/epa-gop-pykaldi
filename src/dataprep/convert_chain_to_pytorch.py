@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import numpy as np
 import argparse
 
-from src.pytorch_models.pytorch_models_old import *
+from src.pytorch_models.FTDNNAcoustic import *
 
 def get_layer_type(is_tdnnf):
 	layer_type = 'tdnn'
@@ -166,41 +166,41 @@ def main(config_dict):
 			components['output.affine'] = read_affine_component(chain_file)
 
 
-	ftdnn = FTDNN()
+	ftdnn = FTDNNAcoustic()
 
 	state_dict = {}
 
-	state_dict['layer01.lda.weight'] = torch.from_numpy(components['lda']['linear_params'])
-	state_dict['layer01.lda.bias'] = torch.from_numpy(components['lda']['bias'])
-	state_dict['layer01.kernel.weight'] = torch.from_numpy(components['tdnn1.affine']['linear_params'])
-	state_dict['layer01.kernel.bias'] = torch.from_numpy(components['tdnn1.affine']['bias'])
-	state_dict['layer01.bn.running_mean'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_mean'])
-	state_dict['layer01.bn.running_var'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_var'])
+	state_dict['ftdnn.layer01.lda.weight']      = torch.from_numpy(components['lda']['linear_params'])
+	state_dict['ftdnn.layer01.lda.bias']        = torch.from_numpy(components['lda']['bias'])
+	state_dict['ftdnn.layer01.kernel.weight']   = torch.from_numpy(components['tdnn1.affine']['linear_params'])
+	state_dict['ftdnn.layer01.kernel.bias']     = torch.from_numpy(components['tdnn1.affine']['bias'])
+	state_dict['ftdnn.layer01.bn.running_mean'] = torch.from_numpy(components['tdnn1.batchnorm']['stats_mean'])
+	state_dict['ftdnn.layer01.bn.running_var']  = torch.from_numpy(components['tdnn1.batchnorm']['stats_var'])
 
 
 
 	for layer_number in range(2, 18):
-		state_dict['layer'+ str("{:02d}".format(layer_number)) +'.sorth.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.linear']['linear_params'])
-		state_dict['layer'+ str("{:02d}".format(layer_number)) +'.affine.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.affine']['linear_params'])
-		state_dict['layer'+ str("{:02d}".format(layer_number)) +'.affine.bias'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.affine']['bias'])
-		state_dict['layer'+ str("{:02d}".format(layer_number)) +'.sorth.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.linear']['linear_params'])
-		state_dict['layer'+ str("{:02d}".format(layer_number)) +'.bn.running_mean'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.batchnorm']['stats_mean'])
-		state_dict['layer'+ str("{:02d}".format(layer_number)) +'.bn.running_var'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.batchnorm']['stats_var'])
+		state_dict['ftdnn.layer'+ str("{:02d}".format(layer_number)) +'.sorth.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.linear']['linear_params'])
+		state_dict['ftdnn.layer'+ str("{:02d}".format(layer_number)) +'.affine.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.affine']['linear_params'])
+		state_dict['ftdnn.layer'+ str("{:02d}".format(layer_number)) +'.affine.bias'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.affine']['bias'])
+		state_dict['ftdnn.layer'+ str("{:02d}".format(layer_number)) +'.sorth.weight'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.linear']['linear_params'])
+		state_dict['ftdnn.layer'+ str("{:02d}".format(layer_number)) +'.bn.running_mean'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.batchnorm']['stats_mean'])
+		state_dict['ftdnn.layer'+ str("{:02d}".format(layer_number)) +'.bn.running_var'] = torch.from_numpy(components['tdnnf'+ str(layer_number) +'.batchnorm']['stats_var'])
 
-	state_dict['layer18.weight'] = torch.from_numpy(components['prefinal-l']['linear_params'])
+	state_dict['ftdnn.layer18.weight'] = torch.from_numpy(components['prefinal-l']['linear_params'])
 
 
-	state_dict['layer19.linear1.weight'] = torch.from_numpy(components['prefinal-chain.affine']['linear_params'])
-	state_dict['layer19.linear1.bias'] = torch.from_numpy(components['prefinal-chain.affine']['bias'])
-	state_dict['layer19.bn1.running_mean'] = torch.from_numpy(components['prefinal-chain.batchnorm1']['stats_mean'])
-	state_dict['layer19.bn1.running_var'] = torch.from_numpy(components['prefinal-chain.batchnorm1']['stats_var'])
-	state_dict['layer19.linear2.weight'] = torch.from_numpy(components['prefinal-chain.linear']['linear_params'])
-	state_dict['layer19.bn2.running_mean'] = torch.from_numpy(components['prefinal-chain.batchnorm2']['stats_mean'])
-	state_dict['layer19.bn2.running_var'] = torch.from_numpy(components['prefinal-chain.batchnorm2']['stats_var'])
-	state_dict['layer19.linear3.weight'] = torch.from_numpy(components['output.affine']['linear_params'])
-	state_dict['layer19.linear3.bias'] = torch.from_numpy(components['output.affine']['bias'])
+	state_dict['output_layer.linear1.weight']   = torch.from_numpy(components['prefinal-chain.affine']['linear_params'])
+	state_dict['output_layer.linear1.bias']     = torch.from_numpy(components['prefinal-chain.affine']['bias'])
+	state_dict['output_layer.bn1.running_mean'] = torch.from_numpy(components['prefinal-chain.batchnorm1']['stats_mean'])
+	state_dict['output_layer.bn1.running_var']  = torch.from_numpy(components['prefinal-chain.batchnorm1']['stats_var'])
+	state_dict['output_layer.linear2.weight']   = torch.from_numpy(components['prefinal-chain.linear']['linear_params'])
+	state_dict['output_layer.bn2.running_mean'] = torch.from_numpy(components['prefinal-chain.batchnorm2']['stats_mean'])
+	state_dict['output_layer.bn2.running_var']  = torch.from_numpy(components['prefinal-chain.batchnorm2']['stats_var'])
+	state_dict['output_layer.linear3.weight']   = torch.from_numpy(components['output.affine']['linear_params'])
+	state_dict['output_layer.linear3.bias']     = torch.from_numpy(components['output.affine']['bias'])
 
-	print(state_dict['layer19.linear3.weight'])
+	print(state_dict['output_layer.linear3.weight'])
 
 
 	for name, param in ftdnn.named_parameters():

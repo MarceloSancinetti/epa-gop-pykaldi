@@ -48,57 +48,6 @@ class FTDNNLayer(nn.Module):
         x = self.dropout(x)
         return x
 
-class OutputXentLayer(nn.Module):
-
-    def __init__(self, linear1_in_dim, linear2_in_dim, linear3_in_dim, out_dim, dropout_p=0.0):
-
-        super(OutputXentLayer, self).__init__()
-        self.linear1_in_dim = linear1_in_dim
-        self.linear2_in_dim = linear2_in_dim
-        self.linear3_in_dim = linear3_in_dim
-        self.out_dim = out_dim
-
-        self.linear1 = nn.Linear(self.linear1_in_dim, self.linear2_in_dim, bias=True) 
-        self.nl = nn.ReLU()
-        self.bn1 = nn.BatchNorm1d(self.linear2_in_dim, affine=False)
-        self.linear2 = nn.Linear(self.linear2_in_dim, self.linear3_in_dim, bias=False) 
-        self.bn2 = nn.BatchNorm1d(self.linear3_in_dim, affine=False)
-        self.linear3 = nn.Linear(self.linear3_in_dim, self.out_dim, bias=True)
-
-    def forward(self, x):
-        x = self.linear1(x)
-        x = self.nl(x)
-        x = x.transpose(1,2)
-        x = self.bn1(x).transpose(1,2)
-        x = self.linear2(x)
-        x = x.transpose(1,2)
-        x = self.bn2(x).transpose(1,2)
-        x = self.linear3(x)
-        softmax = nn.LogSoftmax(dim = 2)
-        return softmax(x)
-
-class OutputLayer(nn.Module):
-
-    def __init__(self, in_dim, out_dim, use_bn=False):
-
-        super(OutputLayer, self).__init__()
-        self.in_dim = in_dim
-        self.out_dim = out_dim
-        self.use_bn = use_bn
-
-        if use_bn:
-            self.bn = nn.BatchNorm1d(self.in_dim, affine=False)
-        self.linear = nn.Linear(self.in_dim, self.out_dim, bias=True) 
-        self.nl = nn.Sigmoid()
-
-    def forward(self, x):
-        if self.use_bn:
-            x = x.transpose(1,2)
-            x = self.bn(x).transpose(1,2)
-        x = self.linear(x)
-        #x = self.nl(x)
-        return x
-
 class InputLayer(nn.Module):
 
     def __init__(
@@ -138,8 +87,6 @@ class InputLayer(nn.Module):
         x = self.drop(x)
         return x
 
-
-
 def sum_outputs_and_feed_to_layer(x, x_2, layer):
         x_3 = x*0.75 + x_2
         x = x_3
@@ -151,10 +98,6 @@ class FTDNN(nn.Module):
     def __init__(self, in_dim=220, out_dim=40, batchnorm=None, dropout_p=0.005851493, device_name='cpu'):
 
         super(FTDNN, self).__init__()
-
-        use_final_bn = False
-        if batchnorm in ["final", "last", "firstlast"]:
-            use_final_bn=True
 
         self.layer01 = InputLayer(input_dim=in_dim, output_dim=1536)
         self.layer02 = FTDNNLayer(3072, 160, 320, 1536, 1, dropout_p=dropout_p, device=device_name)
@@ -174,7 +117,6 @@ class FTDNN(nn.Module):
         self.layer16 = FTDNNLayer(3072, 160, 320, 1536, 3, dropout_p=dropout_p, device=device_name)
         self.layer17 = FTDNNLayer(3072, 160, 320, 1536, 3, dropout_p=dropout_p, device=device_name)
         self.layer18 = nn.Linear(1536, 256, bias=False) #This is the prefinal-l layer
-        self.layer19 = OutputLayer(256, out_dim, use_bn=use_final_bn)
         
     def forward(self, x):
 
@@ -199,6 +141,4 @@ class FTDNN(nn.Module):
         x, x_2 = sum_outputs_and_feed_to_layer(x, x_2, self.layer16)
         x, x_2 = sum_outputs_and_feed_to_layer(x, x_2, self.layer17)
         x, x_2 = sum_outputs_and_feed_to_layer(x, x_2, self.layer18)
-        x = self.layer19(x_2)
-
-        return x
+        return x_2

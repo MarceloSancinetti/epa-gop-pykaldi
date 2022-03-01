@@ -1,13 +1,13 @@
 import sys
 import yaml
 import argparse
-from src.utils.run_utils import load_extended_config_dict
 from src.DataprepStages import *
+from src.Config import DataprepConfig
 from IPython import embed
 
 def run_all(config_yaml):
 
-    config_dict = load_extended_config_dict(config_yaml, "dataprep", True, "cpu")
+    config_dict = DataprepConfig(config_yaml).config_dict
 
     prep_stage   = PrepareFeaturesAndModelsStage(config_dict)
     align_stage  = ComplexStage([AlignCrossValStage(config_dict), AlignHeldoutStage(config_dict)], "align")

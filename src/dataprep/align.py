@@ -11,7 +11,7 @@ import argparse
 import os
 from src.utils.FeatureManager import FeatureManager
 from src.utils.utils import makedirs_for_file
-from src.pytorch_models.pytorch_models_old import *
+from src.pytorch_models.FTDNNAcoustic import *
 from IPython import embed
 
 def log_alignments(aligner, phones, alignment, logid, align_output_fh):
@@ -55,7 +55,7 @@ def main(config_dict):
 
 
     # Instantiate the PyTorch acoustic model (subclass of torch.nn.Module)
-    model = FTDNN()
+    model = FTDNNAcoustic()
     model.load_state_dict(torch.load(acoustic_model_path))
     model.eval()
 

@@ -18,7 +18,7 @@ from src.train.dataset import *
 
 from torch.utils.data import DataLoader, ConcatDataset
 
-from src.pytorch_models.pytorch_models import *
+from src.pytorch_models.FTDNNPronscorer import *
 
 import wandb
 
@@ -280,6 +280,8 @@ def foward_backward_pass(data, model, optimizer, phone_weights, phone_int2sym, p
     
     loss = criterion_fast(outputs, batch_labels, weights=phone_weights, phone_int2sym=phone_int2sym, phone_int2node=phone_int2node, norm_per_phone_and_class=norm_per_phone_and_class, min_frame_count=0)
 
+    loss.requires_grad_()
+
     loss.backward()
 
     return loss
@@ -347,7 +349,7 @@ def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_d
         if scheduler is not None:
             scheduler.step()
 
-        if epoch >= swa_start:
+        if swa_epochs > 0 and epoch >= swa_start:
             swa_model.update_parameters(model)
             swa_scheduler.step()
             #Save SWA model
@@ -436,7 +438,7 @@ def main(config_dict):
     phone_count = trainset.phone_count()
 
     #Get acoustic model to train
-    model = FTDNN(out_dim=phone_count, batchnorm=batchnorm, dropout_p=dropout_p, device_name=device_name) 
+    model = FTDNNPronscorer(out_dim=phone_count, batchnorm=batchnorm, dropout_p=dropout_p, device_name=device_name) 
     model.to(device)
     state_dict = torch.load(get_model_path_for_fold(model_path, fold, layer_amount))
     model.load_state_dict(state_dict['model_state_dict'])
