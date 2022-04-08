@@ -28,7 +28,7 @@ class OutputLayer(nn.Module):
 
 class FTDNNPronscorer(nn.Module):
 
-    def __init__(self, in_dim=220, out_dim=40, batchnorm=None, dropout_p=0.005851493, device_name='cpu'):
+    def __init__(self, out_dim=40, batchnorm=None, dropout_p=0, device_name='cpu'):
 
         super(FTDNNPronscorer, self).__init__()
 
@@ -36,7 +36,7 @@ class FTDNNPronscorer(nn.Module):
         if batchnorm in ["final", "last", "firstlast"]:
             use_final_bn=True
         
-        self.ftdnn        = FTDNN()
+        self.ftdnn        = FTDNN(batchnorm=batchnorm, dropout_p=dropout_p, device_name=device_name)
         self.output_layer = OutputLayer(256, out_dim, use_bn=use_final_bn)
         
     def forward(self, x):

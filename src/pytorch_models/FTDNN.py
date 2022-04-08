@@ -5,7 +5,7 @@ from IPython import embed
 
 class FTDNNLayer(nn.Module):
 
-    def __init__(self, semi_orth_in_dim, semi_orth_out_dim, affine_in_dim, out_dim, time_offset, dropout_p=0.005851493, device='cpu'):
+    def __init__(self, semi_orth_in_dim, semi_orth_out_dim, affine_in_dim, out_dim, time_offset, dropout_p=0, device='cpu'):
         '''
         3 stage factorised TDNN http://danielpovey.com/files/2018_interspeech_tdnnf.pdf
         '''
@@ -54,7 +54,7 @@ class InputLayer(nn.Module):
         self,
         input_dim=220,
         output_dim=1536,
-        dropout_p=0.005851493):
+        dropout_p=0):
 
         super(InputLayer, self).__init__()
         self.input_dim = input_dim
@@ -95,7 +95,7 @@ def sum_outputs_and_feed_to_layer(x, x_2, layer):
 
 class FTDNN(nn.Module):
 
-    def __init__(self, in_dim=220, out_dim=40, batchnorm=None, dropout_p=0.005851493, device_name='cpu'):
+    def __init__(self, in_dim=220, batchnorm=None, dropout_p=0, device_name='cpu'):
 
         super(FTDNN, self).__init__()
 

@@ -160,18 +160,15 @@ def criterion_slow(batch_outputs, batch_pos_labels, batch_neg_labels, loss_dict)
         phone_loss  = loss_for_phone(batch_outputs, batch_pos_labels, phone_int) 
         loss_dict   = add_loss_for_phone_to_dict(phone_loss, phone_sym, loss_dict, '+')
         total_loss += phone_loss
-        #embed()
 
         phone_loss  = loss_for_phone(batch_outputs, batch_neg_labels, phone_int, stop=True)
         loss_dict   = add_loss_for_phone_to_dict(phone_loss, phone_sym, loss_dict, '-')    
         total_loss += phone_loss    
-        #embed()    
     
     return total_loss, loss_dict
 
 
 def calculate_loss(outputs, mask, labels, phone_weights=None, norm_per_phone_and_class=False, min_frame_count=0):
-
     weights = mask *1
 
     if phone_weights is not None:
@@ -190,7 +187,7 @@ def calculate_loss(outputs, mask, labels, phone_weights=None, norm_per_phone_and
 
 
 def criterion_fast(batch_outputs, batch_labels, weights=None, norm_per_phone_and_class=False, log_per_phone_and_class_loss=False, phone_int2sym=None, phone_int2node = None, min_frame_count=0):
-    
+
     batch_labels_for_loss = torch.abs((batch_labels-1)/2)
 
     loss_pos, sum_weights_pos = calculate_loss(batch_outputs, batch_labels ==  1, batch_labels_for_loss, 
@@ -198,6 +195,7 @@ def criterion_fast(batch_outputs, batch_labels, weights=None, norm_per_phone_and
     loss_neg, sum_weights_neg = calculate_loss(batch_outputs, batch_labels == -1, batch_labels_for_loss, 
         phone_weights=weights, norm_per_phone_and_class=norm_per_phone_and_class, min_frame_count=min_frame_count)
 
+    
     total_loss = (loss_pos + loss_neg).sum()
 
     if not norm_per_phone_and_class:
@@ -411,6 +409,7 @@ def main(config_dict):
     state_dict_dir           = config_dict["state-dict-dir"]
     device_name              = config_dict["device"]
     checkpoint_step          = config_dict["checkpoint-step"]
+
 
     wandb.init(project="gop-finetuning", entity="pronscoring-liaa")
     wandb.run.name = run_name

@@ -1,7 +1,7 @@
 import sys
 import yaml
 import argparse 
-from src.utils.run_utils import load_extended_config_dict, get_eval_stage
+from src.utils.run_utils import get_eval_stage
 from src.ExperimentStages import *
 from src.Config import ExperimentConfig
 from IPython import embed

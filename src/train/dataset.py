@@ -60,7 +60,7 @@ class EpaDB(Dataset):
         # Get string representation of 'path' in case Path object is passed
         sample_list_path = os.fspath(sample_list_path)
         phones_list_path = os.fspath(phones_list_path)
-        labels_path = os.fspath(labels_path)
+        labels_path      = os.fspath(labels_path)
 
         self._labels_path = labels_path
 
@@ -93,7 +93,6 @@ class EpaDB(Dataset):
         speaker_id = file_id.split("_")[0]
         utterance_id = file_id.split("_")[1]
 
-#       features, transcript = self._feature_manager.get_features_for_logid(file_id)
         features = self._feature_manager.get_features_for_logid(file_id)
 
 
@@ -116,7 +115,6 @@ class EpaDB(Dataset):
                 try:
                     #These two if statements fix the mismatch between #frames in annotations and feature matrix
                     if end_time > features.shape[0]:
-                        #Printear warning aca
                         if  end_time > features.shape[0] + 2:
                             raise Exception('End time in annotations longer than feature length by ' + str(features.shape[0] - end_time))
                         end_time = features.shape[0]
