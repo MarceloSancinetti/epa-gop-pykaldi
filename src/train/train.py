@@ -1,11 +1,8 @@
 import os
-import glob
 from pathlib import Path
-import argparse
 import yaml
-import time
 
-import torchaudio
+
 import torch
 import torch.optim as optim
 from torch.optim.lr_scheduler import *
@@ -13,7 +10,6 @@ from torch.optim.swa_utils import AveragedModel, SWALR
 import torch.multiprocessing as mp
 
 from src.utils.finetuning_utils import *
-#from src.utils.utils import *
 from src.train.dataset import *
 
 from torch.utils.data import DataLoader, ConcatDataset
@@ -75,8 +71,6 @@ def log_and_reset_every_n_batches(fold, epoch, i, running_loss, step, n):
         log_dict = {'train_loss_fold_' + str(fold): running_loss/n,
                    'step' : step,
                    'epoch': epoch}
-        #loss_dict = {phone : loss/n for phone, loss in loss_dict.items()}
-        #log_dict.update(get_log_dict_for_wandb_from_loss_dict(fold, loss_dict, 'train'))
         wandb.log(log_dict)
         step += 1
         running_loss = 0.0
