@@ -23,7 +23,6 @@ def get_scores_stage(config_dict, epoch, is_swa=False):
     else:
         return GenerateScoresCrossValStage(config_dict, epoch=epoch, is_swa=is_swa)
 
-
 def get_scores_and_eval_stages_for_many_epochs(config_dict, step):
     scores_stages = [] 
     eval_stages   = []

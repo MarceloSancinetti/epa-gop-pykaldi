@@ -74,14 +74,24 @@ def log_and_reset_every_n_batches(fold, epoch, i, running_loss, step, n):
         wandb.log(log_dict)
         step += 1
         running_loss = 0.0
-    return running_loss, step#, loss_dict      
+    return running_loss, step #, loss_dict      
 
 def freeze_layers_for_finetuning(model, layer_amount, use_dropout, batchnorm):
-    #Generate layer names for layers that should be trained
-    layers_to_train = ['layer' + str(19 - x) for x in range(layer_amount)]
-
+    #Generate layer names for layers that should be train
+    layers_list=[]
+    for name, module in model.named_children():
+        if not name.startswith('params'):
+            if name == 'ftdnn':
+                for x in range(layer_amount-1):
+                    layers_list.append(name+'.layer'+str(18-x))
+            else: 
+                layers_list.insert(0,name)
+    
+    #layers_list = list(np.sort(layers_list))
+    layers_to_train = layers_list[-layer_amount:]
     #Freeze all layers except #layer_amount layers starting from the last
     for name, module in model.named_modules():
+        
         freeze_layer = all([layer not in name for layer in layers_to_train])
         if freeze_layer and (batchnorm != 'all' or 'bn' not in name):
             module.eval()
@@ -98,18 +108,11 @@ def freeze_layers_for_finetuning(model, layer_amount, use_dropout, batchnorm):
 
     #Unfreeze dropouts
     for name, module in model.named_modules():
+
         if 'dropout' in name and use_dropout:
             module.train()
+  
 
-def freeze_layers_for_finetuning_buggy(model, layer_amount):
-    #Generate layer names for layers that should be trained
-    layers_to_train = ['layer' + str(19 - x) for x in range(layer_amount)]
-
-    #Freeze all layers except #layer_amount layers starting from the last
-    for name, param in model.named_parameters():
-        freeze_layer = all([layer not in name for layer in layers_to_train])
-        if freeze_layer:
-            param.requires_grad = False
 
 #Builds a dictionary with the individual loss for each phone/class for logging purposes
 def add_loss_for_phone_to_dict(loss, phone, loss_dict, label):
@@ -139,27 +142,6 @@ def loss_for_phone(outputs, labels, phone, stop=False):
         return 0
     else:
         return loss_fn(outputs, labels) * phone_weight
-
-#Returns total batch loss, adding the loss computed for each class individually
-def criterion_slow(batch_outputs, batch_pos_labels, batch_neg_labels, loss_dict):
-    '''
-    Calculates loss
-    '''
-    global phone_int2sym, phone_weights, phone_count
-
-    total_loss = 0
-    for phone_int in range(phone_count):
-        phone_sym = phone_int2sym[phone_int]        
-        
-        phone_loss  = loss_for_phone(batch_outputs, batch_pos_labels, phone_int) 
-        loss_dict   = add_loss_for_phone_to_dict(phone_loss, phone_sym, loss_dict, '+')
-        total_loss += phone_loss
-
-        phone_loss  = loss_for_phone(batch_outputs, batch_neg_labels, phone_int, stop=True)
-        loss_dict   = add_loss_for_phone_to_dict(phone_loss, phone_sym, loss_dict, '-')    
-        total_loss += phone_loss    
-    
-    return total_loss, loss_dict
 
 
 def calculate_loss(outputs, mask, labels, phone_weights=None, norm_per_phone_and_class=False, min_frame_count=0):
@@ -259,14 +241,11 @@ def choose_starting_epoch(epochs, state_dict_dir, run_name, fold, model, optimiz
     return model, optimizer, scheduler, step, start_from_epoch
 
 def foward_backward_pass(data, model, optimizer, phone_weights, phone_int2sym, phone_int2node, norm_per_phone_and_class):
-    logids       = unpack_logids_from_batch(data)
     inputs       = unpack_features_from_batch(data).to(device)
     batch_labels = unpack_labels_from_batch(data).to(device)
     
     # zero the parameter gradients
     optimizer.zero_grad()
-    
-    phone_per_frame_selector = torch.abs((batch_labels-1)/2)
 
     outputs = model(inputs)
     
@@ -309,7 +288,8 @@ def train_one_epoch(trainloader, testloader, model, optimizer, running_loss, fol
 def define_scheduler_from_config(scheduler_config, optimizer):
     return eval(scheduler_config)
 
-def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_dir, run_name, layer_amount, use_dropout, lr, scheduler_config, swa_lr, use_clipping, batchnorm, norm_per_phone_and_class):
+def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_dir, run_name, layer_amount, use_dropout, lr, 
+scheduler_config, swa_lr, use_clipping, batchnorm, norm_per_phone_and_class):
     global phone_weights, phone_count, device, checkpoint_step
 
     print("Started training fold " + str(fold))
@@ -318,7 +298,6 @@ def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_d
 
     optimizer = optim.Adam(model.parameters(), lr=lr)
     scheduler = define_scheduler_from_config(scheduler_config, optimizer)
-
     #Find the most advanced state dict to start from
     model, optimizer, scheduler, step, start_from_epoch = choose_starting_epoch(epochs, state_dict_dir, run_name, 
                                                                      fold, model, optimizer, scheduler)
@@ -327,6 +306,7 @@ def train(model, trainloader, testloader, fold, epochs, swa_epochs, state_dict_d
         swa_model  = AveragedModel(model)
         swa_start  = epochs - swa_epochs
         swa_scheduler = SWALR(optimizer, swa_lr=swa_lr)
+
 
     for epoch in range(start_from_epoch, epochs):  # loop over the dataset multiple times
 
@@ -361,10 +341,7 @@ def test(model, testloader):
     total_loss = 0
     for i, batch in enumerate(testloader, 0):
         features = unpack_features_from_batch(batch).to(device)
-        #pos_labels = unpack_pos_labels_from_batch(batch)
-        #neg_labels = unpack_neg_labels_from_batch(batch)
         labels   = unpack_labels_from_batch(batch).to(device)
-
         outputs = model(features)
         loss_dict = {}
         loss, loss_dict = criterion_fast(outputs, labels, weights=phone_weights, 

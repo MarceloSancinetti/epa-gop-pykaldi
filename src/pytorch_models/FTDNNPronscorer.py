@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from IPython import embed
@@ -21,9 +20,8 @@ class OutputLayer(nn.Module):
     def forward(self, x):
         if self.use_bn:
             x = x.transpose(1,2)
-            x = self.bn(x).transpose(1,2)
+            x =self.bn(x).transpose(1,2)
         x = self.linear(x)
-        #x = self.nl(x)
         return x
 
 class FTDNNPronscorer(nn.Module):
@@ -40,11 +38,10 @@ class FTDNNPronscorer(nn.Module):
         self.output_layer = OutputLayer(256, out_dim, use_bn=use_final_bn)
         
     def forward(self, x):
-
         '''
         Input must be (batch_size, seq_len, in_dim)
         '''
         x = self.ftdnn(x)
         x = self.output_layer(x)
-
+    
         return x
