@@ -1,5 +1,7 @@
 # Pronunciation scoring on Epa-DB using Pykaldi
 
+for a more up-to-date version of this code go to: https://github.com/JazminVidal/gop-ft
+
 This repository has the complete code and examples to obtain the results in the paper 'A transfer learning based approach for pronunciation scoring' by Sancinetti, Vidal Bonomi and Ferrer, accepted at ICASSP 2022. It is meant to facilitate experimentation with Epa-DB, a database of non-native English speech by Spanish speakers from Argentina intended for research on mispronunciation detection and development of pronunciation scoring systems. 
 
 Two pronunciation scoring systems are available: (1) a standard goodness of pronunciation (GOP) DNN algorithm and (2) a GOP-FT algorithm, where we replace the last layer of an ASR DNN, and train the resulting model for the pronunciation scoring task. Both systems use a PyTorch acoustic model based on Kaldi's TDNN-F acoustic model so a script is provided to convert Kaldi's model to PyTorch.
